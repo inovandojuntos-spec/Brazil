@@ -10,8 +10,7 @@
 <meta name="theme-color" content="#000000" />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://inovandojuntos.com.br/" />
-<link rel="alternate" hreflang="pt-br" href="https://inovandojuntos.com.br/" />
-<link rel="alternate" hreflang="x-default" href="https://inovandojuntos.com/" />
+<!-- TODO Mario: confirmar dominio canónico (.com vs .com.br) -->
 
 <!-- ====== OpenGraph ====== -->
 <meta property="og:type" content="website" />
@@ -326,13 +325,23 @@
   }
   .hero-bg video{ z-index:1; opacity:1; transition:opacity 1.2s ease; }   /* video como fondo (sobre la foto) */
   .hero-bg video.ready{ opacity:1; }
+
+  /* ====== HERO video en PC: centrado al 80% (10% negro a cada lado), zoom mínimo. Celular < 1000px igual ====== */
+  @media (min-width:1000px){
+    .hero-bg video{
+      width:80%; height:100%;
+      left:50%; top:0; right:auto; bottom:auto;
+      transform:translateX(-50%);
+      object-fit:cover; object-position:center 28%;
+      animation:kenburns-pc 32s ease-in-out infinite alternate;
+    }
+    @keyframes kenburns-pc{
+      0%{   transform:translateX(-50%) scale(1); }
+      100%{ transform:translateX(-50%) scale(1.04); }
+    }
+  }
   /* fallback elegante si no hay imagen ni video */
-  .hero-fallback{ position:absolute; inset:0; z-index:0;
-    background:
-      radial-gradient(60% 50% at 72% 22%, rgba(255,255,255,.07), rgba(0,0,0,0) 60%),
-      radial-gradient(70% 60% at 20% 90%, rgba(255,255,255,.04), rgba(0,0,0,0) 60%),
-      repeating-linear-gradient(135deg, rgba(255,255,255,.015) 0 16px, rgba(255,255,255,0) 16px 32px),
-      #000; }
+  .hero-fallback{ position:absolute; inset:0; z-index:0; background:#000; }
   .hero-scrim{ position:absolute; inset:0; z-index:2; pointer-events:none;
     background:
       linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.55) 40%, rgba(0,0,0,.12) 68%, rgba(0,0,0,.35) 100%),
