@@ -340,7 +340,8 @@
       100%{ transform:translateX(-50%) scale(1.04); }
     }
   }
-  /* fallback elegante si no hay imagen ni video */
+
+  /* fallback / costados: negro puro (sin líneas) */
   .hero-fallback{ position:absolute; inset:0; z-index:0; background:#000; }
   .hero-scrim{ position:absolute; inset:0; z-index:2; pointer-events:none;
     background:
@@ -1089,4 +1090,23 @@
       } catch(e){}
     }
 
-    canvas.addEventListener("pointerdown", function(e){ drawing = true; 
+    canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
+    window.addEventListener("pointerup", function(){ drawing = false; });
+    canvas.addEventListener("pointermove", scratch);
+    canvas.addEventListener("touchstart", function(e){ drawing = true; scratch(e); }, { passive:true });
+    canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
+    canvas.addEventListener("touchend", function(){ drawing = false; });
+
+    if (reduce){
+      canvas.style.display = "none";
+      if (hint) hint.style.display = "none";
+    } else {
+      window.addEventListener("resize", function(){ if (!cleared) sizeCanvas(); });
+      sizeCanvas();
+    }
+  }
+})();
+</script>
+<script src="store.js"></script>
+</body>
+</html>
