@@ -489,7 +489,7 @@
   /* ====== ROTINA · pantalla emocional cinematográfica (entre hero y jogo) ====== */
   .rotina{ position:relative; padding:0; background:#000; z-index:2; }
   /* runway de scroll que alimenta el sticky */
-  .rotina-track{ position:relative; height:360vh; }
+  .rotina-track{ position:relative; height:340vh; }
   .rotina-sticky{
     position:sticky; top:0; height:100svh;
     display:flex; align-items:center; justify-content:center;
@@ -503,9 +503,11 @@
     opacity:0; transition:opacity 1.1s ease;
   }
   .rotina.head-in .rotina-sticky::before{ opacity:1; }
-  .rotina-inner{ width:min(760px,94vw); text-align:center; }
+  /* el inner ocupa casi toda la pantalla → las frases se reparten verticalmente */
+  .rotina-inner{ width:min(760px,94vw); text-align:center;
+    display:flex; flex-direction:column; min-height:min(86svh,780px); }
 
-  .rotina-head{ opacity:0; transform:translateY(18px); filter:blur(6px);
+  .rotina-head{ flex:none; opacity:0; transform:translateY(18px); filter:blur(6px);
     transition:opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1), filter 1s ease; }
   .rotina.head-in .rotina-head{ opacity:1; transform:none; filter:none; }
 
@@ -523,24 +525,25 @@
     transform:scaleX(0); transform-origin:center; transition:transform .9s cubic-bezier(.2,.8,.2,1) .2s; }
   .rotina.head-in .rotina-rule{ transform:scaleX(1); }
 
-  /* las frases ocupan su espacio desde el inicio (sin saltos): solo aparecen */
-  .rotina-lines{ display:flex; flex-direction:column; gap:clamp(9px,1.7vh,16px); }
+  /* las líneas llenan el alto disponible y se reparten (space-evenly) → no quedan "muy juntas" */
+  /* unidad base de la cascada en em → la compactación solo cambia este valor */
+  .rotina-lines{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:space-evenly;
+    gap:clamp(8px,1.5vh,18px); padding:clamp(8px,1.6vh,20px) 0; font-size:clamp(21px,3.3vw,38px); }
   .rl{ margin:0; color:var(--text); font-weight:400;
-    font-size:clamp(17px,2.3vw,24px); letter-spacing:.005em; line-height:1.35;
+    font-size:1em; letter-spacing:.005em; line-height:1.18;
     opacity:0; transform:translateY(16px); filter:blur(5px);
     transition:opacity .85s cubic-bezier(.2,.8,.2,1), transform .85s cubic-bezier(.2,.8,.2,1), filter .85s ease; }
   .rl.show{ opacity:1; transform:none; filter:none; }
-  /* línea de giro emocional: blanca, un poco más presente */
-  .rl-strong{ margin-top:clamp(10px,1.8vh,18px); color:#fff; font-weight:500;
-    font-size:clamp(19px,2.6vw,28px); letter-spacing:.01em; }
-  .rl-final{ margin-top:clamp(12px,2vh,20px);
-    font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
-    font-weight:400; letter-spacing:.04em; line-height:1.35;
-    font-size:clamp(20px,3vw,32px);
-    /* mismo gradiente plata exacto del titular del hero (uniformidad total) */
-    background:linear-gradient(100deg,#f7f8fa 0%,#aab0ba 26%,#ffffff 47%,#868c96 67%,#e9ebef 100%);
-    background-size:220% auto; -webkit-background-clip:text; background-clip:text;
-    color:transparent; -webkit-text-fill-color:transparent; }
+  /* escalonamiento marcado (no plano): grande → chico, con repunte en las frases-golpe */
+  .rotina-lines .rl:nth-child(1){ font-size:1.32em; }   /* Ela aparece aos poucos. */
+  .rotina-lines .rl:nth-child(2){ font-size:1.06em; }   /* Os mesmos finais de semana. */
+  .rotina-lines .rl:nth-child(3){ font-size:0.92em; }   /* Os mesmos lugares. */
+  .rotina-lines .rl:nth-child(4){ font-size:1.30em; }   /* O celular. (golpe) */
+  .rotina-lines .rl:nth-child(5){ font-size:1.30em; }   /* O cansaço. (golpe) */
+  .rotina-lines .rl:nth-child(6){ font-size:0.74em; line-height:1.32; }  /* Quanto mais tempo… */
+  .rotina-lines .rl:nth-child(7){ font-size:0.86em; line-height:1.3; }   /* E, sem perceber… */
+  /* giro emocional: blanca, el cierre más presente */
+  .rl-strong{ color:#fff; font-weight:500; font-size:1.22em; letter-spacing:.01em; line-height:1.2; }
   /* señal de continuidad hacia el juego */
   .rotina-cue{ position:absolute; left:0; right:0; bottom:20px; z-index:3; text-align:center;
     font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--ember);
@@ -619,7 +622,7 @@
     background:transparent; border:0;
     --sweep:1.2s; }   /* duración del barrido de luz; debe igualar a STEP del attract loop (JS) */
   .g-tile{ position:relative; padding:0; border:0; cursor:pointer; overflow:hidden;
-    border-radius:16px; background:#000; aspect-ratio:25/33; box-shadow:0 18px 44px rgba(0,0,0,.5); }
+    border-radius:16px; background:#000; aspect-ratio:25/38; box-shadow:0 18px 44px rgba(0,0,0,.5); }
   .g-tile img{ width:100%; height:100%; object-fit:cover; display:block;
     transition:transform .55s cubic-bezier(.2,.8,.2,1), filter .4s ease; }
   /* borde plateado + oscurecido al hover (negro/plata premium) */
@@ -689,26 +692,6 @@
   .g-zoom-close:hover svg{ transform:rotate(90deg); }
   .g-zoom-close svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; transition:transform .35s ease; }
 
-  /* ====== FRENOS · scroll fijado que obliga a detenerse (como la sección 2) ====== */
-  .stop{ position:relative; padding:0; background:#000; z-index:2; }
-  .stop-track{ position:relative; height:170vh; }
-  .stop-sticky{ position:sticky; top:0; height:100svh; overflow:hidden;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:clamp(40px,8vh,90px) clamp(20px,5vw,40px); text-align:center; }
-  .sl{ margin:clamp(6px,1.4vh,16px) auto; max-width:26ch;
-    font-family:var(--display); font-weight:500; letter-spacing:.01em; line-height:1.25;
-    font-size:clamp(24px,4.6vw,50px); color:var(--text);
-    opacity:0; transform:translateY(20px); filter:blur(6px);
-    transition:opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1), filter .9s ease; }
-  .sl.show{ opacity:1; transform:none; filter:none; }
-  .sl-em{ background:linear-gradient(180deg,#ffffff,#9aa0aa);
-    -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
-  /* cue del freno (flecha vertical + raya plata), aparece al completarse el texto */
-  .stop-cue{ position:absolute; left:0; right:0; bottom:clamp(18px,4vh,40px); z-index:3;
-    display:block; text-align:center; color:var(--ember); text-decoration:none;
-    opacity:0; pointer-events:none; transition:opacity .6s ease; }
-  .stop.cue-in .stop-cue{ opacity:1; pointer-events:auto; }
-
   /* ====== PLATAFORMA (slide 4) · freno de scroll (pin) + flecha siguiente ====== */
   .plat{ position:relative; padding:0; background:#000; z-index:2; }
   .plat-track{ position:relative; height:180vh; }
@@ -725,9 +708,9 @@
   /* ====== PLATAFORMA · anillo 3D de teléfonos (giratorio + panel) ====== */
   .ring{ position:relative; outline:none; }
   /* la altura sigue al teléfono (mismo eje vw que su ancho) -> sin espacio muerto */
-  .ring-stage{ position:relative; height:clamp(356px,51vw,522px); perspective:1600px; touch-action:pan-y;
+  .ring-stage{ position:relative; height:clamp(430px,61vw,628px); perspective:1600px; touch-action:pan-y;
     transform-style:preserve-3d; user-select:none; }
-  .rphone{ position:absolute; top:50%; left:50%; width:clamp(180px,27vw,275px); aspect-ratio:693/1280;
+  .rphone{ position:absolute; top:50%; left:50%; width:clamp(216px,32vw,330px); aspect-ratio:693/1280;
     border-radius:30px; padding:7px; border:1px solid var(--edge2);
     background:linear-gradient(160deg,#161616,#070707);
     box-shadow:0 40px 90px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06);
@@ -741,7 +724,10 @@
   .rphone-screen::before{ content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%);
     width:48px; height:5px; border-radius:99px; background:rgba(255,255,255,.18); z-index:2; }
   .rphone-screen img{ width:100%; height:100%; object-fit:cover; }
-  .rphone.is-active{ border-color:rgba(255,255,255,.32); box-shadow:0 50px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); cursor:zoom-in; }
+  /* phone activo: borde plata premium + halo plateado */
+  .rphone.is-active{ border-color:rgba(199,204,212,.62);
+    box-shadow:0 50px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.10),
+      0 0 0 1px rgba(199,204,212,.18), 0 0 34px rgba(199,204,212,.10); cursor:zoom-in; }
 
   /* lightbox: zoom de la pantalla seleccionada para leerla completa */
   .ring-zoom{ position:fixed; inset:0; z-index:90; display:flex; align-items:center; justify-content:center;
@@ -775,20 +761,22 @@
     background:rgba(255,255,255,.22); border:0; transition:background .25s ease, width .25s ease; }
   .ring-dots button.on{ background:var(--accent); width:20px; border-radius:99px; }
 
-  /* tarjeta de texto: altura estable de 2 filas máx (sin saltos al cambiar de teléfono) */
-  .ring-panel{ max-width:560px; margin:clamp(10px,1.8vh,18px) auto 0; text-align:center;
-    border:1px solid var(--edge); border-radius:18px; background:var(--glass), var(--card);
-    box-shadow:0 24px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,.035);
-    padding:clamp(14px,2.2vw,20px) clamp(18px,2.6vw,24px); transition:border-color .35s ease; }
-  .ring-title{ margin:0 0 6px;
+  /* tarjeta de texto: premium con borde plata + altura estable de 2 filas (sin saltos) */
+  .ring-panel{ max-width:580px; margin:clamp(14px,2.4vh,24px) auto 0; text-align:center;
+    border:1px solid rgba(199,204,212,.34); border-radius:18px;
+    background:linear-gradient(180deg, rgba(199,204,212,.06), rgba(255,255,255,0) 42%), var(--glass), var(--card);
+    box-shadow:0 24px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,.07),
+      0 0 0 1px rgba(199,204,212,.05), 0 0 30px rgba(199,204,212,.05);
+    padding:clamp(18px,2.6vw,26px) clamp(22px,3vw,30px); transition:border-color .35s ease, box-shadow .35s ease; }
+  .ring-title{ margin:0 0 9px;
     font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
-    font-weight:400; text-transform:uppercase; letter-spacing:.08em; color:var(--text);
-    font-size:clamp(17px,2.2vw,22px); line-height:1.2;
+    font-weight:400; text-transform:uppercase; letter-spacing:.09em; color:var(--text);
+    font-size:clamp(18px,2.3vw,23px); line-height:1.2;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .ring-text{ margin:0 auto; max-width:52ch; color:var(--muted); font-family:var(--font); font-weight:500;
-    font-size:clamp(13px,1.55vw,15.5px); line-height:1.5;
+    font-size:clamp(13.5px,1.6vw,16px); line-height:1.55;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-    min-height:calc(2 * 1.5em); }   /* exactamente 2 filas */
+    min-height:calc(2 * 1.55em); }   /* exactamente 2 filas */
 
   /* ====== Responsive ====== */
   @media (max-width:900px){
@@ -800,7 +788,7 @@
     .g2,.g3,.g4{ grid-template-columns:1fr; }
     .nav .brand .bt small{ display:none; }
     .hero-bg img, .hero-bg video{ object-position:center 22%; }
-    .rotina-track{ height:340vh; }
+    .rotina-track{ height:320vh; }
     .gallery{ grid-template-columns:repeat(3,1fr); gap:7px; padding:7px; }
     .g-ov-cue{ display:none; }
     .g-ov-label{ font-size:11px; }
@@ -809,30 +797,25 @@
   /* slide 2 y 3: el contenido fijo debe caber en una sola pantalla */
   @media (max-height:900px){
     .rotina-title{ font-size:clamp(26px,4.6vw,48px); margin-bottom:12px; }
-    .rotina-lines{ gap:7px; }
-    .rl{ font-size:clamp(15px,2.1vw,22px); }
-    .rl-strong{ font-size:clamp(17px,2.4vw,25px); }
-    .rl-final{ font-size:clamp(18px,2.7vw,28px); }
+    .rotina-lines{ font-size:clamp(18px,2.8vw,31px); }
     .jogo .gallery{ max-width:min(600px,86vw); }
     .fl{ font-size:clamp(18px,3.4vw,30px); }
-    .ring-stage{ height:clamp(330px,48vw,470px); }
-    .rphone{ width:clamp(170px,25vw,250px); }
+    .ring-stage{ height:clamp(384px,55vw,560px); }
+    .rphone{ width:clamp(200px,29vw,295px); }
+    .plat-sticky{ padding:clamp(28px,4.5vh,60px) clamp(16px,4vw,40px) clamp(48px,7vh,84px); }
   }
   /* laptops/pantallas bajas: compacta para que las líneas quepan en el marco fijo */
   @media (max-height:760px){
-    .rotina-title{ font-size:clamp(26px,4.4vw,44px); margin-bottom:12px; }
-    .rotina-rule{ margin:12px auto 10px; }
-    .rotina-lines{ gap:6px; }
-    .rl{ font-size:clamp(14px,1.9vw,19px); }
-    .rl-strong{ font-size:clamp(16px,2.2vw,22px); margin-top:10px; }
-    .rl-final{ font-size:clamp(17px,2.4vw,24px); margin-top:10px; }
+    .rotina-title{ font-size:clamp(26px,4.4vw,44px); margin-bottom:10px; }
+    .rotina-rule{ margin:10px auto 8px; }
+    .rotina-lines{ font-size:clamp(16px,2.4vw,24px); }
     .jogo .gallery{ max-width:min(500px,78vw); }
     .fl{ font-size:clamp(16px,3vw,24px); margin:4px auto; }
     .jogo-freno{ margin-top:clamp(10px,2vh,18px); }
     .jogo-freno-rule{ margin-bottom:12px; }
-    .ring-stage{ height:clamp(300px,44vw,420px); }
-    .rphone{ width:clamp(158px,23vw,230px); }
-    .ring-panel{ padding:12px 16px; margin-top:10px; }
+    .ring-stage{ height:clamp(340px,50vw,480px); }
+    .rphone{ width:clamp(178px,26vw,255px); }
+    .ring-panel{ padding:14px 18px; margin-top:10px; }
     .plat-sticky{ padding-top:clamp(28px,5vh,60px); }
   }
   @media (prefers-reduced-motion:reduce){
@@ -845,10 +828,6 @@
     .rotina-sticky{ position:static; height:auto; min-height:100svh; }
     .rotina-head, .rl{ opacity:1; transform:none; filter:none; }
     .rotina-rule{ transform:scaleX(1); }
-    /* frenos: estáticos, sin runway */
-    .stop-track{ height:auto; }
-    .stop-sticky{ position:static; height:auto; min-height:60svh; }
-    .sl{ opacity:1; transform:none; filter:none; }
     /* galería: sin pin */
     .jogo-track{ height:auto; }
     .jogo-sticky{ position:static; min-height:0; padding:clamp(40px,8vh,90px) 0; }
@@ -938,23 +917,9 @@
           <p class="rl">Quanto mais tempo juntos,<br>mais fácil é entrar no automático.</p>
           <p class="rl">E, sem perceber, vocês deixam de criar<br>novas histórias juntos.</p>
           <p class="rl rl-strong">Vocês ainda se amam.</p>
-          <p class="rl rl-final">Agora só precisam de uma experiência<br>que faça vocês se escolherem novamente.</p>
         </div>
       </div>
       <a class="rotina-cue" href="#jogo" aria-label="Continuar">
-        <span class="cue-line" aria-hidden="true"></span><span class="mw" aria-hidden="true"></span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ====== FRENO 2→3 · "Mas isso vai mudar hoje" (scroll fijado) ====== -->
-<section class="stop" id="stop1" aria-label="Mas isso vai mudar hoje">
-  <div class="stop-track">
-    <div class="stop-sticky">
-      <p class="sl">Mas isso</p>
-      <p class="sl sl-em">vai mudar hoje.</p>
-      <a class="stop-cue" href="#jogo" aria-label="Continuar">
         <span class="cue-line" aria-hidden="true"></span><span class="mw" aria-hidden="true"></span>
       </a>
     </div>
@@ -1471,35 +1436,6 @@
       // pista "Continua" desaparece cerca del final (ya entra el juego)
       sec.classList.toggle("cue-in", p > 0.30 && p < 0.97);
     }
-    function req(){ if (!ticking){ ticking = true; requestAnimationFrame(update); } }
-    window.addEventListener("scroll", req, { passive:true });
-    window.addEventListener("resize", req);
-    req();
-  })();
-
-  /* ---- FRENOS: scroll fijado que revela líneas (obliga a detenerse) ---- */
-  (function(){
-    var sections = Array.prototype.slice.call(document.querySelectorAll(".stop"));
-    if (!sections.length) return;
-    if (reduce){
-      sections.forEach(function(sec){ sec.classList.add("cue-in"); Array.prototype.slice.call(sec.querySelectorAll(".sl")).forEach(function(l){ l.classList.add("show"); }); });
-      return;
-    }
-    function updateOne(sec){
-      var track = sec.querySelector(".stop-track");
-      var lines = Array.prototype.slice.call(sec.querySelectorAll(".sl"));
-      var rect = track.getBoundingClientRect();
-      var total = track.offsetHeight - window.innerHeight;
-      var p = total > 0 ? Math.min(Math.max(-rect.top, 0), total) / total : 0;
-      var start = 0.12, end = 0.62, n = lines.length;
-      for (var i = 0; i < n; i++){
-        lines[i].classList.toggle("show", p >= start + (end - start) * (i / n));
-      }
-      // la flecha vertical aparece al completarse el texto
-      sec.classList.toggle("cue-in", p > end + 0.06);
-    }
-    var ticking = false;
-    function update(){ ticking = false; sections.forEach(updateOne); }
     function req(){ if (!ticking){ ticking = true; requestAnimationFrame(update); } }
     window.addEventListener("scroll", req, { passive:true });
     window.addEventListener("resize", req);
