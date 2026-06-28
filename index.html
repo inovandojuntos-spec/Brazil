@@ -701,6 +701,8 @@
   .g-ov{ position:absolute; inset:0; z-index:2; opacity:0; transition:opacity .4s ease;
     background:linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.5)); }
   .g-tile:hover .g-ov, .g-tile:focus-visible .g-ov, .g-tile.demo-on .g-ov{ opacity:1; }
+  /* en el attract loop el fondo casi negro oculta la foto y resalta el mensaje */
+  .g-tile.demo-on .g-ov{ background:rgba(0,0,0,.9); }
   .g-ov-info, .g-ov-story{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
     width:max-content; max-width:88%; text-align:center; opacity:0; pointer-events:none;
     transition:opacity .3s ease; }
@@ -715,7 +717,7 @@
     border:1px solid rgba(255,255,255,.4); border-radius:999px; padding:6px 13px; }
   /* frase del "cuento": SOLO durante el attract loop */
   .g-ov-story{ font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
-    font-weight:400; letter-spacing:.04em; line-height:1.28; color:#fff;
+    font-weight:700; text-transform:uppercase; letter-spacing:.06em; line-height:1.3; color:#fff;
     font-size:clamp(15px,2vw,21px); text-shadow:0 2px 12px rgba(0,0,0,.85); }
   .g-tile.demo-on .g-ov-story{ opacity:1; }
 
@@ -723,6 +725,8 @@
     background:rgba(0,0,0,.92); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
     opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s; cursor:zoom-out; }
   .g-zoom.open{ opacity:1; visibility:visible; }
+  /* bloquea el scroll de fondo mientras un lightbox está abierto */
+  html.modal-open{ overflow:hidden; }
   .g-zoom-frame{ position:relative; display:flex; flex-direction:column; width:min(440px,92vw); max-height:92vh;
     border-radius:20px; overflow:hidden; background:#0a0a0c; border:1px solid rgba(199,204,212,.28);
     box-shadow:0 50px 130px rgba(0,0,0,.85); transform:scale(.96); transition:transform .35s cubic-bezier(.2,.8,.2,1); cursor:auto; }
@@ -1008,18 +1012,6 @@
       </button>
     </div>
 
-    <div class="g-zoom" id="gZoom" role="dialog" aria-modal="true" aria-label="Detalhe da foto" aria-hidden="true">
-      <div class="g-zoom-frame">
-        <button class="g-zoom-close" id="gZoomClose" type="button" aria-label="Fechar">
-          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </button>
-        <img id="gZoomImg" src="" alt="Detalhe da foto" />
-        <div class="show-cap">
-          <h3 class="show-cap-title" id="gZoomTitle"></h3>
-          <p class="show-cap-text" id="gZoomText"></p>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1070,12 +1062,6 @@
     <div class="ring-panel reveal" id="ringPanel">
       <h3 class="ring-title" id="ringTitle"></h3>
       <p class="ring-text" id="ringText"></p>
-    </div>
-    <div class="ring-zoom" id="ringZoom" role="dialog" aria-modal="true" aria-label="Tela ampliada" aria-hidden="true">
-      <button class="ring-zoom-close" id="ringZoomClose" type="button" aria-label="Fechar">
-        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <img id="ringZoomImg" src="" alt="Tela da plataforma ampliada" />
     </div>
   </div>
 </section>
@@ -1194,6 +1180,28 @@
 </footer>
 
 <!-- Carrinho + checkout: injetados por store.js -->
+
+<!-- ====== Lightbox sección 3 (a nivel body para no quedar atrapado en el z-index de la sección) ====== -->
+<div class="g-zoom" id="gZoom" role="dialog" aria-modal="true" aria-label="Detalhe da foto" aria-hidden="true">
+  <div class="g-zoom-frame">
+    <button class="g-zoom-close" id="gZoomClose" type="button" aria-label="Fechar">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <img id="gZoomImg" src="" alt="Detalhe da foto" />
+    <div class="show-cap">
+      <h3 class="show-cap-title" id="gZoomTitle"></h3>
+      <p class="show-cap-text" id="gZoomText"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Lightbox sección 4 (a nivel body) ====== -->
+<div class="ring-zoom" id="ringZoom" role="dialog" aria-modal="true" aria-label="Tela ampliada" aria-hidden="true">
+  <button class="ring-zoom-close" id="ringZoomClose" type="button" aria-label="Fechar">
+    <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <img id="ringZoomImg" src="" alt="Tela da plataforma ampliada" />
+</div>
 
 <!-- ====== Cookie banner (LGPD) ====== -->
 <div class="cookie" id="cookie" role="dialog" aria-label="Aviso de cookies">
@@ -1643,8 +1651,9 @@
       if (zTitle) zTitle.textContent = t.getAttribute("data-title") || "";
       if (zText) zText.textContent = t.getAttribute("data-text") || "";
       zoom.classList.add("open"); zoom.setAttribute("aria-hidden", "false");
+      document.documentElement.classList.add("modal-open");
     }
-    function closeZoom(){ if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); } }
+    function closeZoom(){ if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("modal-open"); } }
     tiles.forEach(function(t){ t.addEventListener("click", function(){ openZoom(t); }); });
     if (zClose) zClose.addEventListener("click", closeZoom);
     if (zoom) zoom.addEventListener("click", function(e){ if (e.target === zoom) closeZoom(); });
@@ -1734,8 +1743,9 @@
       if (!img || !zoom) return;
       zoomImg.src = img.currentSrc || img.src;
       zoom.classList.add("open"); zoom.setAttribute("aria-hidden", "false");
+      document.documentElement.classList.add("modal-open");
     }
-    function closeZoom(){ if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); } }
+    function closeZoom(){ if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("modal-open"); } }
     if (zoomClose) zoomClose.addEventListener("click", closeZoom);
     if (zoom) zoom.addEventListener("click", function(e){ if (e.target === zoom) closeZoom(); });
     document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeZoom(); });
