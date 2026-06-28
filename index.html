@@ -236,7 +236,8 @@
   .menu-close svg{ width:18px; height:18px; transition:transform .35s ease; }
   .menu-close:hover svg{ transform:rotate(90deg); }
   /* Botón carrito minimalista: solo ícono + número en gris. Oculto en el hero, aparece al scrollear. */
-  .cart-ico{ display:inline-flex; align-items:center; gap:8px; background:transparent; border:0; cursor:pointer;
+  .cart-ico{ position:absolute; right:clamp(16px,4vw,40px); top:50%; transform:translateY(-50%);
+    display:inline-flex; align-items:center; gap:8px; background:transparent; border:0; cursor:pointer;
     color:#6f7378; padding:6px 4px; font-family:inherit; font-weight:700; font-size:16px; line-height:1;
     opacity:0; visibility:hidden; pointer-events:none; transition:color .2s ease, opacity .35s ease; }
   .cart-ico.show{ opacity:1; visibility:visible; pointer-events:auto; }
@@ -278,13 +279,16 @@
     font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--soft);
     font-weight:700; margin-bottom:22px;
   }
-  .eyebrow::before{ content:""; width:30px; height:1px; background:var(--edge2); }
+  .eyebrow::before{ content:""; width:34px; height:1px;
+    background:linear-gradient(90deg, rgba(255,255,255,.05), var(--ember)); }
 
+  /* flecha plateada premium (línea + chevron en plata), estandarizada en todos los rótulos */
   .chev{
     display:inline-flex; align-items:center; justify-content:center;
-    width:30px; height:30px; min-width:30px; border-radius:50%;
-    background:var(--accent); color:#000; font-weight:800; font-size:17px; line-height:1;
-    box-shadow:0 6px 16px rgba(0,0,0,.45);
+    width:auto; min-width:0; height:auto; border-radius:0; background:none; box-shadow:none;
+    margin-left:-6px; font-weight:600; font-size:15px; line-height:1;
+    background-image:linear-gradient(120deg,#f7f8fa 0%,#aab0ba 30%,#ffffff 50%,#868c96 70%,#e9ebef 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
   }
   .ic .ico{ display:inline-flex; align-items:center; justify-content:center;
     width:38px; height:38px; min-width:38px; border-radius:50%;
@@ -551,7 +555,7 @@
 
   .rotina-title{
     font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
-    font-weight:400; letter-spacing:.01em; line-height:1.12;
+    font-weight:400; letter-spacing:.04em; line-height:1.12;
     font-size:clamp(30px,5.6vw,62px); margin:0 0 clamp(14px,2.4vh,22px);
     background:linear-gradient(100deg,#f7f8fa 0%,#aab0ba 26%,#ffffff 47%,#868c96 67%,#e9ebef 100%);
     background-size:220% auto; -webkit-background-clip:text; background-clip:text;
@@ -576,9 +580,11 @@
   .rl.show{ opacity:1; transform:none; filter:none; }
   .rl-final{ margin-top:clamp(14px,2.4vh,24px);
     font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
-    font-weight:400; letter-spacing:.02em; line-height:1.35;
+    font-weight:400; letter-spacing:.04em; line-height:1.35;
     font-size:clamp(20px,3vw,32px);
-    background:linear-gradient(180deg,#ffffff,#9aa0aa); -webkit-background-clip:text; background-clip:text;
+    /* mismo gradiente plata exacto del titular del hero (uniformidad total) */
+    background:linear-gradient(100deg,#f7f8fa 0%,#aab0ba 26%,#ffffff 47%,#868c96 67%,#e9ebef 100%);
+    background-size:220% auto; -webkit-background-clip:text; background-clip:text;
     color:transparent; -webkit-text-fill-color:transparent; }
   /* señal de continuidad hacia el juego */
   .rotina-cue{ position:absolute; left:0; right:0; bottom:20px; z-index:3; text-align:center;
@@ -589,6 +595,198 @@
     border:1px solid var(--edge2); border-radius:14px; position:relative; }
   .rotina-cue .mw::after{ content:""; position:absolute; left:50%; top:7px; width:3px; height:7px; border-radius:3px;
     background:var(--text); transform:translateX(-50%); animation:wheel 1.8s ease-in-out infinite; }
+
+  /* ====== JOGO · carrossel estilo Instagram (foto + legenda) ====== */
+  .jogo{ position:relative; overflow:hidden; padding-block:clamp(72px,11vh,130px); background:#000; }
+  .jogo .wrap{ position:relative; z-index:2; }
+
+  .jogo-head{ text-align:center; margin-bottom:clamp(14px,3vh,28px); }
+  .jogo-title{ margin:0;
+    font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
+    font-weight:400; text-transform:uppercase; letter-spacing:.12em; line-height:1.05;
+    font-size:clamp(21px,3.75vw,42px);
+    background:linear-gradient(100deg,#f7f8fa 0%,#aab0ba 26%,#ffffff 47%,#868c96 67%,#e9ebef 100%);
+    background-size:220% auto; -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.45)) drop-shadow(0 4px 22px rgba(255,255,255,.10)); }
+
+  /* carrusel */
+  .ig{ position:relative; }
+  .ig-viewport{ display:flex; gap:clamp(14px,2vw,20px); overflow-x:auto; scroll-snap-type:x mandatory;
+    scroll-behavior:smooth; -webkit-overflow-scrolling:touch; scrollbar-width:none; cursor:grab;
+    padding-block:6px; padding-inline:max(16px, calc((100% - min(420px,86vw)) / 2)); }
+  .ig-viewport::-webkit-scrollbar{ display:none; }
+  .ig-viewport.dragging{ cursor:grabbing; scroll-behavior:auto; scroll-snap-type:none; }
+  .ig-card{ flex:0 0 min(440px,88vw); scroll-snap-align:center;
+    border:0; background:transparent; box-shadow:none;
+    opacity:.4; transition:opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
+  .ig-card.is-active{ opacity:1; }
+  .ig-media{ position:relative; aspect-ratio:4/5; background:#000; border-radius:18px; overflow:hidden; }
+  .ig-media img, .ig-media video{ width:100%; height:100%; object-fit:contain; -webkit-user-drag:none; user-select:none; pointer-events:none; }
+  .ig-media::after{ content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(180deg, rgba(0,0,0,0) 58%, rgba(0,0,0,.55) 100%); }
+  /* leyenda dentro de una tarjeta glass (como las .ic de la página 4) */
+  .ig-cap{ margin-top:clamp(13px,2vh,18px);
+    border:1px solid var(--edge); border-radius:18px;
+    background:var(--glass), var(--card);
+    box-shadow:0 24px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,.035);
+    padding:clamp(20px,2.6vw,26px) clamp(20px,2.6vw,24px);
+    transition:border-color .35s ease, box-shadow .35s ease; }
+  .ig-card.is-active .ig-cap{ border-color:var(--edge2); }
+  .ig-cap .ig-ico{ display:none; align-items:center; justify-content:center;
+    width:40px; height:40px; min-width:40px; border-radius:50%; background:var(--accent); color:#000;
+    box-shadow:0 8px 18px rgba(0,0,0,.45); margin-bottom:14px;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1); }
+  .ig-card.is-active .ig-cap .ig-ico{ transform:translateY(-2px) scale(1.04); }
+  .ig-cap .ig-ico svg{ width:20px; height:20px; stroke:#000; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .ig-cap h3{ display:none; margin:0 0 10px;
+    font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
+    font-weight:400; text-transform:uppercase; letter-spacing:.08em; color:var(--text);
+    font-size:clamp(20px,2.5vw,26px); }
+  .ig-cap p{ margin:0; color:var(--muted); font-family:var(--font); font-weight:500;
+    font-size:clamp(14px,1.6vw,16px); line-height:1.6; text-align:justify; }
+
+  /* flechas sutiles */
+  .ig-nav{ position:absolute; top:38%; transform:translateY(-50%); z-index:6;
+    width:42px; height:42px; display:grid; place-items:center;
+    background:transparent; border:0; color:var(--soft); cursor:pointer; opacity:.55;
+    transition:color .25s ease, opacity .25s ease, transform .25s ease; }
+  .ig-nav:hover{ color:var(--text); opacity:1; }
+  .ig-nav:active{ transform:translateY(-50%) scale(.9); }
+  .ig-nav svg{ width:27px; height:27px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,.65)); }
+  .ig-prev{ left:clamp(0px,1vw,10px); }
+  .ig-next{ right:clamp(0px,1vw,10px); }
+  .ig-nav[disabled]{ opacity:0; cursor:default; pointer-events:none; }
+
+  /* puntos */
+  .ig-dots{ display:flex; justify-content:center; gap:9px; margin-top:clamp(20px,3.4vh,30px); }
+  .ig-dots button{ width:7px; height:7px; padding:0; border-radius:50%; cursor:pointer;
+    background:rgba(255,255,255,.22); border:0; transition:background .25s ease, width .25s ease; }
+  .ig-dots button.on{ background:var(--accent); width:20px; border-radius:99px; }
+
+  /* ====== JOGO · expositor interactivo (1 video + hotspots) ====== */
+  .show{ max-width:min(391px,92vw); margin:0 auto; }
+  .show-media{ position:relative; aspect-ratio:3/4; border-radius:22px; background:#000;
+    box-shadow:0 50px 110px rgba(0,0,0,.7); }
+  .show-slides{ position:absolute; inset:0; border-radius:22px; overflow:hidden; }
+  .ss-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block;
+    opacity:0; transition:opacity .8s ease; -webkit-user-drag:none; user-select:none; }
+  .ss-img.is-on{ opacity:1; }
+  .show-scrim{ position:absolute; inset:0; pointer-events:none; border-radius:22px;
+    background:radial-gradient(120% 90% at 50% 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.35) 100%); }
+
+  /* control segmentado bajo el video: 1 rectángulo dividido en 3 (crece hacia abajo, 3 por fila) */
+  .show-tabs{ position:relative; display:grid; grid-template-columns:repeat(3,1fr); margin-top:16px;
+    border:1px solid var(--edge2); border-radius:14px; overflow:visible;
+    background:rgba(10,10,10,.55); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    box-shadow:0 16px 38px rgba(0,0,0,.5); }
+  /* destello que barre la barra cada pocos segundos para invitar a tocar */
+  .show-tabs::before{ content:""; position:absolute; inset:0; border-radius:14px; pointer-events:none; z-index:0;
+    background:linear-gradient(115deg, rgba(255,255,255,0) 38%, rgba(255,255,255,.16) 50%, rgba(255,255,255,0) 62%);
+    background-size:220% 100%; background-repeat:no-repeat; background-position:200% 0;
+    animation:tabsSheen 4.5s ease-in-out infinite; }
+  @keyframes tabsSheen{ 0%{ background-position:200% 0; } 32%{ background-position:-120% 0; } 100%{ background-position:-120% 0; } }
+  .show-tabs:hover::before, .show-tabs:focus-within::before{ animation:none; opacity:0; }
+  .hotspot{ position:relative; display:flex; z-index:4; }
+  .hotspot.open{ z-index:8; }
+  /* divisores internos del rectángulo */
+  .hotspot:not(:nth-child(3n)){ border-right:1px solid var(--edge); }
+  .show-tabs > .hotspot:nth-child(n+4){ border-top:1px solid var(--edge); }
+  .hsbtn{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:0; cursor:pointer;
+    white-space:nowrap; padding:14px 8px; border:0; border-radius:0; background:transparent; box-shadow:none;
+    color:#fff; font-family:var(--font); font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+    transition:background .25s ease, color .25s ease; }
+  .hotspot:first-child .hsbtn{ border-radius:13px 0 0 13px; }
+  .hotspot:last-child .hsbtn{ border-radius:0 13px 13px 0; }
+  .hsbtn-dot{ display:none; }
+  .hotspot:hover .hsbtn, .hotspot:focus-within .hsbtn, .hotspot.open .hsbtn{
+    background:var(--accent); color:#000; }
+
+  .hsbtn-pop{ position:absolute; left:50%; bottom:calc(100% + 12px);
+    transform:translateX(-50%) translateY(8px) scale(.96); transform-origin:bottom center;
+    width:min(260px,68vw); padding:15px 17px; border-radius:14px; text-align:justify;
+    background:rgba(12,12,12,.95); border:1px solid var(--edge2);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    box-shadow:0 26px 64px var(--shadow); color:var(--muted); font-family:var(--font); font-weight:500;
+    font-size:13.5px; line-height:1.6; opacity:0; visibility:hidden; pointer-events:none; z-index:9;
+    transition:opacity .28s ease, transform .28s cubic-bezier(.2,.8,.2,1), visibility .28s; }
+  .hsbtn-pop::after{ content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:7px solid transparent; border-top-color:rgba(12,12,12,.95); }
+  /* el primero/último anclan su pop-up al borde para no salirse de los lados */
+  .show-tabs .hotspot:first-child .hsbtn-pop{ left:0; transform-origin:bottom left; transform:translateX(0) translateY(8px) scale(.96); }
+  .show-tabs .hotspot:first-child .hsbtn-pop::after{ left:26px; }
+  .show-tabs .hotspot:last-child .hsbtn-pop{ left:auto; right:0; transform-origin:bottom right; transform:translateX(0) translateY(8px) scale(.96); }
+  .show-tabs .hotspot:last-child .hsbtn-pop::after{ left:auto; right:26px; transform:none; }
+  .hotspot:hover .hsbtn-pop, .hotspot:focus-within .hsbtn-pop, .hotspot.open .hsbtn-pop{
+    opacity:1; visibility:visible; pointer-events:auto; transform:translateX(-50%) translateY(0) scale(1); }
+  .show-tabs .hotspot:first-child:hover .hsbtn-pop, .show-tabs .hotspot:first-child:focus-within .hsbtn-pop, .show-tabs .hotspot:first-child.open .hsbtn-pop,
+  .show-tabs .hotspot:last-child:hover .hsbtn-pop, .show-tabs .hotspot:last-child:focus-within .hsbtn-pop, .show-tabs .hotspot:last-child.open .hsbtn-pop{
+    transform:translateX(0) translateY(0) scale(1); }
+
+  /* ====== PLATAFORMA · anillo 3D de teléfonos (giratorio + panel) ====== */
+  .ring{ position:relative; outline:none; }
+  /* la altura sigue al teléfono (mismo eje vw que su ancho) -> sin espacio muerto */
+  .ring-stage{ position:relative; height:clamp(396px,57vw,580px); perspective:1600px; touch-action:pan-y;
+    transform-style:preserve-3d; user-select:none; }
+  .rphone{ position:absolute; top:50%; left:50%; width:clamp(200px,30vw,306px); aspect-ratio:693/1280;
+    border-radius:30px; padding:7px; border:1px solid var(--edge2);
+    background:linear-gradient(160deg,#161616,#070707);
+    box-shadow:0 40px 90px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06);
+    transform:translate(-50%,-50%); transform-origin:center center; cursor:grab;
+    transition:transform .55s cubic-bezier(.2,.8,.2,1), opacity .5s ease, filter .5s ease, border-color .35s ease;
+    will-change:transform, opacity; }
+  .rphone:active{ cursor:grabbing; }
+  .rphone-screen{ position:relative; width:100%; height:100%; border-radius:24px; overflow:hidden;
+    background:radial-gradient(70% 40% at 50% 0%, rgba(255,255,255,.10), rgba(0,0,0,0) 60%), #050505;
+    border:1px solid rgba(255,255,255,.06); }
+  .rphone-screen::before{ content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    width:48px; height:5px; border-radius:99px; background:rgba(255,255,255,.18); z-index:2; }
+  .rphone-screen img{ width:100%; height:100%; object-fit:cover; }
+  .rphone.is-active{ border-color:rgba(255,255,255,.32); box-shadow:0 50px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); cursor:zoom-in; }
+
+  /* lightbox: zoom de la pantalla seleccionada para leerla completa */
+  .ring-zoom{ position:fixed; inset:0; z-index:90; display:flex; align-items:center; justify-content:center;
+    padding:24px; background:rgba(0,0,0,.86); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s; cursor:zoom-out; }
+  .ring-zoom.open{ opacity:1; visibility:visible; }
+  .ring-zoom img{ max-width:min(430px,92vw); max-height:88vh; width:auto; height:auto; border-radius:26px;
+    border:1px solid var(--edge2); box-shadow:0 50px 130px rgba(0,0,0,.85);
+    transform:scale(.94); transition:transform .35s cubic-bezier(.2,.8,.2,1); }
+  .ring-zoom.open img{ transform:scale(1); }
+  .ring-zoom-close{ position:absolute; top:clamp(16px,3vw,28px); right:clamp(16px,4vw,30px);
+    width:44px; height:44px; border-radius:50%; display:grid; place-items:center; cursor:pointer;
+    background:rgba(255,255,255,.08); border:1px solid var(--edge2); color:var(--text);
+    transition:background .25s ease, transform .35s ease; }
+  .ring-zoom-close:hover{ background:rgba(255,255,255,.16); }
+  .ring-zoom-close:hover svg{ transform:rotate(90deg); }
+  .ring-zoom-close svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; transition:transform .35s ease; }
+
+  .ring-nav{ position:absolute; top:46%; transform:translateY(-50%); z-index:6;
+    width:44px; height:44px; display:grid; place-items:center; background:transparent; border:0;
+    color:var(--soft); cursor:pointer; opacity:.6; transition:color .25s ease, opacity .25s ease, transform .25s ease; }
+  .ring-nav:hover{ color:var(--text); opacity:1; }
+  .ring-nav:active{ transform:translateY(-50%) scale(.9); }
+  .ring-nav svg{ width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,.6)); }
+  .ring-prev{ left:clamp(0px,2vw,20px); } .ring-next{ right:clamp(0px,2vw,20px); }
+  .ring-nav[disabled]{ opacity:.22; cursor:default; pointer-events:none; }
+
+  .ring-dots{ display:flex; justify-content:center; gap:9px; margin-top:clamp(8px,1.4vh,14px); }
+  .ring-dots button{ width:7px; height:7px; padding:0; border-radius:50%; cursor:pointer;
+    background:rgba(255,255,255,.22); border:0; transition:background .25s ease, width .25s ease; }
+  .ring-dots button.on{ background:var(--accent); width:20px; border-radius:99px; }
+
+  .ring-panel{ max-width:600px; margin:clamp(12px,2vh,20px) auto 0; text-align:center;
+    border:1px solid var(--edge); border-radius:18px; background:var(--glass), var(--card);
+    box-shadow:0 24px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,.035);
+    padding:clamp(22px,3vw,30px); transition:border-color .35s ease; }
+  .ring-title{ margin:0 0 10px;
+    font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
+    font-weight:400; text-transform:uppercase; letter-spacing:.08em; color:var(--text);
+    font-size:clamp(18px,2.3vw,24px); }
+  .ring-text{ margin:0; color:var(--muted); font-family:var(--font); font-weight:500;
+    font-size:clamp(14px,1.6vw,16px); line-height:1.6; }
 
   /* ====== Responsive ====== */
   @media (max-width:900px){
@@ -623,6 +821,8 @@
     .rotina-sticky{ position:static; height:auto; min-height:100svh; }
     .rotina-head, .rl{ opacity:1; transform:none; filter:none; }
     .rotina-rule{ transform:scaleX(1); }
+    /* carrusel: scroll instantáneo (sin animación suave) */
+    .ig-viewport{ scroll-behavior:auto; }
   }
 </style>
 </head>
@@ -709,22 +909,39 @@
   </div>
 </section>
 
-<!-- ====== O QUE É O JOGO ====== -->
-<section id="jogo">
+<!-- ====== O JOGO · carrossel estilo Instagram (foto + legenda) ====== -->
+<section class="jogo" id="jogo">
   <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow"><span class="chev">›</span> O que é o jogo</span>
-      <h2 class="title">O QUE É O JOGO<br>INOVANDO JUNTOS?</h2>
+    <div class="jogo-head reveal">
+      <span class="eyebrow"><span class="chev">›</span> Sua rotina termina aqui</span>
+      <h2 class="title">Raspe, Escaneie e Explorem-se</h2>
     </div>
-    <div class="grid g4">
-      <article class="ic reveal d1"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.3L19 10l-5.1 1.7L12 17l-1.9-5.3L5 10l5.1-1.7z"/></svg></span><h3>O que eu vou viver?</h3><p>20 experiências guiadas para criar memórias e fortalecer a conexão do casal.</p></article>
-      <article class="ic reveal d2"><span class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="7.5" width="16" height="12.5" rx="1.3"/><path d="M4 11.5h16"/><path d="M9 7.5V4.5h6v3"/></svg></span><h3>O que tem dentro da caixa?</h3><p>Uma raspadinha com 20 desafios e QR Codes que liberam a experiência digital.</p></article>
-      <article class="ic reveal d3"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 3.5h12l3 5-9 12-9-12z"/><path d="M3 8.5h18"/><path d="M9.5 3.5L12 8.5l2.5-5"/></svg></span><h3>O que nos torna diferentes?</h3><p>A primeira que une jogo físico e plataforma digital, com guias por voz e vídeo.</p></article>
-      <article class="ic reveal d4"><span class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.8 18h2.4"/></svg></span><h3>O que tem dentro da plataforma?</h3><p>Voz, vídeos, guias, playlists, roleta, contratos digitais e muito mais.</p></article>
-      <article class="ic reveal d1"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 20.5S4 16 4 9.8C4 7 6 5.2 8.4 5.2c1.7 0 3 .9 3.6 2.2C12.6 6.1 13.9 5.2 15.6 5.2 18 5.2 20 7 20 9.8 20 16 12 20.5 12 20.5z"/></svg></span><h3>Vale a pena para o casal?</h3><p>Sim: aprofunda a intimidade e cria novas memórias a dois.</p></article>
-      <article class="ic reveal d2"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>É conteúdo pornô?</h3><p>Não. São experiências reais em casal — conexão, comunicação e cumplicidade.</p></article>
-      <article class="ic reveal d3"><span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h3>Acesso exclusivo do casal</h3><p>Código único com até 2 acessos, enviado por e-mail após a compra.</p></article>
-      <article class="ic reveal d4"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><h3>Quanto tempo dura?</h3><p>Sem prazo: cada desafio é um encontro, no ritmo de vocês.</p></article>
+
+    <div class="show reveal d1" id="show">
+      <div class="show-media">
+        <div class="show-slides" id="showSlides" role="img" aria-label="O jogo Inovando Juntos">
+          <img class="ss-img is-on" src="images/jogo01.PNG" alt="" />
+          <img class="ss-img" src="images/jogo02.PNG" alt="" loading="lazy" />
+          <img class="ss-img" src="images/jogo03.PNG" alt="" loading="lazy" />
+          <img class="ss-img" src="images/jogo04.PNG" alt="" loading="lazy" />
+          <img class="ss-img" src="images/jogo05.PNG" alt="" loading="lazy" />
+        </div>
+        <div class="show-scrim" aria-hidden="true"></div>
+      </div>
+      <div class="show-tabs">
+        <div class="hotspot" data-hs>
+          <button class="hsbtn" type="button" aria-expanded="false"><span class="hsbtn-dot" aria-hidden="true"></span>A Caixa</button>
+          <div class="hsbtn-pop" role="tooltip">Desenvolvemos uma experiência única que combina um jogo físico premium com uma plataforma digital de 20 experiências guiadas para fortalecer a conexão, renovar a intimidade e criar memórias inesquecíveis.</div>
+        </div>
+        <div class="hotspot" data-hs>
+          <button class="hsbtn" type="button" aria-expanded="false"><span class="hsbtn-dot" aria-hidden="true"></span>A Raspadinha</button>
+          <div class="hsbtn-pop" role="tooltip">São 20 possibilidades esperando para serem reveladas. Cada raspadinha esconde uma nova experiência, tornando cada momento uma descoberta inesperada para viverem juntos.</div>
+        </div>
+        <div class="hotspot" data-hs>
+          <button class="hsbtn" type="button" aria-expanded="false"><span class="hsbtn-dot" aria-hidden="true"></span>O QR Code</button>
+          <div class="hsbtn-pop" role="tooltip">Depois de revelar a experiência, basta escanear o QR Code para acessar uma jornada guiada por voz e vídeo dentro da nossa plataforma digital, com instruções que conduzem vocês do início ao fim de cada experiência.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -732,31 +949,39 @@
 <!-- ====== PLATAFORMA ====== -->
 <section id="plataforma">
   <div class="wrap">
-    <div class="section-head reveal" style="text-align:center; margin:0 auto 40px;">
-      <span class="eyebrow" style="justify-content:center;"><span class="chev">›</span> Plataforma digital da experiência</span>
-      <h2 class="title">A experiência continua<br>na palma da mão</h2>
+    <div class="section-head reveal" style="text-align:center; margin:0 auto 22px;">
+      <span class="eyebrow" style="justify-content:center;"><span class="chev">›</span> Do físico ao digital</span>
+      <h2 class="title">A experiência continua<br>na plataforma</h2>
     </div>
-    <div class="phones reveal d1">
-      <div class="phone"><div class="screen">
-        <img src="images/mockup_1.png" alt="" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="ph" style="display:none"><svg class="mk" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="1.5"><path d="M12 3v18M3 12h18"/></svg><span class="lbl">EXPERIÊNCIAS</span></div>
-      </div></div>
-      <div class="phone"><div class="screen">
-        <img src="images/mockup_2.png" alt="" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="ph" style="display:none"><svg class="mk" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lbl">PROGRESSO</span></div>
-      </div></div>
-      <div class="phone"><div class="screen">
-        <img src="images/mockup_3.png" alt="" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="ph" style="display:none"><svg class="mk" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="1.5"><path d="M5 12h14M12 5v14"/></svg><span class="lbl">COMUNIDADE</span></div>
-      </div></div>
+    <div class="ring reveal d1" id="ring" tabindex="0" role="group" aria-roledescription="carrossel 3D" aria-label="Telas da plataforma — arraste para girar">
+      <button class="ring-nav ring-prev" id="ringPrev" type="button" aria-label="Anterior">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="ring-stage" id="ringStage">
+        <article class="rphone" data-title="Primeiro acesso" data-text="Um simples escaneamento é o início de uma nova jornada. Após ativar o acesso do casal, cada experiência começa com uma introdução guiada por voz e vídeo, criando o clima ideal para transformar um momento comum em uma lembrança inesquecível.">
+          <div class="rphone-screen"><img src="images/phone_mockup_1.jpeg" alt="Tela de primeiro acesso da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+        </article>
+        <article class="rphone" data-title="Progresso do casal" data-text="Cada experiência vivida marca um novo passo na jornada de vocês. A plataforma registra automaticamente o progresso, permitindo acompanhar tudo o que já viveram e o que ainda está por descobrir.">
+          <div class="rphone-screen"><img src="images/phone_mockup_2.jpeg" alt="Tela de progresso da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+        </article>
+        <article class="rphone" data-title="Comunidade do casal" data-text="Um espaço para compartilhar experiências, trocar inspirações e acompanhar como outros casais estão vivendo cada desafio da plataforma.">
+          <div class="rphone-screen"><img src="images/phone_mockup_3.jpeg" alt="Tela da comunidade da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+        </article>
+      </div>
+      <button class="ring-nav ring-next" id="ringNext" type="button" aria-label="Próximo">
+        <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
     </div>
-    <div class="grid g3">
-      <article class="ic reveal d1"><span class="chev">›</span><h3>Acesso imediato</h3><p>Compatível com iOS e Android. Não é necessário baixar nenhum aplicativo: basta se cadastrar, acessar a plataforma e começar a experiência em segundos, sem interrupções.</p></article>
-      <article class="ic reveal d2"><span class="chev">›</span><h3>Guias que conduzem cada momento</h3><p>Cada desafio conduz vocês a uma experiência única. Explicamos como preparar o ambiente, apresentamos o contexto da atividade e orientamos cada etapa.</p></article>
-      <article class="ic reveal d3"><span class="chev">›</span><h3>Guia de produtos íntimos</h3><p>Indicamos produtos cuidadosamente selecionados para complementar cada experiência.</p></article>
-      <article class="ic reveal d1"><span class="chev">›</span><h3>Atividades complementares</h3><p>Guias de posições, orientações de uso da cadeira tântrica, roletas para casais, contratos digitais, playlists, conteúdos exclusivos e muito mais.</p></article>
-      <article class="ic reveal d2"><span class="chev">›</span><h3>Programação e acompanhamento do progresso</h3><p>Conforme os desafios são concluídos, a raspadinha digital é preenchida automaticamente, mostrando a evolução da jornada do casal.</p></article>
-      <article class="ic reveal d3"><span class="chev">›</span><h3>Comunidade exclusiva</h3><p>Um espaço exclusivo para casais compartilharem experiências, descobertas e dicas de forma privada, reservado a quem adquiriu o Inovando Juntos.</p></article>
+    <div class="ring-dots" id="ringDots" role="tablist" aria-label="Selecionar tela"></div>
+    <div class="ring-panel reveal" id="ringPanel">
+      <h3 class="ring-title" id="ringTitle"></h3>
+      <p class="ring-text" id="ringText"></p>
+    </div>
+    <div class="ring-zoom" id="ringZoom" role="dialog" aria-modal="true" aria-label="Tela ampliada" aria-hidden="true">
+      <button class="ring-zoom-close" id="ringZoomClose" type="button" aria-label="Fechar">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <img id="ringZoomImg" src="" alt="Tela da plataforma ampliada" />
     </div>
     <p class="band reveal">Uma experiência que vocês não apenas jogam… <em>vocês sentem.</em></p>
   </div>
@@ -1166,6 +1391,240 @@
     window.addEventListener("scroll", req, { passive:true });
     window.addEventListener("resize", req);
     req();
+  })();
+
+  /* ---- JOGO: carrossel estilo Instagram (swipe nativo / flechas / teclado / arrastre / puntos) ---- */
+  (function(){
+    var ig = document.getElementById("ig");
+    if (!ig) return;
+    var vp = document.getElementById("igViewport");
+    var cards = Array.prototype.slice.call(vp.querySelectorAll(".ig-card"));
+    var prevBtn = document.getElementById("igPrev");
+    var nextBtn = document.getElementById("igNext");
+    var dotsWrap = document.getElementById("igDots");
+    var n = cards.length, active = 0;
+
+    var dots = cards.map(function(_, i){
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("role", "tab");
+      b.setAttribute("aria-label", "Cartão " + (i + 1));
+      b.addEventListener("click", function(){ scrollToCard(i); });
+      dotsWrap.appendChild(b);
+      return b;
+    });
+
+    function centerOf(card){ return card.offsetLeft + card.offsetWidth / 2; }
+    function scrollToCard(i){
+      i = Math.max(0, Math.min(n - 1, i));
+      vp.scrollTo({ left: centerOf(cards[i]) - vp.clientWidth / 2, behavior: reduce ? "auto" : "smooth" });
+    }
+    function syncActive(){
+      var c = vp.scrollLeft + vp.clientWidth / 2, best = 0, bd = Infinity;
+      cards.forEach(function(card, i){ var d = Math.abs(centerOf(card) - c); if (d < bd){ bd = d; best = i; } });
+      active = best;
+      cards.forEach(function(card, i){ card.classList.toggle("is-active", i === active); });
+      dots.forEach(function(d, i){ d.classList.toggle("on", i === active); d.setAttribute("aria-selected", i === active ? "true" : "false"); });
+      if (prevBtn) prevBtn.disabled = active === 0;
+      if (nextBtn) nextBtn.disabled = active === n - 1;
+      updateMedia();
+    }
+
+    // reproduce el video SOLO de la tarjeta centrada; el resto en pausa con poster
+    function updateMedia(){
+      cards.forEach(function(card, i){
+        var v = card.querySelector("video"); if (!v) return;
+        if (i === active && inView && !reduce && !document.hidden){
+          v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function(){});
+        } else { v.pause(); }
+      });
+    }
+
+    // ---- autoplay (5 s) con pausa inteligente y loop ----
+    var AUTOPLAY = 5000, timer = null, paused = false, inView = false;
+    function tick(){
+      if (reduce || paused || !inView || document.hidden) return;
+      scrollToCard(active >= n - 1 ? 0 : active + 1);   // loop al final
+    }
+    function startAuto(){ if (reduce || timer) return; timer = setInterval(tick, AUTOPLAY); }
+    function stopAuto(){ if (timer){ clearInterval(timer); timer = null; } }
+    function resetAuto(){ if (reduce) return; stopAuto(); startAuto(); }   // reinicia el conteo tras acción manual
+
+    if (prevBtn) prevBtn.addEventListener("click", function(){ scrollToCard(active - 1); resetAuto(); });
+    if (nextBtn) nextBtn.addEventListener("click", function(){ scrollToCard(active + 1); resetAuto(); });
+
+    var raf = null;
+    vp.addEventListener("scroll", function(){
+      if (raf) return;
+      raf = requestAnimationFrame(function(){ raf = null; syncActive(); });
+    }, { passive:true });
+
+    // teclado
+    ig.addEventListener("keydown", function(e){
+      if (e.key === "ArrowRight"){ e.preventDefault(); scrollToCard(active + 1); resetAuto(); }
+      else if (e.key === "ArrowLeft"){ e.preventDefault(); scrollToCard(active - 1); resetAuto(); }
+    });
+
+    // dots reinician el conteo
+    dots.forEach(function(b){ b.addEventListener("click", resetAuto); });
+
+    // arrastrar con mouse (desktop) -> scroll horizontal
+    var down = false, sx = 0, sl = 0;
+    vp.addEventListener("pointerdown", function(e){
+      if (e.pointerType !== "mouse") return;          // táctil = swipe nativo
+      down = true; sx = e.clientX; sl = vp.scrollLeft; vp.classList.add("dragging");
+    });
+    vp.addEventListener("pointermove", function(e){
+      if (!down) return; vp.scrollLeft = sl - (e.clientX - sx);
+    });
+    function up(){ if (!down) return; down = false; vp.classList.remove("dragging"); scrollToCard(active); resetAuto(); }
+    vp.addEventListener("pointerup", up);
+    vp.addEventListener("pointerleave", up);
+
+    // pausa al pasar el cursor / enfocar; reanuda al salir
+    ig.addEventListener("mouseenter", function(){ paused = true; });
+    ig.addEventListener("mouseleave", function(){ paused = false; });
+    ig.addEventListener("focusin", function(){ paused = true; });
+    ig.addEventListener("focusout", function(){ paused = false; });
+    // pausa al deslizar con el dedo (táctil)
+    vp.addEventListener("touchstart", function(){ paused = true; }, { passive:true });
+    vp.addEventListener("touchend", function(){ paused = false; resetAuto(); }, { passive:true });
+
+    // solo reproduce cuando la sección está a la vista (eficiente y oportuno)
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(entries){
+        inView = entries[0].isIntersecting;
+        if (inView) startAuto(); else stopAuto();
+        updateMedia();
+      }, { threshold:0.35 }).observe(ig);
+    } else { inView = true; startAuto(); }
+
+    // al cambiar de pestaña, pausa/retoma el video activo
+    document.addEventListener("visibilitychange", updateMedia);
+
+    window.addEventListener("resize", function(){ scrollToCard(active); });
+    syncActive();
+  })();
+
+  /* ---- JOGO: expositor interactivo (pop-up desde el botón) ---- */
+  (function(){
+    var show = document.getElementById("show");
+    if (!show) return;
+    var spots = Array.prototype.slice.call(show.querySelectorAll(".hotspot"));
+    function closeAll(except){
+      spots.forEach(function(s){
+        if (s !== except){ s.classList.remove("open"); var b = s.querySelector(".hsbtn"); if (b) b.setAttribute("aria-expanded", "false"); }
+      });
+    }
+    spots.forEach(function(s){
+      var b = s.querySelector(".hsbtn");
+      b.addEventListener("click", function(e){
+        e.preventDefault(); e.stopPropagation();
+        var isOpen = s.classList.contains("open");
+        closeAll(s);
+        s.classList.toggle("open", !isOpen);
+        b.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+      });
+    });
+    document.addEventListener("click", function(e){ if (!show.contains(e.target)) closeAll(null); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeAll(null); });
+
+    // slideshow automático: cambia cada 2 s, sin controles ni progreso, en loop
+    var slides = Array.prototype.slice.call(show.querySelectorAll(".ss-img"));
+    if (slides.length > 1){
+      var si = 0;
+      setInterval(function(){
+        slides[si].classList.remove("is-on");
+        si = (si + 1) % slides.length;
+        slides[si].classList.add("is-on");
+      }, 2000);
+    }
+  })();
+
+  /* ---- PLATAFORMA: anillo 3D de teléfonos (girar / seleccionar -> panel) ---- */
+  (function(){
+    var ring = document.getElementById("ring");
+    if (!ring) return;
+    var stage = document.getElementById("ringStage");
+    var phones = Array.prototype.slice.call(stage.querySelectorAll(".rphone"));
+    var prevBtn = document.getElementById("ringPrev");
+    var nextBtn = document.getElementById("ringNext");
+    var dotsWrap = document.getElementById("ringDots");
+    var titleEl = document.getElementById("ringTitle");
+    var textEl = document.getElementById("ringText");
+    var n = phones.length, active = Math.floor(n / 2);   // arranca en el del medio
+
+    var dots = phones.map(function(_, i){
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-label", "Tela " + (i + 1));
+      b.addEventListener("click", function(){ go(i); });
+      dotsWrap.appendChild(b);
+      return b;
+    });
+
+    function render(){
+      var w = phones[0] ? phones[0].offsetWidth : 180;
+      phones.forEach(function(p, i){
+        var off = i - active, a = Math.abs(off), dir = off < 0 ? -1 : 1;
+        var x, ry, sc, op, z, blur;
+        if (a === 0){ x = 0; ry = 0; sc = 1; op = 1; z = 30; blur = 0; }
+        else {
+          x = dir * (w * 0.82 + (a - 1) * w * 0.64);
+          ry = -dir * 42;
+          sc = Math.max(0.62, 1 - a * 0.16);
+          op = a === 1 ? 0.85 : (a === 2 ? 0.4 : 0);
+          z = 30 - a; blur = a >= 2 ? 2 : 0;
+        }
+        p.style.transform = "translate(-50%,-50%) translateX(" + x + "px) rotateY(" + ry + "deg) scale(" + sc + ")";
+        p.style.opacity = op; p.style.filter = blur ? "blur(" + blur + "px)" : "none";
+        p.style.zIndex = z; p.style.pointerEvents = a > 2 ? "none" : "auto";
+        p.classList.toggle("is-active", a === 0);
+      });
+      dots.forEach(function(d, i){ d.classList.toggle("on", i === active); d.setAttribute("aria-selected", i === active ? "true" : "false"); });
+      if (prevBtn) prevBtn.disabled = active === 0;
+      if (nextBtn) nextBtn.disabled = active === n - 1;
+      var ap = phones[active];
+      if (titleEl) titleEl.textContent = ap.getAttribute("data-title") || "";
+      if (textEl) textEl.textContent = ap.getAttribute("data-text") || "";
+    }
+    function go(i){ active = Math.max(0, Math.min(n - 1, i)); render(); }
+
+    if (prevBtn) prevBtn.addEventListener("click", function(){ go(active - 1); });
+    if (nextBtn) nextBtn.addEventListener("click", function(){ go(active + 1); });
+    ring.addEventListener("keydown", function(e){
+      if (e.key === "ArrowRight"){ e.preventDefault(); go(active + 1); }
+      else if (e.key === "ArrowLeft"){ e.preventDefault(); go(active - 1); }
+    });
+
+    // lightbox / zoom de la pantalla seleccionada
+    var zoom = document.getElementById("ringZoom");
+    var zoomImg = document.getElementById("ringZoomImg");
+    var zoomClose = document.getElementById("ringZoomClose");
+    function openZoom(p){
+      var img = p.querySelector("img");
+      if (!img || !zoom) return;
+      zoomImg.src = img.currentSrc || img.src;
+      zoom.classList.add("open"); zoom.setAttribute("aria-hidden", "false");
+    }
+    function closeZoom(){ if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); } }
+    if (zoomClose) zoomClose.addEventListener("click", closeZoom);
+    if (zoom) zoom.addEventListener("click", function(e){ if (e.target === zoom) closeZoom(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeZoom(); });
+
+    var startX = 0, dragging = false, dragMoved = false;
+    phones.forEach(function(p, i){
+      p.addEventListener("click", function(){
+        if (dragMoved) return;
+        if (i === active) openZoom(p); else go(i);   // central -> zoom; lateral -> centrar
+      });
+    });
+    stage.addEventListener("pointerdown", function(e){ dragging = true; dragMoved = false; startX = e.clientX; stage.setPointerCapture && stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener("pointermove", function(e){ if (!dragging) return; if (Math.abs(e.clientX - startX) > 6) dragMoved = true; });
+    function endDrag(e){ if (!dragging) return; dragging = false; var dx = (e.clientX || startX) - startX; if (dx <= -40) go(active + 1); else if (dx >= 40) go(active - 1); }
+    stage.addEventListener("pointerup", endDrag);
+    stage.addEventListener("pointercancel", endDrag);
+
+    window.addEventListener("resize", render);
+    render();
   })();
 
   /* ---- Scratch card (canvas) ---- */
