@@ -843,6 +843,12 @@
     .g-ov-cue{ display:none; }
     .g-ov-label{ font-size:11px; }
     .g-ov-story{ font-size:11px; letter-spacing:.01em; }
+    /* slide 4: sube el bloque (más padding inferior) para que la línea+flecha queden DEBAJO de la placa */
+    .plat-sticky{ padding-bottom:clamp(92px,16vh,150px); }
+    .ring-panel{ margin-top:clamp(18px,3.5vh,30px); }
+    .plat-cue{ bottom:10px; }
+    .plat-cue .cue-line{ height:clamp(14px,2.4vh,22px); }
+    .plat-cue .mw{ width:10px; height:10px; }
   }
   /* slide 2 y 3: el contenido fijo debe caber en una sola pantalla */
   @media (max-height:900px){
@@ -1092,8 +1098,8 @@
         <!-- Player do Desafio 05 com raspadinha encima (raspar revela o play) -->
         <div class="expr-stage" id="exprStage">
           <div class="expr-grad" aria-hidden="true"></div>
-          <video id="exprVideo" src="images/Desafio_05.mp4" muted loop playsinline webkit-playsinline preload="metadata"></video>
-          <audio id="exprAudio" src="audios/Desafio_05.mp3" preload="metadata"></audio>
+          <video id="exprVideo" src="images/Desafio_05.mp4?v=2" muted loop playsinline webkit-playsinline preload="metadata"></video>
+          <audio id="exprAudio" src="audios/Desafio_05.mp3?v=2" preload="metadata"></audio>
           <div class="expr-pbar"><i id="exprPfill"></i></div>
           <button class="expr-play" id="exprPlay" type="button" aria-label="Reproduzir" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
