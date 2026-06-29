@@ -378,7 +378,7 @@
   .hero .sign{ opacity:0; animation:fadeUp .8s ease .95s forwards; }
   @keyframes fadeUp{ from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none} }
   /* indicador scroll */
-  .hero-scroll{ position:absolute; left:0; right:0; bottom:22px; z-index:3;
+  .hero-scroll{ position:absolute; left:0; right:0; bottom:12px; z-index:3;
     display:flex; flex-direction:column; align-items:center; gap:7px; color:var(--ember);
     font-size:10px; letter-spacing:.24em; text-transform:uppercase; text-align:center;
     opacity:0; animation:fadeUp .8s ease 1.2s forwards; }
@@ -409,7 +409,7 @@
   .expr .wrap{ width:100%; display:flex; flex-direction:column; align-items:center; }
 
   /* stage tipo player (portrait 9:16, formato visual de player_V4_live) */
-  .expr-stage{ position:relative; width:auto; height:min(74vh, 660px); aspect-ratio:9/16; max-width:92vw;
+  .expr-stage{ position:relative; width:auto; height:min(60vh, 540px); aspect-ratio:9/16; max-width:92vw;
     border-radius:26px; overflow:hidden; cursor:pointer; touch-action:manipulation;
     border:1px solid rgba(199,204,212,.30); background:#060606;
     box-shadow:0 40px 110px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(199,204,212,.06); }
@@ -428,7 +428,7 @@
   #exprCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:7; cursor:grab; touch-action:none; }
   .expr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:8;
     width:86%; text-align:center; line-height:1.12;
-    font-family:var(--display); font-weight:800; font-size:clamp(28px,7.5vw,54px);
+    font-family:var(--display); font-weight:800; font-size:clamp(18px,4.9vw,35px);
     letter-spacing:.03em; text-transform:uppercase; color:rgba(8,8,10,.80);
     text-shadow:0 1px 0 rgba(255,255,255,.25); pointer-events:none; transition:opacity .4s ease; }
   /* botón play central (aparece al raspar el %) */
@@ -489,7 +489,7 @@
     -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
   .scr-off i{ font-style:normal; font-size:.5em; font-weight:600; color:var(--soft); }
   .scr-code{ font-size:13px; color:var(--muted); }
-  .scr-code b{ color:var(--ember); letter-spacing:.12em; font-weight:800;
+  .scr-code b{ color:var(--ember); letter-spacing:.12em; font-weight:800; font-size:1.4em;
     border:1px dashed rgba(199,204,212,.5); padding:4px 10px; border-radius:9px; margin-left:4px; }
   .scr-note{ font-size:11px; letter-spacing:.04em; color:var(--soft); }
   #scrCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
@@ -556,7 +556,7 @@
   .rotina-inner{ width:min(760px,94vw); text-align:center;
     display:flex; flex-direction:column; min-height:min(86svh,780px); }
 
-  .rotina-head{ flex:none; opacity:0; transform:translateY(18px); filter:blur(6px);
+  .rotina-head{ flex:none; margin-top:clamp(40px,15vh,170px); opacity:0; transform:translateY(18px); filter:blur(6px);
     transition:opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1), filter 1s ease; }
   .rotina.head-in .rotina-head{ opacity:1; transform:none; filter:none; }
 
@@ -584,15 +584,17 @@
     transition:opacity .85s cubic-bezier(.2,.8,.2,1), transform .85s cubic-bezier(.2,.8,.2,1), filter .85s ease; }
   .rl.show{ opacity:1; transform:none; filter:none; }
   /* escalonamiento marcado (no plano): grande → chico, con repunte en las frases-golpe */
-  .rotina-lines .rl:nth-child(1){ font-size:1.32em; }   /* Ela aparece aos poucos. */
-  .rotina-lines .rl:nth-child(2){ font-size:1.06em; }   /* Os mesmos finais de semana. */
-  .rotina-lines .rl:nth-child(3){ font-size:0.92em; }   /* Os mesmos lugares. */
-  .rotina-lines .rl:nth-child(4){ font-size:1.30em; }   /* O celular. (golpe) */
-  .rotina-lines .rl:nth-child(5){ font-size:1.30em; }   /* O cansaço. (golpe) */
-  .rotina-lines .rl:nth-child(6){ font-size:0.74em; line-height:1.32; }  /* Quanto mais tempo… */
-  .rotina-lines .rl:nth-child(7){ font-size:0.86em; line-height:1.3; }   /* E, sem perceber… */
+  .rotina-lines .rl:nth-child(1){ font-size:1.52em; }   /* Ela aparece aos poucos. */
+  .rotina-lines .rl:nth-child(2){ font-size:1.00em; }   /* Os mesmos finais de semana. */
+  .rotina-lines .rl:nth-child(3){ font-size:0.82em; }   /* Os mesmos lugares. */
+  .rotina-lines .rl:nth-child(4){ font-size:1.58em; }   /* O celular. (golpe) */
+  .rotina-lines .rl:nth-child(5){ font-size:1.58em; }   /* O cansaço. (golpe) */
+  .rotina-lines .rl:nth-child(6){ font-size:0.70em; line-height:1.34; }  /* Quanto mais tempo… */
+  .rotina-lines .rl:nth-child(7){ font-size:0.80em; line-height:1.3; }   /* E, sem perceber… */
   /* giro emocional: blanca, el cierre más presente */
-  .rl-strong{ color:#fff; font-weight:500; font-size:1.22em; letter-spacing:.01em; line-height:1.2; }
+  .rl-strong{ color:#fff; font-weight:500; font-size:1.42em; letter-spacing:.01em; line-height:1.18; }
+  /* línea de cierre / marca */
+  .rl-close{ color:#fff; font-weight:500; font-size:1.06em; line-height:1.24; margin-top:clamp(4px,1vh,12px); }
   /* señal de continuidad hacia el juego */
   .rotina-cue{ position:absolute; left:0; right:0; bottom:20px; z-index:3; text-align:center;
     font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--ember);
@@ -811,7 +813,7 @@
   .ring-dots button.on{ background:var(--accent); width:20px; border-radius:99px; }
 
   /* tarjeta de texto: premium con borde plata + altura estable de 2 filas (sin saltos) */
-  .ring-panel{ max-width:580px; margin:clamp(14px,2.4vh,24px) auto 0; text-align:center;
+  .ring-panel{ max-width:580px; margin:clamp(34px,6vh,64px) auto 0; text-align:center;
     border:1px solid rgba(199,204,212,.34); border-radius:18px;
     background:linear-gradient(180deg, rgba(199,204,212,.06), rgba(255,255,255,0) 42%), var(--glass), var(--card);
     box-shadow:0 24px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,.07),
@@ -863,7 +865,7 @@
     .jogo-freno-rule{ margin-bottom:12px; }
     .ring-stage{ height:clamp(340px,50vw,480px); }
     .rphone{ width:clamp(178px,26vw,255px); }
-    .ring-panel{ padding:14px 18px; margin-top:10px; }
+    .ring-panel{ padding:14px 18px; margin-top:clamp(26px,5vh,44px); }
     .plat-sticky{ padding-top:clamp(28px,5vh,60px); }
   }
   @media (prefers-reduced-motion:reduce){
@@ -947,7 +949,7 @@
     </div>
   </div>
   <a class="hero-scroll" href="#rotina" aria-label="Descubra">
-    <span>Descubra</span><span class="mw"></span>
+    <span>Descubra</span><span class="mw" aria-hidden="true"></span>
   </a>
 </section>
 
@@ -968,7 +970,8 @@
           <p class="rl">O cansaço.</p>
           <p class="rl">Quanto mais tempo juntos,<br>mais fácil é entrar no automático.</p>
           <p class="rl">E, sem perceber, vocês deixam de criar<br>novas histórias juntos.</p>
-          <p class="rl rl-strong">Vocês ainda se amam.</p>
+          <p class="rl rl-strong">Sabemos que vocês ainda se amam.</p>
+          <p class="rl rl-close">E foi exatamente por isso que criamos<br>a Inovando Juntos.</p>
         </div>
       </div>
       <a class="rotina-cue" href="#jogo" aria-label="Continuar">
@@ -991,13 +994,13 @@
         <img src="images/jogo01.PNG" alt="A caixa premium do jogo" loading="lazy" />
         <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Caixa Premium</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">Este jogo</span></span>
       </button>
-      <button class="g-tile" type="button" data-img="images/jogo03.PNG" data-title="Como Funciona" data-text="Quatro passos simples para viver experiências guiadas que aproximam vocês a cada desafio.">
+      <button class="g-tile" type="button" data-img="images/jogo03.PNG" data-title="Primeiro Acesso" data-text="Escaneie o QR Code da caixa, ative seu código exclusivo e desbloqueie a plataforma. Um código para até duas pessoas por jogo.">
         <img src="images/jogo03.PNG" alt="Como funciona: quatro passos" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Como Funciona</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">não é só um jogo.</span></span>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Primeiro Acesso</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">não é só um jogo.</span></span>
       </button>
-      <button class="g-tile" type="button" data-img="images/jogo02.PNG" data-title="Primeiro Acesso" data-text="Escaneie o QR Code da caixa, ative seu código exclusivo e desbloqueie a plataforma. Um código para até duas pessoas por jogo.">
+      <button class="g-tile" type="button" data-img="images/jogo02.PNG" data-title="Como Funciona" data-text="Quatro passos simples para viver experiências guiadas que aproximam vocês a cada desafio.">
         <img src="images/jogo02.PNG" alt="Primeiro acesso pelo QR Code" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Primeiro Acesso</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">É uma experiência</span></span>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Como Funciona</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">É uma experiência</span></span>
       </button>
       <button class="g-tile" type="button" data-img="images/jogo04.PNG" data-title="20 Experiências" data-text="Cada raspadinha revela uma nova experiência guiada por áudio e vídeo. Vocês escolhem o momento ideal para viver cada desafio.">
         <img src="images/jogo04.PNG" alt="20 experiências na raspadinha" loading="lazy" />
@@ -1378,17 +1381,18 @@
       if (!drawing) return;
       var p = pos(ev);
       ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath(); ctx.arc(p.x, p.y, 22, 0, Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1; ctx.fillStyle = "#000";   // fuente opaca → borra del todo en una pasada
+      ctx.beginPath(); ctx.arc(p.x, p.y, 30, 0, Math.PI*2); ctx.fill();
       if (!started){ started = true; if (hint) hint.style.opacity = "0"; }
       check();
     }
     var last = 0;
     function check(){
-      var now = Date.now(); if (now - last < 220) return; last = now;
+      var now = Date.now(); if (now - last < 120) return; last = now;
       try {
         var img = ctx.getImageData(0,0,canvas.width,canvas.height).data, clear = 0, step = 80;
-        for (var i=3;i<img.length;i+=4*step){ if (img[i] === 0) clear++; }
-        if (clear / (img.length / (4*step)) > 0.5 && !cleared){
+        for (var i=3;i<img.length;i+=4*step){ if (img[i] < 128) clear++; }   // alpha<128 = zona limpiada
+        if (clear / (img.length / (4*step)) > 0.4 && !cleared){
           cleared = true;
           canvas.style.transition = "opacity .55s ease"; canvas.style.opacity = "0";
           setTimeout(function(){ canvas.style.display = "none"; }, 600);
