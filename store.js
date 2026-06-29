@@ -24,6 +24,9 @@
   function arr() { return Object.keys(cart).map(function (k) { return cart[k]; }); }
   function count() { return arr().reduce(function (s, i) { return s + i.qty; }, 0); }
   function total() { return arr().reduce(function (s, i) { return s + i.price * i.qty; }, 0); }
+  function appliedCoupon() { try { var c = JSON.parse(localStorage.getItem("ij_coupon") || "null"); if (c && c.code && c.pct) return { code: String(c.code), pct: Number(c.pct) || 0 }; } catch (e) {} return null; }
+  function discountAmount() { var c = appliedCoupon(); return c ? total() * c.pct / 100 : 0; }
+  function grandTotal() { return Math.max(0, total() - discountAmount()); }
   function clampQty(v) { var n = parseInt(String(v).replace(/[^0-9]/g, ""), 10); if (!isFinite(n) || n < 1) n = 1; if (n > 99) n = 99; return n; }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); }
 
@@ -60,6 +63,7 @@
       ".ij-qty input{width:36px;height:34px;text-align:center;background:transparent;border:0;color:#fff;font-size:14px;font-family:inherit}",
       ".ij-rm{background:none;border:0;color:#888;cursor:pointer;font-size:12px;text-decoration:underline;padding:0;margin-top:6px;display:block}",
       ".ij-foot{border-top:1px solid rgba(255,255,255,.10);padding:18px}",
+      ".ij-disc{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:#cbd0d6;font-size:12.5px;font-weight:700}.ij-disc[hidden]{display:none}.ij-disc span:last-child{color:#fff}",
       ".ij-tot{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}.ij-tot span{color:#aaa;font-size:13px}.ij-tot b{font-family:'Jost',system-ui,sans-serif;font-size:24px;font-weight:500}",
       ".ij-btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-family:'Manrope',sans-serif;font-weight:800;font-size:14px;letter-spacing:.03em;background:#fff;color:#000;cursor:pointer;text-align:center}",
       ".ij-btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.5)}.ij-btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}",
@@ -87,6 +91,7 @@
         '<div class="ij-dh"><h2>Seu carrinho</h2><button class="ij-x" id="ijClose" aria-label="Fechar">&times;</button></div>' +
         '<div class="ij-items" id="ijItems"></div>' +
         '<div class="ij-foot">' +
+          '<div class="ij-disc" id="ijDisc" hidden><span data-lbl></span><span id="ijDiscVal"></span></div>' +
           '<div class="ij-tot"><span>Total</span> <b id="ijTotal">R$ 0,00</b></div>' +
           '<button class="ij-btn" id="ijCheckout" disabled>Finalizar compra</button>' +
           '<button class="ij-keep" id="ijKeep">Continuar comprando</button>' +
@@ -140,7 +145,16 @@
   function updateCounts() {
     var c = count();
     document.querySelectorAll("[data-ij-cart-count]").forEach(function (el) { el.textContent = c; });
-    if (totalEl) totalEl.textContent = money(total());
+    if (totalEl) totalEl.textContent = money(grandTotal());
+    var dRow = document.getElementById("ijDisc");
+    if (dRow) {
+      var cup = appliedCoupon(), da = discountAmount();
+      if (cup && da > 0) {
+        dRow.hidden = false;
+        var lbl = dRow.querySelector("[data-lbl]"); if (lbl) lbl.textContent = "Desconto " + cup.code + " (−" + cup.pct + "%)";
+        var dv = document.getElementById("ijDiscVal"); if (dv) dv.textContent = "− " + money(da);
+      } else { dRow.hidden = true; }
+    }
     if (checkoutBtn) checkoutBtn.disabled = c === 0;
   }
   var toastT;
@@ -181,7 +195,7 @@
   /* ---------- checkout modal ---------- */
   function openCheckout() {
     if (count() === 0) return;
-    summaryEl.textContent = count() + " item(ns) · " + money(total());
+    summaryEl.textContent = count() + " item(ns) · " + money(grandTotal()) + (appliedCoupon() ? "  ·  cupom " + appliedCoupon().code : "");
     elErr.hidden = true;
     modal.hidden = false; requestAnimationFrame(function () { modal.classList.add("show"); });
     setTimeout(function () { elName.focus(); }, 60);
@@ -230,6 +244,8 @@
     if (!items.length) return;
 
     var payload = { name: name, email: email, phone: phone, items: items, ref: buildRef() };
+    // Cupón de descuento (raspadinha): se guarda en ij_coupon y se aplica en el draft order.
+    try { var _c = JSON.parse(localStorage.getItem("ij_coupon") || "null"); if (_c && _c.code) payload.coupon = String(_c.code); } catch (e) {}
     if (cep.length === 8) {
       payload.cep = cep;
       if (cepResolved) { payload.address = cepResolved.address; payload.city = cepResolved.city; payload.province = cepResolved.province; }
