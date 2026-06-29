@@ -490,7 +490,7 @@
 
   /* ---- raspadinha de descuento (todos ganham) · ~mitad de tamaño ---- */
   .buy-scratch{ display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:clamp(16px,2.4vw,26px); }
-  .scr-stage{ position:relative; width:min(230px,62vw); aspect-ratio:5/2; border-radius:16px; overflow:hidden;
+  .scr-stage{ position:relative; width:min(240px,66vw); aspect-ratio:1/1; border-radius:16px; overflow:hidden;
     border:1px solid rgba(199,204,212,.34); background:#060606; touch-action:none;
     box-shadow:0 30px 70px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(199,204,212,.06); }
   .scr-prize{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
@@ -509,7 +509,44 @@
   .scr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:3; width:86%; text-align:center;
     font-family:var(--display); font-size:clamp(11px,2.4vw,15px); letter-spacing:.04em; text-transform:uppercase; color:rgba(8,8,10,.80); font-weight:800;
     pointer-events:none; transition:opacity .4s ease; line-height:1.2; }
+  /* botón flotante de WhatsApp (aparece al llegar a la compra) */
+  .wa-fab{ position:fixed; right:clamp(12px,3vw,22px); bottom:clamp(12px,3vw,22px); z-index:70;
+    display:inline-flex; align-items:center; gap:9px; padding:11px 17px 11px 14px; border-radius:999px;
+    background:linear-gradient(135deg,#f1f3f6,#aeb4bc,#d7dbe1,#8d9298); color:#0a0a0b;
+    border:1px solid rgba(255,255,255,.55); text-decoration:none; font-family:var(--font); font-weight:800; font-size:13px; letter-spacing:.01em;
+    box-shadow:0 12px 30px rgba(0,0,0,.5); transform:translateY(20px); opacity:0; transition:opacity .4s ease, transform .4s ease; }
+  .wa-fab:hover{ filter:brightness(1.05); }
+  .wa-fab.show{ opacity:1; transform:none; }
+  .wa-fab[hidden]{ display:none; }
+  .wa-fab svg{ width:22px; height:22px; fill:#0a0a0b; flex:none; }
+  @media (max-width:600px){ .wa-fab{ font-size:12px; padding:10px 14px 10px 12px; } }
 
+
+  /* ====== Modais Quem Somos + FAQ (popup, fuera del funil) ====== */
+  .info-modal{ position:fixed; inset:0; z-index:1100; display:flex; align-items:center; justify-content:center; padding:clamp(14px,4vw,40px); }
+  .info-modal[hidden]{ display:none; }
+  .info-modal-bd{ position:absolute; inset:0; background:rgba(0,0,0,.74); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .info-modal-card{ position:relative; z-index:1; width:min(720px,100%); max-height:88vh; overflow:auto;
+    background:var(--card); border:1px solid var(--edge2); border-radius:22px; padding:clamp(26px,4vw,44px);
+    box-shadow:0 50px 130px var(--shadow); }
+  .info-modal-card .title{ text-align:left; margin:0 0 18px; font-size:clamp(22px,3vw,32px); padding-right:40px; }
+  .info-modal-x{ position:absolute; top:14px; right:16px; width:34px; height:34px; border-radius:50%; border:1px solid var(--edge2);
+    background:rgba(255,255,255,.04); color:var(--text); font-size:15px; line-height:1; cursor:pointer; z-index:2; }
+  .info-modal-x:hover{ background:rgba(255,255,255,.1); }
+  .info-text{ color:var(--muted); font-size:clamp(14px,1.7vw,16px); line-height:1.75; }
+  .info-text p{ margin:0 0 14px; }
+  .qs-sign{ font-family:var(--script); color:var(--text); font-size:clamp(22px,3.4vw,30px); line-height:1.3; margin-top:22px !important; text-align:center; }
+  /* FAQ acordeón */
+  .faq{ display:flex; flex-direction:column; gap:10px; }
+  .faq details{ border:1px solid var(--edge2); border-radius:14px; background:var(--card); overflow:hidden; transition:border-color .25s ease; }
+  .faq details[open]{ border-color:rgba(199,204,212,.35); }
+  .faq summary{ list-style:none; cursor:pointer; padding:15px 18px; font-weight:700; font-size:clamp(14px,1.8vw,16px); color:var(--text);
+    display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{ content:""; width:9px; height:9px; border-right:2px solid var(--ember); border-bottom:2px solid var(--ember);
+    transform:rotate(45deg); transition:transform .25s ease; flex:none; }
+  .faq details[open] summary::after{ transform:rotate(-135deg); }
+  .faq-a{ padding:0 18px 16px; color:var(--muted); font-size:clamp(13.5px,1.6vw,15px); line-height:1.65; }
 
   /* ====== Footer ====== */
   footer{ position:relative; z-index:2; border-top:1px solid var(--edge);
@@ -1181,6 +1218,60 @@
   </div>
 </section>
 
+<!-- ====== SOBRE & FAQ (conteúdo a completar) ====== -->
+<!-- ====== Modais Quem Somos / FAQ (acessíveis por link, fora do funil) ====== -->
+<div class="info-modal" id="modalSobre" hidden role="dialog" aria-modal="true" aria-label="Quem Somos">
+  <div class="info-modal-bd" data-close></div>
+  <div class="info-modal-card">
+    <button class="info-modal-x" type="button" data-close aria-label="Fechar">✕</button>
+    <h2 class="title">Quem Somos</h2>
+    <div class="info-text">
+          <p>A Inovando Juntos nasceu da nossa própria história.</p>
+          <p>Nós somos a Deise e o Mario, um casal que acredita que relacionamentos felizes não acontecem por sorte. Eles são construídos todos os dias por meio da conexão, do diálogo, das experiências compartilhadas e da decisão de nunca deixar a rotina falar mais alto que o amor.</p>
+          <p>Assim como muitos casais, percebemos que, com o passar do tempo, a rotina pode ocupar o espaço das surpresas, das conversas profundas e dos momentos que fortalecem a relação. Não porque o amor acaba, mas porque a vida acontece.</p>
+          <p>Foi então que decidimos criar algo que, antes de ajudar outros casais, transformasse o nosso próprio relacionamento.</p>
+          <p>Começamos a planejar encontros diferentes, criar desafios, testar experiências, explorar novas formas de nos conectar e viver momentos que saíssem completamente do comum. Aos poucos, percebemos que essas pequenas experiências criavam grandes lembranças.</p>
+          <p>Foi nesse processo que nasceu a Inovando Juntos.</p>
+          <p>O que começou como um projeto para nós dois se transformou em uma experiência que hoje pode fazer parte da história de milhares de casais.</p>
+          <p>Cada desafio, cada dinâmica, cada áudio, cada vídeo e cada detalhe da plataforma foi pensado para proporcionar momentos reais de conexão. Antes de fazer parte da Inovando Juntos, tudo foi vivido, ajustado e aprovado por nós.</p>
+          <p>Nossa missão nunca foi criar apenas um jogo para casais.</p>
+          <p>Queríamos desenvolver uma experiência completa, capaz de transformar uma noite comum em uma lembrança especial, estimular conversas que talvez nunca acontecessem naturalmente e incentivar casais a continuarem descobrindo um ao outro, independentemente do tempo que estão juntos.</p>
+          <p>Hoje, a Inovando Juntos reúne um jogo físico premium e uma plataforma digital exclusiva, oferecendo experiências guiadas, desafios, recursos interativos e momentos cuidadosamente planejados para fortalecer a conexão, a cumplicidade e a intimidade entre o casal.</p>
+          <p>Mais do que vender um produto, queremos fazer parte de histórias.</p>
+          <p>Queremos que cada casal crie novas memórias, fortaleça sua relação e descubra que sempre existe uma nova forma de viver o amor.</p>
+          <p>Porque acreditamos que todo relacionamento pode se reinventar.</p>
+          <p class="qs-sign">Com carinho,<br>Deise &amp; Mario ❤️</p>
+        </div>
+  </div>
+</div>
+
+<div class="info-modal" id="modalFaq" hidden role="dialog" aria-modal="true" aria-label="Perguntas Frequentes">
+  <div class="info-modal-bd" data-close></div>
+  <div class="info-modal-card">
+    <button class="info-modal-x" type="button" data-close aria-label="Fechar">✕</button>
+    <h2 class="title">Perguntas Frequentes</h2>
+    <div class="faq">
+          <details open><summary>O que é a Inovando Juntos?</summary><div class="faq-a">A Inovando Juntos é uma experiência exclusiva para casais que une um jogo físico premium a uma plataforma digital com 20 experiências guiadas por voz e vídeo, desenvolvidas para fortalecer a conexão, a comunicação e a intimidade.</div></details>
+          <details><summary>O que vou receber ao comprar?</summary><div class="faq-a">Você receberá uma caixa premium contendo a raspadinha da Inovando Juntos e acesso exclusivo à plataforma digital, onde serão desbloqueadas todas as experiências e conteúdos extras.</div></details>
+          <details><summary>Como funciona a experiência?</summary><div class="faq-a">Basta escanear o QR Code da caixa, criar seu cadastro, inserir o código exclusivo de ativação e começar a viver as experiências. Cada desafio é revelado na raspadinha e guiado pela plataforma.</div></details>
+          <details><summary>Quantas experiências estão inclusas?</summary><div class="faq-a">O jogo conta com 20 experiências exclusivas, desenvolvidas para serem vividas no ritmo do casal.</div></details>
+          <details><summary>Precisamos fazer todas as experiências no mesmo dia?</summary><div class="faq-a">Não. Vocês podem realizar cada experiência quando desejarem, sem pressa e no momento que fizer mais sentido para o casal.</div></details>
+          <details><summary>É necessário baixar algum aplicativo?</summary><div class="faq-a">Não. Toda a experiência acontece diretamente pelo navegador, no celular, tablet ou computador.</div></details>
+          <details><summary>Quantas pessoas podem acessar a plataforma?</summary><div class="faq-a">Cada jogo libera um acesso exclusivo para até duas pessoas, permitindo que o casal compartilhe toda a experiência.</div></details>
+          <details><summary>O acesso pode ser compartilhado com outras pessoas?</summary><div class="faq-a">Não. O código de ativação é exclusivo e destinado apenas ao casal que adquiriu o jogo.</div></details>
+          <details><summary>Posso escolher a ordem das experiências?</summary><div class="faq-a">Sim. O casal pode decidir qual experiência deseja viver a qualquer momento.</div></details>
+          <details><summary>É necessário comprar acessórios para participar?</summary><div class="faq-a">Não. Todas as experiências podem ser realizadas apenas com o conteúdo do jogo. Em alguns momentos, a plataforma poderá sugerir acessórios opcionais para quem desejar tornar a experiência ainda mais completa.</div></details>
+          <details><summary>O que encontro na plataforma além das experiências?</summary><div class="faq-a">Além das 20 experiências, vocês terão acesso a conteúdos exclusivos como introduções guiadas, roleta de perguntas, guia de massagem, sugestões de posições, playlists, contratos digitais e outras funcionalidades desenvolvidas para o casal.</div></details>
+          <details><summary>O produto serve para qualquer casal?</summary><div class="faq-a">Sim. A Inovando Juntos foi criada para casais que desejam sair da rotina, fortalecer a conexão e criar novas memórias juntos, independentemente do tempo de relacionamento.</div></details>
+          <details><summary>O envio é discreto?</summary><div class="faq-a">Sim. O produto é enviado em uma embalagem discreta, preservando totalmente a privacidade do casal.</div></details>
+          <details><summary>O pagamento é seguro?</summary><div class="faq-a">Sim. Todo o processo de pagamento é realizado em ambiente seguro e protegido.</div></details>
+          <details><summary>Posso comprar para presentear outro casal?</summary><div class="faq-a">Sim. A Inovando Juntos é um presente perfeito para casais em datas especiais ou para quem deseja oferecer uma experiência diferente e inesquecível.</div></details>
+          <details><summary>O produto é indicado para maiores de idade?</summary><div class="faq-a">Sim. A Inovando Juntos é destinada exclusivamente para maiores de 18 anos.</div></details>
+          <details><summary>Como entro em contato com o suporte?</summary><div class="faq-a">Caso tenha qualquer dúvida, nossa equipe estará pronta para ajudar através dos canais oficiais de atendimento informados no site.</div></details>
+        </div>
+  </div>
+</div>
+
 <!-- ====== FOOTER ====== -->
 <footer>
   <div class="foot-grid">
@@ -1198,6 +1289,11 @@
         <a href="#comprar">Comprar</a>
       </div>
       <div class="foot-col">
+        <h4>Inovando Juntos</h4>
+        <a href="#" data-modal="modalSobre">Quem Somos</a>
+        <a href="#" data-modal="modalFaq">FAQ</a>
+      </div>
+      <div class="foot-col">
         <h4>Contato</h4>
         <div class="foot-social">
           <a href="https://www.loja.inovandojuntos.com.br" data-buy target="_blank" rel="noopener" aria-label="Loja oficial" title="Loja oficial">
@@ -1210,11 +1306,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           </a>
         </div>
-      </div>
-      <div class="foot-col">
-        <h4>Legal</h4>
-        <a href="#">Política de Privacidade</a>
-        <a href="#">Termos de Uso</a>
       </div>
     </div>
   </div>
@@ -1247,6 +1338,12 @@
   </button>
   <img id="ringZoomImg" src="" alt="Tela da plataforma ampliada" />
 </div>
+
+<!-- ====== WhatsApp flotante (aparece al llegar a #comprar) ====== -->
+<a class="wa-fab" id="waFab" href="#" target="_blank" rel="noopener" hidden aria-label="Fale conosco no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.01c-1.52 0-3-.41-4.3-1.18l-.31-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.03c0-4.54 3.7-8.24 8.24-8.24s8.24 3.7 8.24 8.24-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03s.87 2.35.99 2.51c.12.16 1.71 2.61 4.15 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.18-.47-.3z"/></svg>
+  <span>Tem dúvidas? Fale conosco</span>
+</a>
 
 <!-- ====== Cookie banner (LGPD) ====== -->
 <div class="cookie" id="cookie" role="dialog" aria-label="Aviso de cookies">
@@ -1369,14 +1466,10 @@
     var ctaEl = document.querySelector(".buy-cta");
     var base = ctaEl ? (parseFloat(ctaEl.getAttribute("data-price")) || 189.90) : 189.90;
     function fmtBRL(v){ var s = v.toFixed(2).split("."); return s[0] + '<span class="cents">,' + s[1] + '</span>'; }
-    function applyDiscount(pct){
-      if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - pct/100)); newEl.hidden = false; }
-      if (oldEl){ oldEl.classList.add("struck"); requestAnimationFrame(function(){ oldEl.classList.add("on"); }); }
-    }
 
-    // Descuento FIJO de 20% · cupom fijo IJ20MD.
+    // Descuento FIJO de 20% · cupom fijo IJ20MD. Se aplica PROGRESIVO (0→20%) según el raspaje.
     var prize = { pct:20 }, coupon = "IJ20MD";
-    if (pctEl) pctEl.textContent = prize.pct;
+    if (pctEl) pctEl.textContent = 0;
     if (codeEl) codeEl.textContent = coupon;
 
     var ctx = canvas.getContext("2d");
@@ -1406,25 +1499,34 @@
       var p = pos(ev);
       ctx.globalCompositeOperation = "destination-out";
       ctx.globalAlpha = 1; ctx.fillStyle = "#000";   // fuente opaca → borra del todo en una pasada
-      ctx.beginPath(); ctx.arc(p.x, p.y, 30, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, 26, 0, Math.PI*2); ctx.fill();
       if (!started){ started = true; if (hint) hint.style.opacity = "0"; }
-      check();
+      update();
     }
-    var last = 0;
-    function check(){
-      var now = Date.now(); if (now - last < 120) return; last = now;
+    var MAXPCT = prize.pct, TARGET = 0.85, last = 0;   // hay que limpiar ~85% para llegar al 20%
+    function clearedFraction(){
       try {
-        var img = ctx.getImageData(0,0,canvas.width,canvas.height).data, clear = 0, step = 80;
-        for (var i=3;i<img.length;i+=4*step){ if (img[i] < 128) clear++; }   // alpha<128 = zona limpiada
-        if (clear / (img.length / (4*step)) > 0.4 && !cleared){
-          cleared = true;
-          canvas.style.transition = "opacity .55s ease"; canvas.style.opacity = "0";
-          setTimeout(function(){ canvas.style.display = "none"; }, 600);
-          applyDiscount(prize.pct);   // tacha el precio viejo y muestra el nuevo valor
-          try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}  // recién al raspar
-          if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
-        }
-      } catch(e){}
+        var img = ctx.getImageData(0,0,canvas.width,canvas.height).data, clr = 0, step = 80, n = 0;
+        for (var i=3;i<img.length;i+=4*step){ n++; if (img[i] < 128) clr++; }   // alpha<128 = limpiado
+        return n ? clr / n : 0;
+      } catch(e){ return 0; }
+    }
+    function update(){
+      var now = Date.now(); if (now - last < 50) return; last = now;
+      var frac = clearedFraction();
+      var disc = Math.min(MAXPCT, Math.round(frac / TARGET * MAXPCT));   // 0 → 20% progresivo
+      if (pctEl) pctEl.textContent = disc;                              // % en vivo sobre la raspadinha
+      if (disc > 0){
+        if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - disc/100)); newEl.hidden = false; }  // precio en vivo
+        if (oldEl && !oldEl.classList.contains("struck")){ oldEl.classList.add("struck"); requestAnimationFrame(function(){ oldEl.classList.add("on"); }); }
+      }
+      if (disc >= MAXPCT && !cleared){   // llegó al 20% → fija el cupón
+        cleared = true;
+        canvas.style.transition = "opacity .5s ease"; canvas.style.opacity = "0";
+        setTimeout(function(){ canvas.style.display = "none"; }, 520);
+        try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
+        if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
+      }
     }
     canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
     window.addEventListener("pointerup", function(){ drawing = false; });
@@ -1435,6 +1537,10 @@
 
     if (reduce){
       canvas.style.display = "none"; if (hint) hint.style.display = "none";
+      if (pctEl) pctEl.textContent = prize.pct;
+      if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - prize.pct/100)); newEl.hidden = false; }
+      if (oldEl){ oldEl.classList.add("struck","on"); }
+      try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
     } else {
       window.addEventListener("resize", function(){ if (!cleared) size(); });
       size();
@@ -1552,15 +1658,16 @@
       el.addEventListener("click", function(){ track("comprar_click"); });
     });
 
-    var marks = {25:false,50:false,75:false,100:false};
+    var STEPS = [10,20,30,40,50,60,70,80,90,100], marks = {}, maxPct = 0;
     window.addEventListener("scroll", function(){
       var h = document.documentElement, sc = h.scrollTop||document.body.scrollTop, max = h.scrollHeight-h.clientHeight;
       var pct = max>0 ? Math.round(sc/max*100) : 0;
-      [25,50,75,100].forEach(function(m){ if(!marks[m] && pct>=m){ marks[m]=true; track("scroll_depth",{depth:m}); } });
+      if (pct > maxPct) maxPct = pct;
+      STEPS.forEach(function(m){ if(!marks[m] && pct>=m){ marks[m]=true; track("scroll_depth",{depth:m}); } });
     }, {passive:true});
 
     var t0 = Date.now();
-    window.addEventListener("pagehide", function(){ track("page_exit",{seconds:Math.round((Date.now()-t0)/1000)}); });
+    window.addEventListener("pagehide", function(){ track("page_exit",{seconds:Math.round((Date.now()-t0)/1000), max_scroll:maxPct}); });
 
     window.ijTrack = track;   // disponible para disparar eventos personalizados
   })();
@@ -1970,6 +2077,37 @@
     window.addEventListener("scroll", req, { passive:true });
     window.addEventListener("resize", req);
     req();
+  })();
+
+  /* ---- WhatsApp flotante: aparece al llegar a #comprar, con el ID de captura en el texto ---- */
+  (function(){
+    var WA_NUMBER = "5562991551720";   // número con código país, solo dígitos. Vacío = botón oculto.
+    var fab = document.getElementById("waFab");
+    var sec = document.getElementById("comprar");
+    if (!fab || !sec || !WA_NUMBER) return;
+    var vid = ""; try { vid = (localStorage.getItem("ij_vid") || "").slice(0,8); } catch(e){}
+    var msg = "Olá! Tenho dúvidas sobre o jogo Inovando Juntos." + (vid ? " (Ref: " + vid + ")" : "");
+    fab.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+    fab.addEventListener("click", function(){ if (window.ijTrack) window.ijTrack("whatsapp_click", { ref: vid }); });
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(es){
+        if (es[0].isIntersecting){ fab.hidden = false; requestAnimationFrame(function(){ fab.classList.add("show"); }); }
+        else { fab.classList.remove("show"); }
+      }, { threshold:0.12 }).observe(sec);
+    } else { fab.hidden = false; fab.classList.add("show"); }
+  })();
+
+  /* ---- Modais Quem Somos / FAQ (link → popup) ---- */
+  (function(){
+    function openM(id){ var m = document.getElementById(id); if (!m) return; m.hidden = false; document.body.style.overflow = "hidden"; if (window.ijTrack) window.ijTrack("modal_open", { id:id }); }
+    function closeM(m){ m.hidden = true; document.body.style.overflow = ""; }
+    document.querySelectorAll("[data-modal]").forEach(function(t){
+      t.addEventListener("click", function(e){ e.preventDefault(); openM(t.getAttribute("data-modal")); });
+    });
+    document.querySelectorAll(".info-modal").forEach(function(m){
+      m.addEventListener("click", function(e){ if (e.target.hasAttribute("data-close")) closeM(m); });
+    });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape"){ document.querySelectorAll(".info-modal:not([hidden])").forEach(closeM); } });
   })();
 })();
 </script>
