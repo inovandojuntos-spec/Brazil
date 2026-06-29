@@ -1655,8 +1655,8 @@
       };
       try{
         var json = JSON.stringify(body);
-        if(navigator.sendBeacon){ navigator.sendBeacon(ENDPOINT, new Blob([json],{type:"application/json"})); }
-        else { fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:json,keepalive:true}).catch(function(){}); }
+        if(navigator.sendBeacon){ navigator.sendBeacon(ENDPOINT, new Blob([json],{type:"text/plain;charset=UTF-8"})); }
+        else { fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:json,keepalive:true}).catch(function(){}); }
       }catch(e){}
     }
 
