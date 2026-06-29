@@ -1526,6 +1526,7 @@
         setTimeout(function(){ canvas.style.display = "none"; }, 520);
         try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
         if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
+        try { if (window.ijMeta) window.ijMeta.track("Lead", { content_name:"cupom_20" }, window.ijMeta.uuid()); } catch(e){}
       }
     }
     canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
@@ -1561,6 +1562,7 @@
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: "consent_granted" });
       // Aqui o GTM pode disparar GA4 / Pixel após o consentimento.
+      try { if (window.ijMeta) window.ijMeta.init(); } catch(e){}
     }
   }
   document.getElementById("ckAccept").addEventListener("click", function(){ setConsent("accept"); });
@@ -1670,6 +1672,77 @@
     window.addEventListener("pagehide", function(){ track("page_exit",{seconds:Math.round((Date.now()-t0)/1000), max_scroll:maxPct}); });
 
     window.ijTrack = track;   // disponible para disparar eventos personalizados
+  })();
+
+  /* ---- Meta Pixel (browser) — gated por consentimiento LGPD ---- */
+  (function(){
+    var META_PIXEL_ID    = "1046549447944946";
+    var META_CURRENCY    = "BRL";
+    var META_VALUE       = 187.00;
+    var META_CONTENT_IDS = ["1538741502"];
+    var ready = false;
+
+    function consentOK(){ try { return localStorage.getItem("ij_consent") === "accept"; } catch(e){ return false; } }
+    function uuid(){ if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c==="x"?r:(r&0x3|0x8);return v.toString(16);}); }
+
+    // Captura _fbc desde fbclid (para propagar al CAPI). El Pixel setea _fbp solo.
+    (function(){
+      try{
+        var fbclid = new URLSearchParams(location.search).get("fbclid");
+        if (fbclid && !/(^|;\s*)_fbc=/.test(document.cookie)){
+          document.cookie = "_fbc=fb.1." + Date.now() + "." + fbclid + ";path=/;max-age=7776000;samesite=Lax";
+        }
+      }catch(e){}
+    })();
+
+    function init(){
+      if (ready || !consentOK()) return;
+      if (!window.fbq){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+      }
+      window.fbq("init", META_PIXEL_ID);
+      ready = true;
+      track("PageView");
+      observeViewContent();
+    }
+
+    // Helper único. Espeja también en ij_events (panel propio) con el mismo event_id.
+    function track(event, params, eventId){
+      try{
+        if (window.fbq && ready && consentOK()){
+          var opts = eventId ? { eventID: eventId } : undefined;
+          window.fbq("track", event, params || {}, opts);
+        }
+      }catch(e){}
+      if (window.ijTrack) window.ijTrack("meta_" + event, Object.assign({ event_id: eventId || null }, params || {}));
+    }
+
+    // ViewContent: una vez, cuando #comprar entra en viewport.
+    var vcDone = false;
+    function observeViewContent(){
+      if (vcDone) return;
+      var el = document.getElementById("comprar");
+      if (!el || !("IntersectionObserver" in window)) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if (en.isIntersecting && !vcDone){
+            vcDone = true; io.disconnect();
+            track("ViewContent", { content_ids: META_CONTENT_IDS, content_type: "product", value: META_VALUE, currency: META_CURRENCY }, uuid());
+          }
+        });
+      }, { threshold: 0.4 });
+      io.observe(el);
+    }
+
+    // API pública para store.js e index.html
+    window.ijMeta = {
+      PIXEL_ID: META_PIXEL_ID, CURRENCY: META_CURRENCY, VALUE: META_VALUE, CONTENT_IDS: META_CONTENT_IDS,
+      track: track, init: init, uuid: uuid, ready: function(){ return ready; }, consentOK: consentOK
+    };
+
+    // Arranque: si ya había consentimiento previo, inicializa de una.
+    if (consentOK()) init();
   })();
 
   /* ---- ROTINA: reveal cinematográfico guiado por scroll ---- */
@@ -2088,7 +2161,7 @@
     var vid = ""; try { vid = (localStorage.getItem("ij_vid") || "").slice(0,8); } catch(e){}
     var msg = "Olá! Tenho dúvidas sobre o jogo Inovando Juntos." + (vid ? " (Ref: " + vid + ")" : "");
     fab.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
-    fab.addEventListener("click", function(){ if (window.ijTrack) window.ijTrack("whatsapp_click", { ref: vid }); });
+    fab.addEventListener("click", function(){ if (window.ijTrack) window.ijTrack("whatsapp_click", { ref: vid }); try { if (window.ijMeta) window.ijMeta.track("Lead", { content_name:"whatsapp" }, window.ijMeta.uuid()); } catch(e){} });
     if ("IntersectionObserver" in window){
       new IntersectionObserver(function(es){
         if (es[0].isIntersecting){ fab.hidden = false; requestAnimationFrame(function(){ fab.classList.add("show"); }); }

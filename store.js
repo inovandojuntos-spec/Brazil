@@ -29,6 +29,9 @@
   function grandTotal() { return Math.max(0, total() - discountAmount()); }
   function clampQty(v) { var n = parseInt(String(v).replace(/[^0-9]/g, ""), 10); if (!isFinite(n) || n < 1) n = 1; if (n > 99) n = 99; return n; }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); }
+  function getCookie(n) { try { var m = document.cookie.match("(^|;\\s*)" + n + "=([^;]+)"); return m ? decodeURIComponent(m[2]) : ""; } catch (e) { return ""; } }
+  function metaTrack(ev, params) { try { if (window.ijMeta) window.ijMeta.track(ev, params, window.ijMeta.uuid()); } catch (e) {} }
+  function metaCurrency() { try { return (window.ijMeta && window.ijMeta.CURRENCY) || "BRL"; } catch (e) { return "BRL"; } }
 
   function addItem(item, qty) {
     var key = String(item.variant_id);
@@ -37,6 +40,8 @@
     if (cart[key]) cart[key].qty = clampQty(cart[key].qty + qty);
     else cart[key] = { variant_id: Number(item.variant_id), name: item.name || "Produto", price: Number(item.price) || 0, image: item.image || "", qty: qty };
     save(); updateCounts();
+    // Meta · AddToCart
+    metaTrack("AddToCart", { content_ids: [String(item.variant_id)], content_type: "product", value: (Number(item.price) || 0) * qty, currency: metaCurrency(), contents: [{ id: String(item.variant_id), quantity: qty }] });
   }
   function setQty(key, qty) { if (cart[key]) { cart[key].qty = clampQty(qty); save(); updateCounts(); renderDrawer(); } }
   function removeItem(key) { delete cart[key]; save(); updateCounts(); renderDrawer(); }
@@ -199,6 +204,8 @@
     elErr.hidden = true;
     modal.hidden = false; requestAnimationFrame(function () { modal.classList.add("show"); });
     setTimeout(function () { elName.focus(); }, 60);
+    // Meta · InitiateCheckout
+    metaTrack("InitiateCheckout", { value: grandTotal(), currency: metaCurrency(), num_items: count(), content_type: "product", content_ids: arr().map(function (i) { return String(i.variant_id); }), contents: arr().map(function (i) { return { id: String(i.variant_id), quantity: i.qty }; }) });
   }
   function closeCheckout() { modal.classList.remove("show"); setTimeout(function () { modal.hidden = true; }, 250); }
 
@@ -244,6 +251,8 @@
     if (!items.length) return;
 
     var payload = { name: name, email: email, phone: phone, items: items, ref: buildRef() };
+    // Meta CAPI matching: propagar fbp/fbc + URL para recuperarlos en el webhook order/paid.
+    payload.meta = { fbp: getCookie("_fbp"), fbc: getCookie("_fbc"), event_source_url: (location.href || "").slice(0, 500), user_agent: (navigator.userAgent || "").slice(0, 400) };
     // Cupón de descuento (raspadinha): se guarda en ij_coupon y se aplica en el draft order.
     try { var _c = JSON.parse(localStorage.getItem("ij_coupon") || "null"); if (_c && _c.code) payload.coupon = String(_c.code); } catch (e) {}
     if (cep.length === 8) {
