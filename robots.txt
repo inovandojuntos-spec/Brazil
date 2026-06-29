@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://inovandojuntos.com.br/sitemap.xml
