@@ -400,37 +400,51 @@
 
   .section-head{ max-width:760px; margin-bottom:46px; }
 
-  /* ====== Banda de cierre ====== */
-  .band{
-    text-align:center; font-weight:800; letter-spacing:.04em;
-    font-size:clamp(17px,2.6vw,30px); line-height:1.25; color:var(--text);
-    max-width:22ch; margin:56px auto 0;
-  }
-  .band em{ font-style:normal; color:transparent; background:linear-gradient(180deg,#fff,#9aa0aa);
-    -webkit-background-clip:text; background-clip:text; }
+  /* ====== EXPERIMENTE · player del Desafio 05 (formato player_V4) con raspadinha encima → al raspar % revela el PLAY ====== */
+  .expr{ position:relative; padding:0; background:#000; z-index:2; }
+  .expr-track{ position:relative; height:175vh; }
+  .expr-sticky{ position:sticky; top:0; min-height:100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:clamp(36px,5.5vh,76px) clamp(16px,4vw,40px) clamp(60px,9vh,104px); }
+  .expr .wrap{ width:100%; display:flex; flex-direction:column; align-items:center; }
 
-  /* ====== Scratch / desafios ====== */
-  .scratch-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:34px; align-items:center; }
-  .scratch-stage{ position:relative; border-radius:26px; overflow:hidden; border:1px solid var(--edge);
-    background:var(--glass), var(--card); box-shadow:0 40px 100px var(--shadow); aspect-ratio:1/1; }
-  .scratch-reveal{ position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:30px;
-    background:radial-gradient(70% 60% at 50% 40%, rgba(255,255,255,.12), rgba(0,0,0,0) 60%), #060606; }
-  .scratch-reveal .rk{ font-family:var(--script); font-size:clamp(26px,4vw,46px); color:#fff; }
-  .scratch-reveal .rs{ color:var(--muted); font-size:13px; margin-top:8px; letter-spacing:.14em; text-transform:uppercase; }
-  .scratch-reveal .qr{ width:84px; height:84px; margin:18px auto 0; border-radius:14px; padding:8px; background:#fff; }
-  .scratch-reveal .qr svg{ width:100%; height:100%; }
-  #scratchCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
-  .scratch-hint{ position:absolute; left:50%; bottom:16px; transform:translateX(-50%); z-index:3;
-    font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(0,0,0,.55); font-weight:800;
-    pointer-events:none; transition:opacity .4s ease; }
+  /* stage tipo player (portrait 9:16, formato visual de player_V4_live) */
+  .expr-stage{ position:relative; width:auto; height:min(74vh, 660px); aspect-ratio:9/16; max-width:92vw;
+    border-radius:26px; overflow:hidden; cursor:pointer; touch-action:manipulation;
+    border:1px solid rgba(199,204,212,.30); background:#060606;
+    box-shadow:0 40px 110px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(199,204,212,.06); }
+  .expr-grad{ position:absolute; inset:0; z-index:0;
+    background:radial-gradient(70% 55% at 32% 26%,rgba(150,160,172,.28),transparent 60%),
+               radial-gradient(60% 60% at 78% 82%,rgba(60,64,72,.55),transparent),
+               linear-gradient(160deg,#16171b,#070708); }
+  .expr-stage video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    background:transparent; z-index:1; opacity:0; transition:opacity .5s ease; }
+  .expr-stage video.ready{ opacity:1; }
+  /* barra de progreso plata (abajo del stage) */
+  .expr-pbar{ position:absolute; left:0; right:0; bottom:0; z-index:5; height:3px; background:rgba(255,255,255,.16); }
+  .expr-pbar>i{ display:block; height:100%; width:0%;
+    background:linear-gradient(90deg, var(--ember-2), var(--ember)); border-radius:2px; transition:width .1s linear; }
+  /* raspadinha encima del player: al raspar 20% arranca y se limpia sola */
+  #exprCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:7; cursor:grab; touch-action:none; }
+  .expr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:8;
+    width:86%; text-align:center; line-height:1.12;
+    font-family:var(--display); font-weight:800; font-size:clamp(28px,7.5vw,54px);
+    letter-spacing:.03em; text-transform:uppercase; color:rgba(8,8,10,.80);
+    text-shadow:0 1px 0 rgba(255,255,255,.25); pointer-events:none; transition:opacity .4s ease; }
+  /* botón play central (aparece al raspar el %) */
+  .expr-play{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:6; border:0; cursor:pointer;
+    width:84px; height:84px; border-radius:50%; display:grid; place-items:center;
+    background:linear-gradient(135deg,#f1f3f6 0%,#aeb4bc 38%,#d7dbe1 60%,#8d9298 100%);
+    box-shadow:0 14px 40px rgba(0,0,0,.6); transition:transform .2s ease; }
+  .expr-play[hidden]{ display:none; }
+  .expr-play:hover{ transform:translate(-50%,-50%) scale(1.05); }
+  .expr-play svg{ width:36px; height:36px; fill:#0a0a0b; margin-left:5px; }
 
-  .desafios{ display:flex; flex-direction:column; gap:14px; }
-  .des{ border:1px solid var(--edge); border-radius:20px; padding:20px 22px; background:var(--glass), var(--card);
-    transition:transform .3s ease, border-color .3s ease; }
-  .des:hover{ transform:translateX(6px); border-color:var(--edge2); }
-  .des .dn{ font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--ember); font-weight:800; }
-  .des h3{ font-size:17px; margin:6px 0 8px; }
-  .des p{ margin:0; color:var(--muted); font-size:13.5px; }
+  /* flecha vertical + raya plata (aparece tras raspar / avanzar el scroll) */
+  .expr-cue{ position:absolute; left:0; right:0; bottom:clamp(18px,4vh,40px); z-index:6;
+    display:block; text-align:center; color:var(--ember); text-decoration:none;
+    opacity:0; pointer-events:none; transition:opacity .6s ease; }
+  .expr.cue-in .expr-cue{ opacity:1; pointer-events:auto; }
 
   /* ====== Compra ====== */
   .buy-wrap{ position:relative; border-radius:30px; overflow:hidden; padding:clamp(34px,5vw,64px);
@@ -445,18 +459,53 @@
   .pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px;
     border:1px solid var(--edge2); font-size:12px; font-weight:700; letter-spacing:.04em; color:var(--text);
     background:rgba(255,255,255,.04); }
-  .coupon{ display:inline-flex; align-items:center; gap:10px; margin-top:8px;
-    font-size:13px; color:var(--muted); }
-  .coupon b{ color:var(--ember); letter-spacing:.14em; font-weight:800;
-    border:1px dashed rgba(255,255,255,.42); padding:5px 12px; border-radius:10px; }
+  /* ---- layout 2 columnas: oferta | raspadinha ---- */
+  .buy-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:clamp(24px,3.4vw,44px);
+    align-items:center; margin-top:clamp(18px,2.6vw,28px); }
+  .buy-offer{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; }
+  .buy-label{ font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); font-weight:700; }
+  .buy-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+  .buy-pay{ font-size:13.5px; color:var(--muted); }
+  .buy-cta{ width:100%; max-width:360px; margin-top:6px; }
+  .buy-fine{ margin:2px 0 0; font-size:12px; color:var(--soft); max-width:44ch; }
 
-  /* ====== Newsletter ====== */
-  .news{ display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; max-width:460px; }
-  .news input{ flex:1; min-width:200px; min-height:50px; border:1px solid var(--edge);
-    border-radius:14px; background:rgba(255,255,255,.05); color:var(--text); padding:0 16px; font-size:15px; outline:none;
-    transition:border-color .2s ease, box-shadow .2s ease; font-family:var(--font); }
-  .news input:focus{ border-color:rgba(255,255,255,.3); box-shadow:0 0 0 4px rgba(255,255,255,.05); }
-  .news .ok{ font-size:13px; color:var(--ember); margin-top:6px; display:none; }
+  /* ---- raspadinha de descuento (todos ganham) ---- */
+  .buy-scratch{ display:flex; flex-direction:column; align-items:center; gap:14px;
+    border-left:1px solid var(--edge); padding-left:clamp(0px,2.4vw,34px); }
+  .scr-h{ margin:0; text-align:center; font-family:var(--display); font-weight:500;
+    font-size:clamp(18px,2.3vw,24px); color:var(--text); line-height:1.25; }
+  .scr-h span{ display:block; font-family:var(--font); font-weight:600;
+    font-size:clamp(11px,1.4vw,13px); color:var(--ember); text-transform:uppercase; letter-spacing:.14em; margin-top:7px; }
+  .scr-stage{ position:relative; width:min(360px,82vw); aspect-ratio:8/5; border-radius:20px; overflow:hidden;
+    border:1px solid rgba(199,204,212,.34); background:#060606; touch-action:none;
+    box-shadow:0 30px 70px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(199,204,212,.06); }
+  .scr-prize{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    text-align:center; padding:16px;
+    background:radial-gradient(75% 70% at 50% 40%, rgba(199,204,212,.14), rgba(0,0,0,0) 62%), #070708; }
+  .scr-off{ font-family:var(--display); font-weight:500; line-height:1; color:#fff;
+    display:flex; align-items:baseline; gap:.08em; letter-spacing:.02em; font-size:clamp(34px,8vw,52px); }
+  .scr-off b{ font-weight:600;
+    background:linear-gradient(100deg,#f7f8fa,#aab0ba,#ffffff,#868c96,#e9ebef);
+    -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
+  .scr-off i{ font-style:normal; font-size:.5em; font-weight:600; color:var(--soft); }
+  .scr-code{ font-size:13px; color:var(--muted); }
+  .scr-code b{ color:var(--ember); letter-spacing:.12em; font-weight:800;
+    border:1px dashed rgba(199,204,212,.5); padding:4px 10px; border-radius:9px; margin-left:4px; }
+  .scr-note{ font-size:11px; letter-spacing:.04em; color:var(--soft); }
+  #scrCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
+  .scr-hint{ position:absolute; left:50%; bottom:12px; transform:translateX(-50%); z-index:3;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(0,0,0,.6); font-weight:800;
+    pointer-events:none; transition:opacity .4s ease; }
+  .scr-copy{ font-size:12px; padding:9px 18px; }
+  .scr-fine{ margin:0; font-size:11.5px; color:var(--soft); text-align:center; max-width:36ch; }
+
+  @media (max-width:760px){
+    .buy-grid{ grid-template-columns:1fr; gap:clamp(22px,6vw,30px); }
+    .buy-offer{ align-items:center; text-align:center; }
+    .buy-meta{ justify-content:center; }
+    .buy-fine{ text-align:center; max-width:none; }
+    .buy-scratch{ border-left:0; padding-left:0; border-top:1px solid var(--edge); padding-top:clamp(20px,5vw,28px); }
+  }
 
   /* ====== Footer ====== */
   footer{ position:relative; z-index:2; border-top:1px solid var(--edge);
@@ -782,7 +831,6 @@
   @media (max-width:900px){
     .g4{ grid-template-columns:repeat(2,1fr); }
     .g3{ grid-template-columns:repeat(2,1fr); }
-    .scratch-wrap{ grid-template-columns:1fr; }
   }
   @media (max-width:560px){
     .g2,.g3,.g4{ grid-template-columns:1fr; }
@@ -839,6 +887,10 @@
     .plat-track{ height:auto; }
     .plat-sticky{ position:static; min-height:0; padding:clamp(40px,8vh,90px) clamp(16px,4vw,40px); }
     .plat-cue{ position:static; opacity:1; pointer-events:auto; margin-top:20px; }
+    /* experimente: sin pin, play y flecha visibles */
+    .expr-track{ height:auto; }
+    .expr-sticky{ position:static; min-height:0; padding:clamp(40px,8vh,90px) clamp(16px,4vw,40px); }
+    .expr-cue{ position:static; opacity:1; pointer-events:auto; margin-top:20px; }
   }
 </style>
 </head>
@@ -870,7 +922,7 @@
   <div class="menu-links">
     <a href="#jogo"><span class="mt">O Jogo</span></a>
     <a href="#plataforma"><span class="mt">Plataforma</span></a>
-    <a href="#como-funciona"><span class="mt">Como Funciona</span></a>
+    <a href="#como-funciona"><span class="mt">Experimente</span></a>
     <a href="#comprar"><span class="mt">Comprar</span></a>
   </div>
 </nav>
@@ -1024,42 +1076,34 @@
   </div>
 </section>
 
-<!-- ====== RASPE / QR ====== -->
-<section id="como-funciona">
-  <div class="wrap">
-    <div class="section-head reveal" style="margin:0 auto 40px; text-align:center;">
-      <span class="eyebrow" style="justify-content:center;"><span class="chev">›</span> Como funciona</span>
-      <h2 class="title">Raspe, escaneie o QR Code<br>e descubra sua próxima experiência</h2>
-    </div>
-    <div class="scratch-wrap">
-      <div class="scratch-stage reveal" id="scratchStage">
-        <div class="scratch-reveal">
-          <div>
-            <div class="rs">Desafio revelado</div>
-            <div class="rk">Massagem Sensual</div>
-            <div class="qr" aria-hidden="true">
-              <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><g fill="#000">
-                <rect x="6" y="6" width="22" height="22"/><rect x="12" y="12" width="10" height="10" fill="#fff"/>
-                <rect x="72" y="6" width="22" height="22"/><rect x="78" y="12" width="10" height="10" fill="#fff"/>
-                <rect x="6" y="72" width="22" height="22"/><rect x="12" y="78" width="10" height="10" fill="#fff"/>
-                <rect x="38" y="6" width="6" height="6"/><rect x="50" y="6" width="6" height="6"/><rect x="44" y="18" width="6" height="6"/>
-                <rect x="38" y="38" width="6" height="6"/><rect x="50" y="44" width="6" height="6"/><rect x="62" y="38" width="6" height="6"/>
-                <rect x="38" y="62" width="6" height="6"/><rect x="50" y="74" width="6" height="6"/><rect x="62" y="62" width="6" height="6"/>
-                <rect x="74" y="44" width="6" height="6"/><rect x="86" y="56" width="6" height="6"/><rect x="74" y="74" width="6" height="6"/><rect x="86" y="86" width="6" height="6"/>
-              </g></svg>
-            </div>
-          </div>
+<!-- ====== EXPERIMENTE · player directo do Desafio 05 (vídeo com áudio) ====== -->
+<section class="expr" id="como-funciona">
+  <div class="expr-track">
+    <div class="expr-sticky">
+      <div class="wrap">
+        <div class="section-head reveal" style="margin:0 auto clamp(14px,2.4vh,26px); text-align:center;">
+          <span class="eyebrow" style="justify-content:center;"><span class="chev">›</span> Experimente agora</span>
+          <h2 class="title">Experimente com<br>Inovando Juntos</h2>
         </div>
-        <canvas id="scratchCanvas"></canvas>
-        <span class="scratch-hint" id="scratchHint">Raspe aqui ✦</span>
+
+        <!-- Player do Desafio 05 com raspadinha encima (raspar revela o play) -->
+        <div class="expr-stage" id="exprStage">
+          <div class="expr-grad" aria-hidden="true"></div>
+          <video id="exprVideo" src="images/Desafio_05.mp4" muted loop playsinline webkit-playsinline preload="metadata"></video>
+          <audio id="exprAudio" src="audios/Desafio_05.mp3" preload="metadata"></audio>
+          <div class="expr-pbar"><i id="exprPfill"></i></div>
+          <button class="expr-play" id="exprPlay" type="button" aria-label="Reproduzir" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <canvas id="exprCanvas"></canvas>
+          <span class="expr-hint" id="exprHint">Raspe para revelar</span>
+        </div>
       </div>
-      <div class="desafios">
-        <article class="des reveal d1"><div class="dn">Desafio 1</div><h3>Massagem Sensual</h3><p>O desafio revelado é Massagem Sensual. Escutem atentamente. Vocês vão criar juntos um momento de massagem pensado para relaxar o corpo e aproximar vocês…</p></article>
-        <article class="des reveal d2"><div class="dn">Desafio 2</div><h3>Desconhecidos</h3><p>Vocês vão se tornar completos desconhecidos, prestes a se encontrar pela primeira vez em uma balada ou restaurante…</p></article>
-        <article class="des reveal d3"><div class="dn">Desafio 19</div><h3>Explorando Limites</h3><p>Antes de começar, cada um deverá acessar o contrato digital individualmente… um momento de honestidade, confiança e respeito.</p></article>
-      </div>
+
+      <a class="expr-cue" href="#comprar" aria-label="Continuar">
+        <span class="cue-line" aria-hidden="true"></span><span class="mw" aria-hidden="true"></span>
+      </a>
     </div>
-    <p class="band reveal">Uma experiência que o casal vive… <em>e que repete.</em></p>
   </div>
 </section>
 
@@ -1068,36 +1112,40 @@
   <div class="wrap">
     <div class="buy-wrap reveal">
       <span class="eyebrow"><span class="chev">›</span> Estão prontos para viver esta experiência?</span>
-      <div class="grid g3" style="margin-top:14px; align-items:start;">
-        <div class="reveal d1">
-          <h4 style="color:var(--soft); letter-spacing:.18em; font-size:12px; text-transform:uppercase; margin:0 0 12px;">Investimento</h4>
+
+      <div class="buy-grid">
+        <!-- Oferta: precio + pago + CTA directo -->
+        <div class="buy-offer reveal d1">
+          <span class="buy-label">Investimento</span>
           <div class="price"><small>R$</small> 189<span class="cents">,90</span></div>
-          <span class="pill" style="margin-top:14px;">✦ Frete grátis</span>
-        </div>
-        <div class="reveal d2">
-          <h4 style="color:var(--soft); letter-spacing:.18em; font-size:12px; text-transform:uppercase; margin:0 0 12px;">Formas de pagamento</h4>
-          <p class="lead" style="font-size:15px;">PIX, cartão em até 3x ou boleto.</p>
-        </div>
-        <div class="reveal d3">
-          <h4 style="color:var(--soft); letter-spacing:.18em; font-size:12px; text-transform:uppercase; margin:0 0 12px;">Onde compro?</h4>
-          <button class="btn btn--lg"
+          <div class="buy-meta">
+            <span class="pill">✦ Frete grátis</span>
+            <span class="buy-pay">PIX, cartão em até 3x ou boleto</span>
+          </div>
+          <button class="btn btn--lg buy-cta"
             data-ij-add
             data-variant-id="1538741502"
             data-name="Jogo para casais — Inovando Juntos"
             data-price="189.90"
             data-image="https://dcdn-us.mitiendanube.com/stores/005/452/146/products/4e2f4c36-486d-435b-ab3e-d39b29a01dee-41a627f92725d275d517807721262797-1024-1024.png">Adicionar ao carrinho</button>
-          <div class="coupon">Cupom de desconto 5%: <b>PRIMEIRACOMPRA</b></div>
+          <p class="buy-fine">Código de ativação enviado por e-mail após a confirmação da compra.</p>
         </div>
-      </div>
 
-      <div style="margin-top:36px; padding-top:28px; border-top:1px solid var(--edge);">
-        <h4 style="color:var(--text); font-size:16px; margin:0 0 6px;">Quer fazer parte da comunidade?</h4>
-        <p class="lead" style="font-size:14px;">Deixe seu e-mail e avisamos sobre novidades e novas experiências.</p>
-        <form class="news" id="newsForm" novalidate>
-          <input type="email" id="newsEmail" placeholder="seu@email.com" autocomplete="email" aria-label="Seu e-mail" required />
-          <button class="btn" type="submit">Quero ser avisado</button>
-        </form>
-        <p class="ok" id="newsOk">Pronto! Em breve vocês terão novidades. ✦</p>
+        <!-- Raspadinha: todos ganham um desconto (5% a 20%) -->
+        <div class="buy-scratch reveal d2">
+          <h3 class="scr-h">Raspe e descubra seu cupom</h3>
+          <div class="scr-stage" id="scrStage" role="img" aria-label="Raspadinha de desconto">
+            <div class="scr-prize" id="scrPrize" aria-hidden="true">
+              <div class="scr-off"><b id="scrPct">10</b><i>%</i> OFF</div>
+              <div class="scr-code">Cupom <b id="scrCode">IJ10-AB3</b></div>
+              <div class="scr-note">válido em nossas lojas online</div>
+            </div>
+            <canvas id="scrCanvas"></canvas>
+            <span class="scr-hint" id="scrHint">Raspe aqui ✦</span>
+          </div>
+          <button class="btn btn--ghost scr-copy" id="scrCopy" type="button" hidden>Copiar cupom</button>
+          <p class="scr-fine">Todos ganham. Use o cupom no carrinho da nossa loja.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -1269,18 +1317,109 @@
 
   /* ---- Carrinho + checkout: gerenciados por store.js ---- */
 
-  /* ---- Newsletter (placeholder: conectar a Supabase/Resend) ---- */
-  var nf = document.getElementById("newsForm");
-  if (nf){
-    nf.addEventListener("submit", function(ev){
-      ev.preventDefault();
-      var email = document.getElementById("newsEmail").value.trim();
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return;
-      // TODO: POST para Supabase/Resend aqui.
-      document.getElementById("newsOk").style.display = "block";
-      nf.reset();
-    });
-  }
+  /* ---- Raspadinha de desconto: sorteo ponderado (todos ganham 5%–20%) + cupom ---- */
+  (function(){
+    var stage = document.getElementById("scrStage");
+    var canvas = document.getElementById("scrCanvas");
+    if (!stage || !canvas) return;
+    var hint = document.getElementById("scrHint");
+    var copyBtn = document.getElementById("scrCopy");
+    var pctEl = document.getElementById("scrPct");
+    var codeEl = document.getElementById("scrCode");
+
+    // PARÁMETROS ajustables: valor del descuento (%) y su peso (probabilidad relativa).
+    // Sin "blanco": el mínimo siempre es un descuento real.
+    var PRIZES = [
+      { pct:5,  w:30 },
+      { pct:10, w:26 },
+      { pct:8,  w:16 },
+      { pct:15, w:13 },
+      { pct:12, w:8  },
+      { pct:20, w:7  }
+    ];
+    function pickPrize(){
+      var total = 0, i; for (i=0;i<PRIZES.length;i++) total += PRIZES[i].w;
+      var r = Math.random() * total;
+      for (i=0;i<PRIZES.length;i++){ r -= PRIZES[i].w; if (r <= 0) return PRIZES[i]; }
+      return PRIZES[0];
+    }
+    function code(pct){
+      var s = "", abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      for (var i=0;i<3;i++) s += abc.charAt(Math.floor(Math.random()*abc.length));
+      return "IJ" + pct + "-" + s;
+    }
+    var prize = pickPrize(), coupon = code(prize.pct);
+    if (pctEl) pctEl.textContent = prize.pct;
+    if (codeEl) codeEl.textContent = coupon;
+
+    var ctx = canvas.getContext("2d");
+    var drawing = false, cleared = false, started = false;
+    function size(){
+      var r = stage.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      cover(r.width, r.height);
+    }
+    function cover(w,h){
+      var g = ctx.createLinearGradient(0,0,w,h);
+      g.addColorStop(0,"#c7ccd4"); g.addColorStop(.5,"#8a909a"); g.addColorStop(1,"#aab0ba");
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle = "rgba(0,0,0,.10)";
+      for (var i=0;i<w;i+=20){ for (var j=0;j<h;j+=20){ ctx.fillRect(i,j,2,2); } }
+    }
+    function pos(ev){
+      var r = canvas.getBoundingClientRect();
+      var p = ev.touches ? ev.touches[0] : ev;
+      return { x:p.clientX - r.left, y:p.clientY - r.top };
+    }
+    function scratch(ev){
+      if (!drawing) return;
+      var p = pos(ev);
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath(); ctx.arc(p.x, p.y, 22, 0, Math.PI*2); ctx.fill();
+      if (!started){ started = true; if (hint) hint.style.opacity = "0"; }
+      check();
+    }
+    var last = 0;
+    function check(){
+      var now = Date.now(); if (now - last < 220) return; last = now;
+      try {
+        var img = ctx.getImageData(0,0,canvas.width,canvas.height).data, clear = 0, step = 80;
+        for (var i=3;i<img.length;i+=4*step){ if (img[i] === 0) clear++; }
+        if (clear / (img.length / (4*step)) > 0.5 && !cleared){
+          cleared = true;
+          canvas.style.transition = "opacity .55s ease"; canvas.style.opacity = "0";
+          setTimeout(function(){ canvas.style.display = "none"; }, 600);
+          if (copyBtn) copyBtn.hidden = false;
+          if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
+        }
+      } catch(e){}
+    }
+    canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
+    window.addEventListener("pointerup", function(){ drawing = false; });
+    canvas.addEventListener("pointermove", scratch);
+    canvas.addEventListener("touchstart", function(e){ drawing = true; scratch(e); }, { passive:true });
+    canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
+    canvas.addEventListener("touchend", function(){ drawing = false; });
+
+    if (copyBtn){
+      copyBtn.addEventListener("click", function(){
+        var done = function(){ var t = copyBtn.textContent; copyBtn.textContent = "Cupom copiado ✦"; setTimeout(function(){ copyBtn.textContent = t; }, 1600); };
+        if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(coupon).then(done, done); }
+        else { done(); }
+      });
+    }
+
+    if (reduce){
+      canvas.style.display = "none"; if (hint) hint.style.display = "none";
+      if (copyBtn) copyBtn.hidden = false;
+    } else {
+      window.addEventListener("resize", function(){ if (!cleared) size(); });
+      size();
+    }
+  })();
 
   /* ---- Cookie consent (LGPD) ---- */
   var cookie = document.getElementById("cookie");
@@ -1669,74 +1808,137 @@
     req();
   })();
 
-  /* ---- Scratch card (canvas) ---- */
-  var canvas = document.getElementById("scratchCanvas");
-  var hint = document.getElementById("scratchHint");
-  if (canvas){
-    var ctx = canvas.getContext("2d");
-    var stage = document.getElementById("scratchStage");
-    var drawing = false, cleared = false, started = false;
+  /* ---- EXPERIMENTE: raspadinha (capa encima) → al raspar el % se deshabilita y muestra el PLAY ---- */
+  (function(){
+    var stage   = document.getElementById("exprStage");
+    var video   = document.getElementById("exprVideo");
+    var audio   = document.getElementById("exprAudio");
+    var canvas  = document.getElementById("exprCanvas");
+    var hint    = document.getElementById("exprHint");
+    var pfill   = document.getElementById("exprPfill");
+    var playBtn = document.getElementById("exprPlay");
+    if (!stage || !video) return;
+    if (video){ video.muted = true; video.loop = true; }   // el vídeo es MUDO + loop; manda el áudio
+    var ctx = canvas ? canvas.getContext("2d") : null;
 
-    function sizeCanvas(){
-      var r = stage.getBoundingClientRect();
+    var SCRATCH_TARGET = 0.40;   // <-- % a raspar para revelar el play (fácil de ajustar)
+    var drawing = false, revealed = false, sized = false, last = 0;
+
+    /* paso 1 · pintar la capa de raspadinha (robusto: re-mide cuando el slide está visible) */
+    function paintCover(){
+      if (!ctx) return false;
+      var r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+      canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
       ctx.setTransform(dpr,0,0,dpr,0,0);
-      paintCover(r.width, r.height);
-    }
-    function paintCover(w,h){
-      var g = ctx.createLinearGradient(0,0,w,h);
-      g.addColorStop(0,"#2a2a2a"); g.addColorStop(.5,"#3a3a3a"); g.addColorStop(1,"#222");
+      var g = ctx.createLinearGradient(0,0,r.width,r.height);
+      g.addColorStop(0,"#c7ccd4"); g.addColorStop(.5,"#8a909a"); g.addColorStop(1,"#aab0ba");
       ctx.globalCompositeOperation = "source-over";
-      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle = "rgba(255,255,255,.08)";
-      for (var i=0;i<w;i+=22){ for (var j=0;j<h;j+=22){ ctx.fillRect(i,j,2,2); } }
+      ctx.fillStyle = g; ctx.fillRect(0,0,r.width,r.height);
+      ctx.fillStyle = "rgba(0,0,0,.10)";
+      for (var i=0;i<r.width;i+=22){ for (var j=0;j<r.height;j+=22){ ctx.fillRect(i,j,2,2); } }
+      sized = true; return true;
     }
+    if (ctx && "IntersectionObserver" in window){
+      new IntersectionObserver(function(es){
+        if (es[0].isIntersecting && !sized && !revealed) paintCover();
+      }, { threshold:0.2 }).observe(stage);
+    }
+
     function pos(ev){
       var r = canvas.getBoundingClientRect();
       var p = ev.touches ? ev.touches[0] : ev;
       return { x:p.clientX - r.left, y:p.clientY - r.top };
     }
+    function pctCleared(){
+      try {
+        var d = ctx.getImageData(0,0,canvas.width,canvas.height).data, clr = 0, step = 80, n = 0;
+        for (var i=3;i<d.length;i+=4*step){ n++; if (d[i] < 128) clr++; }   // alpha<128 = zona limpiada (robusto)
+        return n ? clr / n : 0;
+      } catch(e){ return 0; }
+    }
+    /* paso 2 · al raspar el %: deshabilita la capa y muestra el play */
+    function reveal(){
+      if (revealed) return; revealed = true;
+      if (canvas){ canvas.style.transition = "opacity .45s ease"; canvas.style.opacity = "0"; canvas.style.pointerEvents = "none";
+        setTimeout(function(){ canvas.style.display = "none"; }, 480); }
+      if (hint) hint.style.opacity = "0";
+      showPlay(true);
+      if (window.ijTrack) window.ijTrack("expr_revealed");
+    }
     function scratch(ev){
-      if (!drawing) return;
+      if (!drawing || !ctx || revealed) return;
+      if (!sized && !paintCover()) return;
       var p = pos(ev);
       ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath(); ctx.arc(p.x, p.y, 26, 0, Math.PI*2); ctx.fill();
-      if (!started){ started = true; if (hint) hint.style.opacity = "0"; }
-      checkCleared();
+      ctx.globalAlpha = 1; ctx.fillStyle = "#000";   // fuente opaca → borra del todo en una pasada
+      ctx.beginPath(); ctx.arc(p.x, p.y, 52, 0, Math.PI*2); ctx.fill();
+      if (hint) hint.style.opacity = "0";
+      var now = Date.now();
+      if (now - last > 120){ last = now; if (pctCleared() > SCRATCH_TARGET) reveal(); }
     }
-    var lastCheck = 0;
-    function checkCleared(){
-      var now = Date.now(); if (now - lastCheck < 250) return; lastCheck = now;
-      try {
-        var img = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-        var clear = 0, step = 80;
-        for (var i=3;i<img.length;i+=4*step){ if (img[i] === 0) clear++; }
-        var ratio = clear / (img.length / (4*step));
-        if (ratio > 0.55 && !cleared){
-          cleared = true;
-          canvas.style.transition = "opacity .6s ease";
-          canvas.style.opacity = "0";
-          setTimeout(function(){ canvas.style.display = "none"; }, 650);
-        }
-      } catch(e){}
+    if (canvas){
+      canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
+      window.addEventListener("pointerup", function(){ drawing = false; });
+      canvas.addEventListener("pointermove", scratch);
+      canvas.addEventListener("touchstart", function(e){ drawing = true; scratch(e); }, { passive:true });
+      canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
+      canvas.addEventListener("touchend", function(){ drawing = false; });
     }
 
-    canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
-    window.addEventListener("pointerup", function(){ drawing = false; });
-    canvas.addEventListener("pointermove", scratch);
-    canvas.addEventListener("touchstart", function(e){ drawing = true; scratch(e); }, { passive:true });
-    canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
-    canvas.addEventListener("touchend", function(){ drawing = false; });
+    /* paso 3 · play: el ÁUDIO (audios/Desafio_05.mp3) manda; el vídeo (mudo) lo sigue */
+    function showPlay(v){ if (playBtn) playBtn.hidden = !v; }
+    function play(){ if (!audio) return; var p = audio.play(); if (p && p.catch) p.catch(function(){}); }
+    function toggle(){ if (!audio) return; if (audio.paused) play(); else audio.pause(); }
+    if (playBtn) playBtn.addEventListener("click", function(e){ e.stopPropagation(); toggle(); });
+    stage.addEventListener("click", function(e){ if (!revealed || e.target === canvas) return; toggle(); });
 
-    if (reduce){
-      canvas.style.display = "none";
-      if (hint) hint.style.display = "none";
-    } else {
-      window.addEventListener("resize", function(){ if (!cleared) sizeCanvas(); });
-      sizeCanvas();
+    video.addEventListener("loadeddata", function(){ video.classList.add("ready"); });
+    if (video.readyState >= 2) video.classList.add("ready");
+
+    if (audio){
+      audio.addEventListener("play", function(){
+        showPlay(false);
+        video.muted = true; var p = video.play(); if (p && p.catch) p.catch(function(){});
+        if (window.ijTrack) window.ijTrack("expr_play");
+      });
+      audio.addEventListener("pause", function(){ showPlay(true); video.pause(); });
+      audio.addEventListener("ended", function(){
+        showPlay(true); video.pause();
+        try { video.currentTime = 0; } catch(e){}
+        if (pfill) pfill.style.width = "0%";
+      });
+      audio.addEventListener("timeupdate", function(){
+        if (audio.duration && pfill) pfill.style.width = (audio.currentTime / audio.duration * 100) + "%";
+      });
     }
-  }
+
+    /* pintado inicial + fallbacks */
+    paintCover();
+    window.addEventListener("resize", function(){ if (!revealed) paintCover(); });
+    if (reduce){ revealed = true; if (canvas) canvas.style.display = "none"; if (hint) hint.style.display = "none"; showPlay(true); }
+  })();
+
+  /* ---- EXPERIMENTE: freno de scroll → revela la flecha "siguiente" ---- */
+  (function(){
+    var sec = document.getElementById("como-funciona");
+    if (!sec || !sec.classList.contains("expr")) return;
+    var track = sec.querySelector(".expr-track");
+    if (reduce || !track){ sec.classList.add("cue-in"); return; }
+    var ticking = false;
+    function update(){
+      ticking = false;
+      var rect = track.getBoundingClientRect();
+      var total = track.offsetHeight - window.innerHeight;
+      var p = total > 0 ? Math.min(Math.max(-rect.top, 0), total) / total : 0;
+      sec.classList.toggle("cue-in", p > 0.4);
+    }
+    function req(){ if (!ticking){ ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener("scroll", req, { passive:true });
+    window.addEventListener("resize", req);
+    req();
+  })();
 })();
 </script>
 <script src="store.js"></script>
