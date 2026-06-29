@@ -459,31 +459,36 @@
   .pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px;
     border:1px solid var(--edge2); font-size:12px; font-weight:700; letter-spacing:.04em; color:var(--text);
     background:rgba(255,255,255,.04); }
-  /* ---- layout 2 columnas: oferta | raspadinha ---- */
-  .buy-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:clamp(24px,3.4vw,44px);
-    align-items:center; margin-top:clamp(18px,2.6vw,28px); }
-  .buy-offer{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; }
+  /* ---- slide 6: oferta en columna centrada ---- */
+  .buy-wrap{ text-align:center; }
+  .buy-wrap .eyebrow{ justify-content:center; }
+  .buy-pay{ margin:clamp(16px,2.4vw,24px) auto 0; font-size:clamp(15px,2vw,20px); color:var(--text); font-weight:600; letter-spacing:.01em; }
+  .buy-price{ margin-top:clamp(18px,2.6vw,30px); display:flex; flex-direction:column; align-items:center; gap:10px; }
   .buy-label{ font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); font-weight:700; }
-  .buy-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
-  .buy-pay{ font-size:13.5px; color:var(--muted); }
-  .buy-cta{ width:100%; max-width:360px; margin-top:6px; }
-  .buy-fine{ margin:2px 0 0; font-size:12px; color:var(--soft); max-width:44ch; }
+  .buy-price-line{ display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:clamp(12px,2.4vw,22px); }
+  .price--old{ position:relative; color:var(--muted); transition:opacity .4s ease; }
+  .price--old.struck{ opacity:.55; }
+  .price--old.struck::after{ content:""; position:absolute; left:-3%; right:-3%; top:52%; height:3px; border-radius:3px;
+    background:var(--ember); transform:scaleX(0); transform-origin:left; transition:transform .55s cubic-bezier(.2,.8,.2,1) .1s; }
+  .price--old.struck.on::after{ transform:scaleX(1); }
+  .price--new{ color:#fff; }
+  .buy-off{ display:inline-flex; align-items:center; font-size:clamp(13px,1.5vw,16px); font-weight:800; letter-spacing:.05em;
+    color:#0a0a0b; background:linear-gradient(135deg,#f1f3f6,#aeb4bc,#d7dbe1,#8d9298); padding:7px 13px; border-radius:999px;
+    box-shadow:0 8px 22px rgba(0,0,0,.4); }
+  .buy-off b{ font-weight:800; margin:0 .12em; }
+  .buy-cta{ width:100%; max-width:360px; margin:clamp(20px,3vw,30px) auto 0; }
+  .buy-fine{ margin:12px auto 0; font-size:12px; color:var(--soft); max-width:46ch; }
 
   /* ---- raspadinha de descuento (todos ganham) ---- */
-  .buy-scratch{ display:flex; flex-direction:column; align-items:center; gap:14px;
-    border-left:1px solid var(--edge); padding-left:clamp(0px,2.4vw,34px); }
-  .scr-h{ margin:0; text-align:center; font-family:var(--display); font-weight:500;
-    font-size:clamp(18px,2.3vw,24px); color:var(--text); line-height:1.25; }
-  .scr-h span{ display:block; font-family:var(--font); font-weight:600;
-    font-size:clamp(11px,1.4vw,13px); color:var(--ember); text-transform:uppercase; letter-spacing:.14em; margin-top:7px; }
-  .scr-stage{ position:relative; width:min(360px,82vw); aspect-ratio:8/5; border-radius:20px; overflow:hidden;
+  .buy-scratch{ display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:clamp(22px,3.2vw,36px); }
+  .scr-stage{ position:relative; width:min(420px,86vw); aspect-ratio:5/2; border-radius:20px; overflow:hidden;
     border:1px solid rgba(199,204,212,.34); background:#060606; touch-action:none;
     box-shadow:0 30px 70px var(--shadow), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(199,204,212,.06); }
   .scr-prize{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-    text-align:center; padding:16px;
+    text-align:center; padding:14px;
     background:radial-gradient(75% 70% at 50% 40%, rgba(199,204,212,.14), rgba(0,0,0,0) 62%), #070708; }
   .scr-off{ font-family:var(--display); font-weight:500; line-height:1; color:#fff;
-    display:flex; align-items:baseline; gap:.08em; letter-spacing:.02em; font-size:clamp(34px,8vw,52px); }
+    display:flex; align-items:baseline; gap:.08em; letter-spacing:.02em; font-size:clamp(30px,7vw,46px); }
   .scr-off b{ font-weight:600;
     background:linear-gradient(100deg,#f7f8fa,#aab0ba,#ffffff,#868c96,#e9ebef);
     -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
@@ -491,20 +496,14 @@
   .scr-code{ font-size:13px; color:var(--muted); }
   .scr-code b{ color:var(--ember); letter-spacing:.12em; font-weight:800; font-size:1.4em;
     border:1px dashed rgba(199,204,212,.5); padding:4px 10px; border-radius:9px; margin-left:4px; }
-  .scr-note{ font-size:11px; letter-spacing:.04em; color:var(--soft); }
   #scrCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
-  .scr-hint{ position:absolute; left:50%; bottom:12px; transform:translateX(-50%); z-index:3;
-    font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(0,0,0,.6); font-weight:800;
-    pointer-events:none; transition:opacity .4s ease; }
+  .scr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:3; width:84%; text-align:center;
+    font-family:var(--display); font-size:clamp(15px,2.8vw,23px); letter-spacing:.05em; text-transform:uppercase; color:rgba(8,8,10,.80); font-weight:800;
+    pointer-events:none; transition:opacity .4s ease; line-height:1.2; }
   .scr-copy{ font-size:12px; padding:9px 18px; }
-  .scr-fine{ margin:0; font-size:11.5px; color:var(--soft); text-align:center; max-width:36ch; }
 
   @media (max-width:760px){
-    .buy-grid{ grid-template-columns:1fr; gap:clamp(22px,6vw,30px); }
-    .buy-offer{ align-items:center; text-align:center; }
-    .buy-meta{ justify-content:center; }
-    .buy-fine{ text-align:center; max-width:none; }
-    .buy-scratch{ border-left:0; padding-left:0; border-top:1px solid var(--edge); padding-top:clamp(20px,5vw,28px); }
+    .buy-fine{ max-width:none; }
   }
 
   /* ====== Footer ====== */
@@ -1095,11 +1094,10 @@
           <h2 class="title">Experimente com<br>Inovando Juntos</h2>
         </div>
 
-        <!-- Player do Desafio 05 com raspadinha encima (raspar revela o play) -->
+        <!-- Player do Desafio (vídeo único com áudio próprio) + raspadinha encima -->
         <div class="expr-stage" id="exprStage">
           <div class="expr-grad" aria-hidden="true"></div>
-          <video id="exprVideo" src="images/Desafio_05.mp4?v=2" muted loop playsinline webkit-playsinline preload="metadata"></video>
-          <audio id="exprAudio" src="audios/Desafio_05.mp3?v=2" preload="metadata"></audio>
+          <video id="exprVideo" src="images/Desafio_web.mp4" playsinline webkit-playsinline preload="metadata"></video>
           <div class="expr-pbar"><i id="exprPfill"></i></div>
           <button class="expr-play" id="exprPlay" type="button" aria-label="Reproduzir" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
@@ -1122,40 +1120,38 @@
     <div class="buy-wrap reveal">
       <span class="eyebrow"><span class="chev">›</span> Estão prontos para viver esta experiência?</span>
 
-      <div class="buy-grid">
-        <!-- Oferta: precio + pago + CTA directo -->
-        <div class="buy-offer reveal d1">
-          <span class="buy-label">Investimento</span>
-          <div class="price"><small>R$</small> 189<span class="cents">,90</span></div>
-          <div class="buy-meta">
-            <span class="pill">✦ Frete grátis</span>
-            <span class="buy-pay">PIX, cartão em até 3x ou boleto</span>
-          </div>
-          <button class="btn btn--lg buy-cta"
-            data-ij-add
-            data-variant-id="1538741502"
-            data-name="Jogo para casais — Inovando Juntos"
-            data-price="189.90"
-            data-image="https://dcdn-us.mitiendanube.com/stores/005/452/146/products/4e2f4c36-486d-435b-ab3e-d39b29a01dee-41a627f92725d275d517807721262797-1024-1024.png">Adicionar ao carrinho</button>
-          <p class="buy-fine">Código de ativação enviado por e-mail após a confirmação da compra.</p>
-        </div>
+      <!-- 1 · métodos de pagamento -->
+      <p class="buy-pay">PIX, cartão em até 3x ou boleto</p>
 
-        <!-- Raspadinha: todos ganham um desconto (5% a 20%) -->
-        <div class="buy-scratch reveal d2">
-          <h3 class="scr-h">Raspe e descubra seu cupom</h3>
-          <div class="scr-stage" id="scrStage" role="img" aria-label="Raspadinha de desconto">
-            <div class="scr-prize" id="scrPrize" aria-hidden="true">
-              <div class="scr-off"><b id="scrPct">10</b><i>%</i> OFF</div>
-              <div class="scr-code">Cupom <b id="scrCode">IJ10-AB3</b></div>
-              <div class="scr-note">válido em nossas lojas online</div>
-            </div>
-            <canvas id="scrCanvas"></canvas>
-            <span class="scr-hint" id="scrHint">Raspe aqui ✦</span>
-          </div>
-          <button class="btn btn--ghost scr-copy" id="scrCopy" type="button" hidden>Copiar cupom</button>
-          <p class="scr-fine">Todos ganham. Use o cupom no carrinho da nossa loja.</p>
+      <!-- 2 · investimento (riscado) + novo valor após raspar -->
+      <div class="buy-price">
+        <span class="buy-label">Investimento</span>
+        <div class="buy-price-line">
+          <div class="price price--old" id="buyOld"><small>R$</small> 187</div>
+          <div class="price price--new" id="buyNew" hidden></div>
+          <span class="buy-off">✦ Frete grátis</span>
         </div>
       </div>
+
+      <!-- 3 · raspe para descobrir o desconto -->
+      <div class="buy-scratch reveal d1">
+        <div class="scr-stage" id="scrStage" role="img" aria-label="Raspadinha de desconto">
+          <div class="scr-prize" id="scrPrize" aria-hidden="true">
+            <div class="scr-off"><b id="scrPct">20</b><i>%</i> OFF</div>
+            <div class="scr-code">Cupom <b id="scrCode">IJ20-XXX</b></div>
+          </div>
+          <canvas id="scrCanvas"></canvas>
+          <span class="scr-hint" id="scrHint">Raspe para descobrir seu desconto</span>
+        </div>
+      </div>
+
+      <!-- 4 · CTA -->
+      <button class="btn btn--lg buy-cta"
+        data-ij-add
+        data-variant-id="1538741502"
+        data-name="Jogo para casais — Inovando Juntos"
+        data-price="187.00"
+        data-image="https://dcdn-us.mitiendanube.com/stores/005/452/146/products/4e2f4c36-486d-435b-ab3e-d39b29a01dee-41a627f92725d275d517807721262797-1024-1024.png">Adicionar ao carrinho</button>
     </div>
   </div>
 </section>
@@ -1332,32 +1328,25 @@
     var canvas = document.getElementById("scrCanvas");
     if (!stage || !canvas) return;
     var hint = document.getElementById("scrHint");
-    var copyBtn = document.getElementById("scrCopy");
     var pctEl = document.getElementById("scrPct");
     var codeEl = document.getElementById("scrCode");
-
-    // PARÁMETROS ajustables: valor del descuento (%) y su peso (probabilidad relativa).
-    // Sin "blanco": el mínimo siempre es un descuento real.
-    var PRIZES = [
-      { pct:5,  w:30 },
-      { pct:10, w:26 },
-      { pct:8,  w:16 },
-      { pct:15, w:13 },
-      { pct:12, w:8  },
-      { pct:20, w:7  }
-    ];
-    function pickPrize(){
-      var total = 0, i; for (i=0;i<PRIZES.length;i++) total += PRIZES[i].w;
-      var r = Math.random() * total;
-      for (i=0;i<PRIZES.length;i++){ r -= PRIZES[i].w; if (r <= 0) return PRIZES[i]; }
-      return PRIZES[0];
+    var oldEl = document.getElementById("buyOld");
+    var newEl = document.getElementById("buyNew");
+    var ctaEl = document.querySelector(".buy-cta");
+    var base = ctaEl ? (parseFloat(ctaEl.getAttribute("data-price")) || 189.90) : 189.90;
+    function fmtBRL(v){ var s = v.toFixed(2).split("."); return s[0] + '<span class="cents">,' + s[1] + '</span>'; }
+    function applyDiscount(pct){
+      if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - pct/100)); newEl.hidden = false; }
+      if (oldEl){ oldEl.classList.add("struck"); requestAnimationFrame(function(){ oldEl.classList.add("on"); }); }
     }
+
+    // Descuento FIJO de 20% (todos ganham o mesmo) + cupom.
     function code(pct){
       var s = "", abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
       for (var i=0;i<3;i++) s += abc.charAt(Math.floor(Math.random()*abc.length));
       return "IJ" + pct + "-" + s;
     }
-    var prize = pickPrize(), coupon = code(prize.pct);
+    var prize = { pct:20 }, coupon = code(prize.pct);
     if (pctEl) pctEl.textContent = prize.pct;
     if (codeEl) codeEl.textContent = coupon;
 
@@ -1402,7 +1391,7 @@
           cleared = true;
           canvas.style.transition = "opacity .55s ease"; canvas.style.opacity = "0";
           setTimeout(function(){ canvas.style.display = "none"; }, 600);
-          if (copyBtn) copyBtn.hidden = false;
+          applyDiscount(prize.pct);   // tacha el precio viejo y muestra el nuevo valor
           if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
         }
       } catch(e){}
@@ -1414,17 +1403,8 @@
     canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
     canvas.addEventListener("touchend", function(){ drawing = false; });
 
-    if (copyBtn){
-      copyBtn.addEventListener("click", function(){
-        var done = function(){ var t = copyBtn.textContent; copyBtn.textContent = "Cupom copiado ✦"; setTimeout(function(){ copyBtn.textContent = t; }, 1600); };
-        if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(coupon).then(done, done); }
-        else { done(); }
-      });
-    }
-
     if (reduce){
       canvas.style.display = "none"; if (hint) hint.style.display = "none";
-      if (copyBtn) copyBtn.hidden = false;
     } else {
       window.addEventListener("resize", function(){ if (!cleared) size(); });
       size();
@@ -1822,13 +1802,11 @@
   (function(){
     var stage   = document.getElementById("exprStage");
     var video   = document.getElementById("exprVideo");
-    var audio   = document.getElementById("exprAudio");
     var canvas  = document.getElementById("exprCanvas");
     var hint    = document.getElementById("exprHint");
     var pfill   = document.getElementById("exprPfill");
     var playBtn = document.getElementById("exprPlay");
-    if (!stage || !video) return;
-    if (video){ video.muted = true; video.loop = true; }   // el vídeo es MUDO + loop; manda el áudio
+    if (!stage || !video) return;   // un único vídeo con áudio próprio (images/Desafio_web.mp4)
     var ctx = canvas ? canvas.getContext("2d") : null;
 
     var SCRATCH_TARGET = 0.40;   // <-- % a raspar para revelar el play (fácil de ajustar)
@@ -1897,32 +1875,21 @@
       canvas.addEventListener("touchend", function(){ drawing = false; });
     }
 
-    /* paso 3 · play: el ÁUDIO (audios/Desafio_05.mp3) manda; el vídeo (mudo) lo sigue */
+    /* paso 3 · play: un único vídeo com áudio próprio (images/Desafio_web.mp4) */
     function showPlay(v){ if (playBtn) playBtn.hidden = !v; }
-    function play(){ if (!audio) return; var p = audio.play(); if (p && p.catch) p.catch(function(){}); }
-    function toggle(){ if (!audio) return; if (audio.paused) play(); else audio.pause(); }
+    function play(){ var p = video.play(); if (p && p.catch) p.catch(function(){}); }
+    function toggle(){ if (video.paused) play(); else video.pause(); }
     if (playBtn) playBtn.addEventListener("click", function(e){ e.stopPropagation(); toggle(); });
     stage.addEventListener("click", function(e){ if (!revealed || e.target === canvas) return; toggle(); });
 
     video.addEventListener("loadeddata", function(){ video.classList.add("ready"); });
     if (video.readyState >= 2) video.classList.add("ready");
-
-    if (audio){
-      audio.addEventListener("play", function(){
-        showPlay(false);
-        video.muted = true; var p = video.play(); if (p && p.catch) p.catch(function(){});
-        if (window.ijTrack) window.ijTrack("expr_play");
-      });
-      audio.addEventListener("pause", function(){ showPlay(true); video.pause(); });
-      audio.addEventListener("ended", function(){
-        showPlay(true); video.pause();
-        try { video.currentTime = 0; } catch(e){}
-        if (pfill) pfill.style.width = "0%";
-      });
-      audio.addEventListener("timeupdate", function(){
-        if (audio.duration && pfill) pfill.style.width = (audio.currentTime / audio.duration * 100) + "%";
-      });
-    }
+    video.addEventListener("play",  function(){ showPlay(false); if (window.ijTrack) window.ijTrack("expr_play"); });
+    video.addEventListener("pause", function(){ if (!video.ended) showPlay(true); });
+    video.addEventListener("ended", function(){ showPlay(true); try { video.currentTime = 0; } catch(e){} if (pfill) pfill.style.width = "0%"; });
+    video.addEventListener("timeupdate", function(){
+      if (video.duration && pfill) pfill.style.width = (video.currentTime / video.duration * 100) + "%";
+    });
 
     /* pintado inicial + fallbacks */
     paintCover();
