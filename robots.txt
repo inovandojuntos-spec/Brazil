@@ -1,4 +1,31 @@
 User-agent: *
 Allow: /
 
+# Páginas internas / app / admin — no indexar (no afecta su funcionamiento)
+Disallow: /admin-codigos.html
+Disallow: /panel-jogo.html
+Disallow: /panel-estadisticas.html
+Disallow: /clientes-brazil.html
+Disallow: /reset-password.html
+Disallow: /login.html
+Disallow: /app.html
+Disallow: /demo.html
+Disallow: /play.html
+Disallow: /play_instagram.html
+Disallow: /movies.html
+Disallow: /morp.html
+Disallow: /proposta.html
+Disallow: /player_V3.html
+Disallow: /player_V3_live.html
+Disallow: /player_V4_live.html
+Disallow: /player_V4_test.html
+Disallow: /add/
+Disallow: /redesign/
+Disallow: /nuvemshop/
+Disallow: /nuvemshop_premium/
+Disallow: /upload/
+Disallow: /bunny/
+Disallow: /kb/
+Disallow: /Ruleta/
+
 Sitemap: https://inovandojuntos.com.br/sitemap.xml
