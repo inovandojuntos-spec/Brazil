@@ -38,8 +38,8 @@
   .eyebrow{ display:inline-flex; align-items:center; gap:12px; font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--soft); }
   .eyebrow::before{ content:""; width:26px; height:1px; background:var(--edge2); }
   .lead-strip h1{ font-family:var(--display); font-weight:400; font-size:clamp(24px,4.6vw,38px); margin:10px 0 4px; letter-spacing:.01em; }
-  .crumb{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; font-weight:600; margin-top:6px; }
-  .crumb:hover{ color:var(--text); }
+  .crumb{ display:inline-flex; align-items:center; gap:8px; color:#fff; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-top:6px; }
+  .crumb:hover{ opacity:.7; }
 
   /* ===== Mosaico de categorías · pantalla completa ===== */
   .mgrid{ display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:1px;
@@ -72,9 +72,11 @@
   .pitem.in{ opacity:1; transform:none; }
   .pitem:first-child{ border-top:0; }
   @media (max-width:760px){ .pitem{ grid-template-columns:1fr; gap:16px; padding:22px 18px; } }
-  .pi-main{ width:100%; aspect-ratio:1/1; background:#111 center/cover no-repeat; border-radius:16px; }
+  .pi-main{ position:relative; width:100%; aspect-ratio:1/1; background:#111; border-radius:16px; overflow:hidden; }
+  .pi-main .cm{ position:absolute; inset:0; background:#111 center/cover no-repeat; opacity:0; transition:opacity .8s ease; }
+  .pi-main .cm.on{ opacity:1; }
   .pi-thumbs{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
-  .pi-thumbs .th{ width:52px; height:52px; border-radius:9px; background:#111 center/cover no-repeat; border:1px solid var(--edge); cursor:pointer; opacity:.55; }
+  .pi-thumbs .th{ width:52px; height:52px; border-radius:9px; background:#111 center/cover no-repeat; border:1px solid var(--edge); cursor:pointer; opacity:.55; transition:opacity .2s ease, border-color .2s ease; }
   .pi-thumbs .th.on{ opacity:1; border-color:var(--edge2); }
   .pi-info{ display:flex; flex-direction:column; gap:12px; align-self:center; }
   .pi-name{ font-family:var(--display); font-weight:400; font-size:clamp(22px,3.2vw,30px); margin:0; color:#fff; line-height:1.18; }
@@ -84,7 +86,7 @@
   .pi-price{ font-family:var(--display); font-size:28px; font-weight:500; color:#fff; }
   .pi-price .cur{ font-size:14px; color:var(--muted); }
   .pi-price .old{ font-size:14px; color:var(--soft); text-decoration:line-through; margin-left:8px; font-family:var(--font); }
-  .pi-desc{ color:var(--muted); font-size:14px; line-height:1.6; margin:0; }
+  .pi-desc{ color:var(--muted); font-size:14px; line-height:1.6; margin:0; text-align:justify; }
   .pi-buy{ display:flex; gap:10px; align-items:center; margin-top:4px; }
   .qty{ display:inline-flex; align-items:center; border:1px solid #2a2a2a; border-radius:10px; overflow:hidden; }
   .qty button{ width:34px; height:42px; background:transparent; border:0; color:var(--text); font-size:18px; cursor:pointer; }
@@ -96,7 +98,7 @@
 
   .state{ max-width:var(--maxw); margin:0 auto; padding:60px 22px; text-align:center; color:var(--muted); }
   footer{ border-top:1px solid var(--edge); padding:24px 22px; text-align:center; color:var(--soft); font-size:12px; }
-  @media (prefers-reduced-motion: reduce){ .tbody,.pitem{ opacity:1; transform:none; } .tmedia::after{ opacity:.82; } .tmedia .cm{ transition:none; } }
+  @media (prefers-reduced-motion: reduce){ .tbody,.pitem{ opacity:1; transform:none; } .tmedia::after{ opacity:.82; } .tmedia .cm,.pi-main .cm{ transition:none; } }
 </style>
 </head>
 <body>
@@ -112,7 +114,7 @@
 <section class="lead-strip" id="lead">
   <span class="eyebrow" id="eyebrow">Loja oficial</span>
   <h1 id="leadTitle">Escolha por categoria</h1>
-  <a class="crumb" id="crumb" href="loja.html" hidden>← Todas as categorias</a>
+  <a class="crumb" id="crumb" href="loja.html" hidden>← Voltar</a>
 </section>
 
 <main id="main" aria-live="polite">
@@ -179,7 +181,8 @@
     return imgs;
   }
 
-  function makeCycler(mediaEl, imgs){
+  // crossfade entre fotos dentro de un contenedor con capas .cm
+  function makeCycler(mediaEl, imgs, ms){
     var a=document.createElement("div"); a.className="cm on";
     var b=document.createElement("div"); b.className="cm";
     a.style.backgroundImage="url('"+(imgs[0]||"")+"')";
@@ -192,7 +195,7 @@
       back.style.backgroundImage="url('"+imgs[idx]+"')";
       back.classList.add("on"); front.classList.remove("on");
       var tmp=front; front=back; back=tmp;
-    }, 3400 + Math.floor(Math.random()*1600));
+    }, ms || (3400 + Math.floor(Math.random()*1600)));
     timers.push(t);
   }
 
@@ -203,19 +206,19 @@
     nodes.forEach(function(n){ io.observe(n); });
   }
 
-  // ===== Nivel 1: Mosaico de categorías =====
+  // ===== Nivel 1: Mosaico de categorías (fotos rotando + frase tipo raspadinha) =====
   function renderMosaic(){
     document.title = "Loja — Inovando Juntos";
-    var lead=document.getElementById("lead"); lead.style.display="none";
-    var foot=document.getElementById("foot"); foot.style.display="none";
+    document.getElementById("lead").style.display="none";
+    document.getElementById("foot").style.display="none";
 
     var main = document.getElementById("main");
     var cats = (DATA.categories||[]).filter(function(c){ return c.count>0 && c.id!==0; });
-    if(!cats.length){ lead.style.display=""; main.innerHTML = '<div class="state">Nenhuma categoria disponível no momento.</div>'; return; }
+    if(!cats.length){ document.getElementById("lead").style.display=""; main.innerHTML = '<div class="state">Nenhuma categoria disponível no momento.</div>'; return; }
     main.innerHTML = '<div class="mgrid" id="grid"></div>';
     var grid = document.getElementById("grid");
 
-    cats.forEach(function(c){
+    cats.forEach(function(c, i){
       var a = document.createElement("a");
       a.className = "tile";
       a.href = "loja.html?cat=" + encodeURIComponent(c.id);
@@ -230,12 +233,13 @@
       grid.appendChild(a);
       makeCycler(a.querySelector(".tmedia"), imagesOfCat(c.id));
     });
+
     onResize=function(){ fitViewport(grid); }; window.addEventListener("resize", onResize);
     fitViewport(grid);
     revealAll(grid.querySelectorAll(".tile"));
   }
 
-  // ===== Nivel 2: Lista scrollable de produtos de la categoría =====
+  // ===== Nivel 2: Lista scrollable de produtos =====
   function renderCategory(catId){
     document.getElementById("lead").style.display="";
     document.getElementById("foot").style.display="";
@@ -248,7 +252,7 @@
 
     var list = productsOfCat(catId);
     var main = document.getElementById("main");
-    if(!list.length){ main.innerHTML = '<div class="state">Nenhum produto nesta categoria. <a class="crumb" href="loja.html">← Todas as categorias</a></div>'; return; }
+    if(!list.length){ main.innerHTML = '<div class="state">Nenhum produto nesta categoria. <a class="crumb" href="loja.html">← Voltar</a></div>'; return; }
     main.innerHTML = '<div class="plist" id="plist"></div>';
     var plist = document.getElementById("plist");
 
@@ -278,16 +282,9 @@
         '</div>';
       plist.appendChild(it);
 
-      // galería
-      var main_ = it.querySelector(".pi-main"); main_.style.backgroundImage="url('"+(imgs[0]||"")+"')";
-      var thumbs = it.querySelector(".pi-thumbs");
-      if(imgs.length>1){
-        imgs.forEach(function(src,i){
-          var th=document.createElement("div"); th.className="th"+(i===0?" on":""); th.style.backgroundImage="url('"+src+"')";
-          th.addEventListener("click", function(){ main_.style.backgroundImage="url('"+src+"')"; thumbs.querySelectorAll(".th").forEach(function(x){x.classList.remove("on");}); th.classList.add("on"); });
-          thumbs.appendChild(th);
-        });
-      }
+      // galería con auto-pase (crossfade) + miniaturas sincronizadas
+      gallery(it.querySelector(".pi-main"), it.querySelector(".pi-thumbs"), imgs);
+
       // qty + add
       var qtyInput = it.querySelector(".qty input");
       it.querySelector("[data-dec]").addEventListener("click", function(){ qtyInput.value=clampQty(clampQty(qtyInput.value)-1); });
@@ -300,6 +297,30 @@
     });
     revealAll(plist.querySelectorAll(".pitem"));
     window.scrollTo(0,0);
+  }
+
+  // galería de un produto: capas crossfade + auto-avance + miniaturas
+  function gallery(mainEl, thumbsEl, imgs){
+    imgs = imgs.filter(Boolean); if(!imgs.length){ return; }
+    var a=document.createElement("div"); a.className="cm on"; a.style.backgroundImage="url('"+imgs[0]+"')";
+    var b=document.createElement("div"); b.className="cm";
+    mainEl.appendChild(a); mainEl.appendChild(b);
+    if(imgs.length<2) return;
+    imgs.forEach(function(s){ var im=new Image(); im.src=s; });
+
+    var idx=0, front=a, back=b;
+    function setThumbs(i){ var ts=thumbsEl.querySelectorAll(".th"); for(var k=0;k<ts.length;k++) ts[k].classList.toggle("on", k===i); }
+    function go(i){
+      i=((i%imgs.length)+imgs.length)%imgs.length;
+      back.style.backgroundImage="url('"+imgs[i]+"')"; back.classList.add("on"); front.classList.remove("on");
+      var tmp=front; front=back; back=tmp; idx=i; setThumbs(i);
+    }
+    imgs.forEach(function(src,i){
+      var th=document.createElement("div"); th.className="th"+(i===0?" on":""); th.style.backgroundImage="url('"+src+"')";
+      th.addEventListener("click", function(){ go(i); });
+      thumbsEl.appendChild(th);
+    });
+    timers.push(setInterval(function(){ go(idx+1); }, 3500));
   }
 
   function priceBlock(v){
