@@ -2329,4 +2329,10 @@
     document.querySelectorAll(".info-modal").forEach(function(m){
       m.addEventListener("click", function(e){ if (e.target.hasAttribute("data-close")) closeM(m); });
     });
-    document.addEventListener("
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape"){ document.querySelectorAll(".info-modal:not([hidden])").forEach(closeM); } });
+  })();
+})();
+</script>
+<script src="store.js"></script>
+</body>
+</html>
