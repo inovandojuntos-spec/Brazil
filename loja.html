@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Loja — Inovando Juntos</title>
-<meta name="description" content="Loja oficial Inovando Juntos. Pagamento seguro via Nuvemshop." />
+<meta name="description" content="Loja oficial Inovando Juntos. Produtos para casais por categoria. Pagamento seguro via Nuvemshop." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -25,139 +25,292 @@
   img{ display:block; max-width:100%; }
 
   header{ position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between;
-    padding:16px 22px; border-bottom:1px solid var(--edge); background:rgba(0,0,0,.72); backdrop-filter:blur(12px); }
+    padding:14px 20px; border-bottom:1px solid var(--edge); background:rgba(0,0,0,.72); backdrop-filter:blur(12px); }
   .brand{ display:flex; flex-direction:column; line-height:1; }
   .brand b{ font-weight:800; letter-spacing:.18em; font-size:13px; }
   .brand small{ font-weight:500; letter-spacing:.32em; font-size:8.5px; color:var(--soft); margin-top:5px; }
-  /* Carrinho minimalista: ícone + número em cinza (20% maior) */
   .cart-ico{ display:inline-flex; align-items:center; gap:8px; background:transparent; border:0; cursor:pointer;
     color:#6f7378; padding:6px 4px; font-family:inherit; font-weight:700; font-size:16px; line-height:1; transition:color .2s ease; }
   .cart-ico:hover{ color:var(--ember); }
-  .cart-ico svg{ width:29px; height:29px; }
+  .cart-ico svg{ width:28px; height:28px; }
 
-  .lead-strip{ max-width:var(--maxw); margin:0 auto; padding:54px 22px 26px; }
+  .lead-strip{ max-width:var(--maxw); margin:0 auto; padding:18px 20px 8px; }
   .eyebrow{ display:inline-flex; align-items:center; gap:12px; font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--soft); }
-  .eyebrow::before{ content:""; width:30px; height:1px; background:var(--edge2); }
-  .lead-strip h1{ font-family:var(--display); font-weight:400; font-size:clamp(28px,5vw,46px); margin:16px 0 8px; letter-spacing:.01em; }
-  .lead-strip p{ color:var(--muted); max-width:54ch; margin:0; }
+  .eyebrow::before{ content:""; width:26px; height:1px; background:var(--edge2); }
+  .lead-strip h1{ font-family:var(--display); font-weight:400; font-size:clamp(24px,4.6vw,38px); margin:10px 0 4px; letter-spacing:.01em; }
+  .crumb{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; font-weight:600; margin-top:6px; }
+  .crumb:hover{ color:var(--text); }
 
-  .grid{ max-width:var(--maxw); margin:0 auto; padding:18px 22px 90px;
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:22px; }
-  .card{ border:1px solid var(--edge); border-radius:18px; overflow:hidden; background:var(--card); display:flex; flex-direction:column; transition:border-color .25s ease, transform .25s ease; }
-  .card:hover{ border-color:var(--edge2); transform:translateY(-3px); }
-  .thumb{ aspect-ratio:1/1; background:#111 center/cover no-repeat; }
-  .card .body{ padding:16px 16px 18px; display:flex; flex-direction:column; gap:10px; flex:1; }
-  .card h3{ font-size:15.5px; font-weight:700; margin:0; line-height:1.3; }
-  .price{ font-family:var(--display); font-size:22px; font-weight:500; }
-  .price .cur{ font-size:13px; color:var(--muted); }
-  .price .old{ font-size:13px; color:var(--soft); text-decoration:line-through; margin-left:8px; font-family:var(--font); }
-  select{ width:100%; background:#0a0a0a; border:1px solid #2a2a2a; border-radius:10px; padding:10px 12px; color:var(--text); font-size:14px; font-family:inherit; }
-  .row{ display:flex; gap:10px; align-items:center; margin-top:auto; }
+  /* ===== Mosaico de categorías · pantalla completa ===== */
+  .mgrid{ display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:1px;
+    background:rgba(255,255,255,.09); width:100%; margin:0; padding:0; }
+  @media (min-width:780px){ .mgrid{ grid-template-columns:repeat(3,1fr); } }
+  .tile{ position:relative; overflow:hidden; border:0; cursor:pointer; background:#000;
+    display:flex; align-items:center; justify-content:center; text-align:center; min-height:0; }
+  .tmedia{ position:absolute; inset:0; }
+  .tmedia .cm{ position:absolute; inset:0; background:#111 center/cover no-repeat; opacity:0; transition:opacity .9s ease; }
+  .tmedia .cm.on{ opacity:1; }
+  .tmedia::after{ content:""; position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.55) 55%, rgba(0,0,0,.86));
+    opacity:.62; transition:opacity .55s ease; }
+  .tile:hover .tmedia::after, .tile.in .tmedia::after{ opacity:.84; }
+  .tbody{ position:relative; z-index:2; padding:14px; width:100%;
+    opacity:0; transform:translateY(12px); transition:opacity .6s ease, transform .6s ease; }
+  .tile.in .tbody{ opacity:1; transform:none; }
+  .ttitle{ color:#fff; font-family:var(--display); font-weight:400; font-size:clamp(17px,4.2vw,25px); margin:0 0 4px;
+    letter-spacing:.02em; line-height:1.14; text-shadow:0 2px 14px rgba(0,0,0,.75); }
+  .tdesc{ color:#fff; font-size:clamp(10.5px,2.5vw,13px); line-height:1.36; margin:0 auto 8px; max-width:26ch;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .tcta{ display:inline-block; margin-top:6px; font-size:11px; letter-spacing:.08em; font-weight:700; color:#fff; text-transform:uppercase; }
+  .tcount{ position:absolute; top:10px; right:10px; z-index:3; font-size:10.5px; font-weight:700;
+    background:rgba(0,0,0,.45); border:1px solid var(--edge2); border-radius:999px; padding:2px 8px; color:#fff; }
+
+  /* ===== Lista de produtos (scroll) ===== */
+  .plist{ max-width:1000px; margin:0 auto; padding:6px 0 50px; }
+  .pitem{ display:grid; grid-template-columns:1fr 1fr; gap:26px; padding:30px 22px; border-top:1px solid var(--edge);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s ease; }
+  .pitem.in{ opacity:1; transform:none; }
+  .pitem:first-child{ border-top:0; }
+  @media (max-width:760px){ .pitem{ grid-template-columns:1fr; gap:16px; padding:22px 18px; } }
+  .pi-main{ width:100%; aspect-ratio:1/1; background:#111 center/cover no-repeat; border-radius:16px; }
+  .pi-thumbs{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .pi-thumbs .th{ width:52px; height:52px; border-radius:9px; background:#111 center/cover no-repeat; border:1px solid var(--edge); cursor:pointer; opacity:.55; }
+  .pi-thumbs .th.on{ opacity:1; border-color:var(--edge2); }
+  .pi-info{ display:flex; flex-direction:column; gap:12px; align-self:center; }
+  .pi-name{ font-family:var(--display); font-weight:400; font-size:clamp(22px,3.2vw,30px); margin:0; color:#fff; line-height:1.18; }
+  .pi-stk{ align-self:flex-start; font-size:11.5px; font-weight:700; padding:3px 11px; border-radius:999px; border:1px solid var(--edge); }
+  .pi-stk.ok{ color:#bfe9d4; } .pi-stk.no{ color:#f2a6a6; }
+  .pi-sold{ font-size:12.5px; color:#f3c6a5; font-weight:700; }
+  .pi-price{ font-family:var(--display); font-size:28px; font-weight:500; color:#fff; }
+  .pi-price .cur{ font-size:14px; color:var(--muted); }
+  .pi-price .old{ font-size:14px; color:var(--soft); text-decoration:line-through; margin-left:8px; font-family:var(--font); }
+  .pi-desc{ color:var(--muted); font-size:14px; line-height:1.6; margin:0; }
+  .pi-buy{ display:flex; gap:10px; align-items:center; margin-top:4px; }
   .qty{ display:inline-flex; align-items:center; border:1px solid #2a2a2a; border-radius:10px; overflow:hidden; }
-  .qty button{ width:34px; height:38px; background:transparent; border:0; color:var(--text); font-size:18px; cursor:pointer; }
+  .qty button{ width:34px; height:42px; background:transparent; border:0; color:var(--text); font-size:18px; cursor:pointer; }
   .qty button:hover{ background:rgba(255,255,255,.06); }
-  .qty input{ width:38px; height:38px; text-align:center; background:transparent; border:0; color:var(--text); font-size:15px; font-family:inherit; }
-  .btn{ flex:1; border:0; border-radius:10px; padding:12px 14px; font-family:inherit; font-weight:800; font-size:13.5px; letter-spacing:.04em; background:var(--accent); color:#000; cursor:pointer; }
+  .qty input{ width:42px; height:42px; text-align:center; background:transparent; border:0; color:var(--text); font-size:15px; font-family:inherit; }
+  .btn{ flex:1; border:0; border-radius:10px; padding:13px 16px; font-family:inherit; font-weight:800; font-size:13.5px; letter-spacing:.04em; background:var(--accent); color:#000; cursor:pointer; }
   .btn:hover{ box-shadow:0 8px 20px rgba(0,0,0,.5); }
   .btn[disabled]{ opacity:.4; cursor:not-allowed; box-shadow:none; }
-  .btn--ghost{ background:transparent; color:var(--text); border:1px solid var(--edge2); }
+
   .state{ max-width:var(--maxw); margin:0 auto; padding:60px 22px; text-align:center; color:var(--muted); }
-  footer{ border-top:1px solid var(--edge); padding:28px 22px; text-align:center; color:var(--soft); font-size:12px; }
+  footer{ border-top:1px solid var(--edge); padding:24px 22px; text-align:center; color:var(--soft); font-size:12px; }
+  @media (prefers-reduced-motion: reduce){ .tbody,.pitem{ opacity:1; transform:none; } .tmedia::after{ opacity:.82; } .tmedia .cm{ transition:none; } }
 </style>
 </head>
 <body>
 
 <header>
-  <a class="brand" href="/landing.html" aria-label="Inovando Juntos">
+  <a class="brand" href="/" aria-label="Inovando Juntos">
     <b>INOVANDO JUNTOS</b>
     <small>CONEXÃO • COMUNICAÇÃO • INTIMIDADE</small>
   </a>
   <button class="cart-ico" data-ij-cart aria-label="Carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span data-ij-cart-count>0</span></button>
 </header>
 
-<section class="lead-strip">
-  <span class="eyebrow">Loja oficial</span>
-  <h1>Escolha sua experiência</h1>
-  <p>Pagamento seguro processado pela Nuvemshop — PIX, cartão ou boleto. Frete e nota fiscal inclusos.</p>
+<section class="lead-strip" id="lead">
+  <span class="eyebrow" id="eyebrow">Loja oficial</span>
+  <h1 id="leadTitle">Escolha por categoria</h1>
+  <a class="crumb" id="crumb" href="loja.html" hidden>← Todas as categorias</a>
 </section>
 
-<main class="grid" id="grid" aria-live="polite">
-  <div class="state" id="state">Carregando produtos…</div>
+<main id="main" aria-live="polite">
+  <div class="state" id="state">Carregando…</div>
 </main>
 
-<footer>© <span id="year"></span> Inovando Juntos · Loja oficial</footer>
+<footer id="foot">© <span id="year"></span> Inovando Juntos · Loja oficial</footer>
 
 <script src="store.js"></script>
 <script>
 (function(){
   "use strict";
-  var ENDPOINT = "https://rsordtljnvxonaygyuxd.supabase.co/functions/v1/nuvemshop-create-draft-order";
-  document.getElementById("year").textContent = new Date().getFullYear();
+  var ENDPOINT = "https://rsordtljnvxonaygyuxd.supabase.co/functions/v1/store-catalog";
+
+  var CAT_DESC = {
+    "Jogos":"A experiência que aproxima o casal. Conexão de verdade.",
+    "Vibradores Liquidos":"Géis que vibram, esquentam e pulsam.",
+    "Vibradores":"Para o casal explorar o prazer juntos.",
+    "Massagem":"Velas e géis para o toque virar ritual.",
+    "Lubrificante":"Mais conforto e deslize.",
+    "Beijáveis":"Caldas e sabores para as preliminares.",
+    "Bondage":"Para quem quer ousar com confiança.",
+    "Higiene":"Cuidado e bem-estar íntimo.",
+    "Outros":"Novidades para o casal."
+  };
+  // Vendidos por produto (placeholder · a completar no futuro): { "<product_id>": 123 }
+  var SOLD = {};
 
   function money(v){ return "R$ " + Number(v||0).toLocaleString("pt-BR", { minimumFractionDigits:2, maximumFractionDigits:2 }); }
   function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
-  function priceOf(v){ var p = v.promotional_price && Number(v.promotional_price)>0 ? v.promotional_price : v.price; return Number(p||0); }
+  function priceOf(v){ if(!v) return 0; var p = v.promotional_price && Number(v.promotional_price)>0 ? v.promotional_price : v.price; return Number(p||0); }
+  function available(v){ if(!v) return false; if(priceOf(v)<=0) return false; if(v.stock===null) return true; return Number(v.stock)>0; }
   function clampQty(v){ var n=parseInt(String(v).replace(/[^0-9]/g,""),10); if(!isFinite(n)||n<1)n=1; if(n>99)n=99; return n; }
+  function qs(name){ return new URLSearchParams(location.search).get(name); }
+  function fitViewport(el){ var t = el.getBoundingClientRect().top; el.style.height = Math.max(320,(window.innerHeight - t)) + "px"; }
 
-  fetch(ENDPOINT + "?action=catalog&per_page=50")
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var DATA = null, timers = [], onResize = null;
+  function clearTimers(){ timers.forEach(clearInterval); timers = []; if(onResize){ window.removeEventListener("resize", onResize); onResize=null; } }
+
+  fetch(ENDPOINT)
     .then(function(r){ return r.json(); })
-    .then(function(d){ if(!d||!d.ok||!Array.isArray(d.products)) throw new Error("bad"); render(d.products); })
-    .catch(function(){ document.getElementById("state").textContent = "Não foi possível carregar os produtos. Recarregue a página."; });
+    .then(function(d){ if(!d||!d.ok||!Array.isArray(d.products)) throw new Error("bad"); DATA = d; route(); })
+    .catch(function(){ document.getElementById("state").textContent = "Não foi possível carregar a loja. Recarregue a página."; });
 
-  function render(products){
+  function route(){
+    clearTimers();
+    var cat = qs("cat");
+    if(cat===null || cat==="") renderMosaic();
+    else renderCategory(cat);
+  }
+
+  function productsOfCat(catId){
+    catId = String(catId);
+    return DATA.products.filter(function(p){
+      if(catId==="0") return !p.category_ids || p.category_ids.length===0;
+      return (p.category_ids||[]).map(String).indexOf(catId) !== -1;
+    });
+  }
+  function imagesOfCat(catId){
+    var imgs = [];
+    productsOfCat(catId).forEach(function(p){ if(p.image) imgs.push(p.image); });
+    return imgs;
+  }
+
+  function makeCycler(mediaEl, imgs){
+    var a=document.createElement("div"); a.className="cm on";
+    var b=document.createElement("div"); b.className="cm";
+    a.style.backgroundImage="url('"+(imgs[0]||"")+"')";
+    mediaEl.appendChild(a); mediaEl.appendChild(b);
+    if(imgs.length<2) return;
+    imgs.forEach(function(s){ var im=new Image(); im.src=s; });
+    var idx=0, front=a, back=b;
+    var t=setInterval(function(){
+      idx=(idx+1)%imgs.length;
+      back.style.backgroundImage="url('"+imgs[idx]+"')";
+      back.classList.add("on"); front.classList.remove("on");
+      var tmp=front; front=back; back=tmp;
+    }, 3400 + Math.floor(Math.random()*1600));
+    timers.push(t);
+  }
+
+  function revealAll(nodes){
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(reduce || !("IntersectionObserver" in window)){ nodes.forEach(function(n){ n.classList.add("in"); }); return; }
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold:0.15 });
+    nodes.forEach(function(n){ io.observe(n); });
+  }
+
+  // ===== Nivel 1: Mosaico de categorías =====
+  function renderMosaic(){
+    document.title = "Loja — Inovando Juntos";
+    var lead=document.getElementById("lead"); lead.style.display="none";
+    var foot=document.getElementById("foot"); foot.style.display="none";
+
+    var main = document.getElementById("main");
+    var cats = (DATA.categories||[]).filter(function(c){ return c.count>0 && c.id!==0; });
+    if(!cats.length){ lead.style.display=""; main.innerHTML = '<div class="state">Nenhuma categoria disponível no momento.</div>'; return; }
+    main.innerHTML = '<div class="mgrid" id="grid"></div>';
     var grid = document.getElementById("grid");
-    if(!products.length){ document.getElementById("state").textContent = "Nenhum produto disponível no momento."; return; }
-    grid.innerHTML = "";
-    products.forEach(function(p){
-      var variants = (p.variants||[]).filter(function(v){ return v&&v.id; });
-      if(!variants.length) return;
-      var v0 = variants[0], hasOpts = variants.length>1;
 
-      var card = document.createElement("div");
-      card.className = "card";
-      var opts = "";
-      if(hasOpts){
-        opts = '<select>' + variants.map(function(v){
-          var label = v.values&&v.values.length ? v.values.join(" / ") : ("Opção "+v.id);
-          var out = (Number(v.stock)<=0 && v.stock!==null);
-          return '<option value="'+v.id+'"'+(out?' disabled':'')+'>'+esc(label)+(out?' (esgotado)':'')+' — '+money(priceOf(v))+'</option>';
-        }).join("") + '</select>';
-      }
-      card.innerHTML =
-        '<div class="thumb" style="background-image:url(\''+(p.image||"")+'\')"></div>' +
-        '<div class="body">' +
-          '<h3>'+esc(p.name)+'</h3>' +
-          '<div class="price-wrap">'+priceBlock(v0)+'</div>' +
-          opts +
-          '<div class="row">' +
+    cats.forEach(function(c){
+      var a = document.createElement("a");
+      a.className = "tile";
+      a.href = "loja.html?cat=" + encodeURIComponent(c.id);
+      a.innerHTML =
+        '<span class="tcount">'+c.count+'</span>' +
+        '<div class="tmedia"></div>' +
+        '<div class="tbody">' +
+          '<h3 class="ttitle">'+esc(c.name)+'</h3>' +
+          '<p class="tdesc">'+esc(CAT_DESC[c.name]||"Produtos para o casal.")+'</p>' +
+          '<span class="tcta">Ver produtos →</span>' +
+        '</div>';
+      grid.appendChild(a);
+      makeCycler(a.querySelector(".tmedia"), imagesOfCat(c.id));
+    });
+    onResize=function(){ fitViewport(grid); }; window.addEventListener("resize", onResize);
+    fitViewport(grid);
+    revealAll(grid.querySelectorAll(".tile"));
+  }
+
+  // ===== Nivel 2: Lista scrollable de produtos de la categoría =====
+  function renderCategory(catId){
+    document.getElementById("lead").style.display="";
+    document.getElementById("foot").style.display="";
+    var cat = (DATA.categories||[]).filter(function(c){ return String(c.id)===String(catId); })[0];
+    var catName = cat ? cat.name : "Produtos";
+    document.getElementById("eyebrow").textContent = "Categoria";
+    document.getElementById("leadTitle").textContent = catName;
+    document.getElementById("crumb").hidden = false;
+    document.title = catName + " — Loja Inovando Juntos";
+
+    var list = productsOfCat(catId);
+    var main = document.getElementById("main");
+    if(!list.length){ main.innerHTML = '<div class="state">Nenhum produto nesta categoria. <a class="crumb" href="loja.html">← Todas as categorias</a></div>'; return; }
+    main.innerHTML = '<div class="plist" id="plist"></div>';
+    var plist = document.getElementById("plist");
+
+    list.forEach(function(p){
+      var v0 = (p.variants||[])[0];
+      var ok = available(v0);
+      var imgs = (p.images&&p.images.length?p.images:[p.image]).filter(Boolean);
+      var sold = SOLD[p.id];
+
+      var it = document.createElement("article");
+      it.className = "pitem";
+      it.innerHTML =
+        '<div class="pi-media">' +
+          '<div class="pi-main"></div>' +
+          '<div class="pi-thumbs"></div>' +
+        '</div>' +
+        '<div class="pi-info">' +
+          '<h2 class="pi-name">'+esc(p.name)+'</h2>' +
+          '<span class="pi-stk '+(ok?"ok":"no")+'">'+(ok?"Em estoque":"Indisponível")+'</span>' +
+          (sold&&sold>0 ? '<div class="pi-sold">🔥 '+sold+' já vendidos</div>' : '') +
+          '<div class="pi-price">'+priceBlock(v0)+'</div>' +
+          (p.desc_full||p.desc ? '<p class="pi-desc">'+esc(p.desc_full||p.desc)+'</p>' : '') +
+          '<div class="pi-buy">' +
             '<div class="qty"><button type="button" data-dec>−</button><input type="text" value="1" inputmode="numeric"><button type="button" data-inc>+</button></div>' +
-            '<button class="btn" type="button" data-add>Adicionar ao carrinho</button>' +
+            '<button class="btn" type="button" data-add'+(ok?"":" disabled")+'>'+(ok?"Adicionar ao carrinho":"Indisponível")+'</button>' +
           '</div>' +
         '</div>';
+      plist.appendChild(it);
 
-      var sel = card.querySelector("select");
-      var priceWrap = card.querySelector(".price-wrap");
-      var qtyInput = card.querySelector(".qty input");
-      function cur(){ if(!sel) return v0; return variants.filter(function(v){ return String(v.id)===sel.value; })[0] || v0; }
-      if(sel) sel.addEventListener("change", function(){ priceWrap.innerHTML = priceBlock(cur()); });
-      card.querySelector("[data-dec]").addEventListener("click", function(){ qtyInput.value = clampQty(clampQty(qtyInput.value)-1); });
-      card.querySelector("[data-inc]").addEventListener("click", function(){ qtyInput.value = clampQty(clampQty(qtyInput.value)+1); });
-      qtyInput.addEventListener("input", function(){ qtyInput.value = qtyInput.value.replace(/[^0-9]/g,""); });
-
-      function item(){ var v = cur(); return { variant_id:v.id, name:p.name + (v.values&&v.values.length?(" — "+v.values.join("/")):""), price:priceOf(v), image:p.image, qty:clampQty(qtyInput.value) }; }
-      card.querySelector("[data-add]").addEventListener("click", function(){ var v=cur(); if(Number(v.stock)<=0&&v.stock!==null) return; window.IJStore.addToCart(item(), true); });
-
-      grid.appendChild(card);
+      // galería
+      var main_ = it.querySelector(".pi-main"); main_.style.backgroundImage="url('"+(imgs[0]||"")+"')";
+      var thumbs = it.querySelector(".pi-thumbs");
+      if(imgs.length>1){
+        imgs.forEach(function(src,i){
+          var th=document.createElement("div"); th.className="th"+(i===0?" on":""); th.style.backgroundImage="url('"+src+"')";
+          th.addEventListener("click", function(){ main_.style.backgroundImage="url('"+src+"')"; thumbs.querySelectorAll(".th").forEach(function(x){x.classList.remove("on");}); th.classList.add("on"); });
+          thumbs.appendChild(th);
+        });
+      }
+      // qty + add
+      var qtyInput = it.querySelector(".qty input");
+      it.querySelector("[data-dec]").addEventListener("click", function(){ qtyInput.value=clampQty(clampQty(qtyInput.value)-1); });
+      it.querySelector("[data-inc]").addEventListener("click", function(){ qtyInput.value=clampQty(clampQty(qtyInput.value)+1); });
+      qtyInput.addEventListener("input", function(){ qtyInput.value=qtyInput.value.replace(/[^0-9]/g,""); });
+      it.querySelector("[data-add]").addEventListener("click", function(){
+        if(!available(v0)) return;
+        window.IJStore.addToCart({ variant_id:v0.id, name:p.name, price:priceOf(v0), image:p.image, qty:clampQty(qtyInput.value) }, true);
+      });
     });
+    revealAll(plist.querySelectorAll(".pitem"));
+    window.scrollTo(0,0);
   }
 
   function priceBlock(v){
+    if(!v || priceOf(v)<=0) return '<span style="font-size:17px;color:var(--muted)">Sob consulta</span>';
     var promo = v.promotional_price && Number(v.promotional_price)>0;
-    var html = '<div class="price"><span class="cur">R$</span> ' + money(priceOf(v)).replace("R$ ","");
+    var html = '<span class="cur">R$</span> ' + money(priceOf(v)).replace("R$ ","");
     if(promo) html += '<span class="old">'+money(v.price)+'</span>';
-    html += '</div>';
     return html;
   }
+
+  window.addEventListener("popstate", function(){ if(DATA) route(); });
 })();
 </script>
 </body>
