@@ -1,0 +1,18 @@
+{
+  "name": "Inovando Juntos",
+  "short_name": "Inovando Juntos",
+  "description": "Jogos interativos para casais — 20 experiências guiadas por voz.",
+  "lang": "pt-BR",
+  "start_url": "/play.html",
+  "scope": "/",
+  "id": "/play.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    { "src": "/images/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/images/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/images/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,2150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Contrato | Inovando Juntos</title>
+
+  <style>
+    :root{
+      --bg:#000000;
+      --panel:#0b0b0b;
+      --panel2:#101010;
+      --edge:rgba(255,255,255,0.08);
+      --edge2:rgba(255,255,255,0.14);
+      --text:rgba(255,255,255,0.82);
+      --muted:rgba(255,255,255,0.62);
+      --soft:rgba(255,255,255,0.42);
+      --danger:#ff5c5c;
+      --ok:#83f0a1;
+      --shadow:rgba(0,0,0,0.78);
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+    .app{
+      height:100dvh;
+      width:100vw;
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+      background:#000;
+    }
+
+    .shell{
+      width:min(560px,100%);
+      min-height:100dvh;
+      height:100dvh;
+      background:#000;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .topbar{
+      flex:0 0 auto;
+      padding:10px 14px 4px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0));
+      z-index:2;
+    }
+
+    .logo-center{ display:flex; align-items:center; justify-content:center; }
+    .logo-center img{ width:75px; height:75px; object-fit:contain; opacity:.92; }
+
+    .content{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      padding:8px 18px calc(104px + env(safe-area-inset-bottom,0px));
+      background:
+        radial-gradient(120% 55% at 50% 0%, rgba(255,255,255,0.07), rgba(255,255,255,0.01) 52%, rgba(255,255,255,0) 76%),
+        linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 28%, rgba(0,0,0,0.95) 100%);
+    }
+
+    .hero{
+      border-radius:24px;
+      padding:20px 18px 18px;
+      border:1px solid var(--edge);
+      background:
+        radial-gradient(90% 80% at 50% 0%, rgba(255,255,255,0.08), transparent 58%),
+        rgba(255,255,255,0.025);
+      box-shadow:0 24px 60px rgba(0,0,0,0.50), inset 0 0 0 1px rgba(255,255,255,0.025);
+    }
+
+    .kicker{
+      margin:0 0 8px;
+      color:var(--soft);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      color:rgba(255,255,255,.88);
+      font-size:30px;
+      line-height:1.06;
+      letter-spacing:-.035em;
+      font-weight:950;
+    }
+
+    .subtitle{
+      margin:12px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.48;
+    }
+
+    .progressRow{
+      margin-top:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .stepInfo{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .bar{
+      flex:1;
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+      overflow:hidden;
+    }
+    .barFill{ width:0%; height:100%; background:rgba(255,255,255,.84); transition:width .22s ease; }
+
+    .questionCard{
+      margin-top:16px;
+      border-radius:22px;
+      border:1px solid var(--edge);
+      background:rgba(11,11,11,.86);
+      padding:18px;
+      box-shadow:0 20px 48px rgba(0,0,0,.45);
+    }
+
+    .questionTitle{
+      margin:0;
+      font-size:23px;
+      line-height:1.12;
+      letter-spacing:-.025em;
+      font-weight:920;
+      color:rgba(255,255,255,.88);
+    }
+
+    .questionDesc{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.48;
+    }
+
+    .fieldArea{ margin-top:18px; display:flex; flex-direction:column; gap:10px; }
+
+    .infoBox{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      padding:15px;
+      color:rgba(255,255,255,.82);
+      font-size:14px;
+      line-height:1.5;
+      white-space:pre-wrap;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);
+    }
+
+    .infoBadge{
+      display:inline-flex;
+      align-items:center;
+      width:max-content;
+      max-width:100%;
+      margin-bottom:10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.62);
+      padding:5px 9px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .option{
+      width:100%;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:16px;
+      background:rgba(255,255,255,.035);
+      padding:13px 13px;
+      cursor:pointer;
+      transition:background .12s ease, border-color .12s ease, transform .10s ease;
+    }
+    .option:hover{ background:rgba(255,255,255,.055); border-color:rgba(255,255,255,.16); transform:translateY(-1px); }
+    .option:has(input:checked){
+      background:#000000;
+      border-color:rgba(255,255,255,.58);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.20), 0 10px 26px rgba(0,0,0,.55);
+    }
+    .option:has(input:checked) .optionText{
+      color:#ffffff;
+      font-weight:900;
+    }
+    .option.selected{
+      background:#000000;
+      border-color:rgba(255,255,255,.58);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.20), 0 10px 26px rgba(0,0,0,.55);
+    }
+    .option.selected .optionText{ color:#ffffff; font-weight:900; }
+    .option input{ margin-top:2px; accent-color:#000000; }
+    .optionText{ flex:1; min-width:0; font-size:15px; line-height:1.32; color:rgba(255,255,255,.80); font-weight:650; }
+
+    textarea,
+    input[type="text"],
+    input[type="date"]{
+      width:100%;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      outline:none;
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.90);
+      padding:14px;
+      font-size:16px;
+      line-height:1.4;
+      font-family:inherit;
+    }
+    textarea{ min-height:150px; resize:vertical; }
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="date"]:focus{ border-color:rgba(255,255,255,.24); background:rgba(255,255,255,.08); }
+
+
+    .signatureWrap{
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.96);
+      overflow:hidden;
+      box-shadow:inset 0 0 0 1px rgba(0,0,0,.04);
+    }
+
+    .signatureCanvas{
+      width:100%;
+      height:230px;
+      display:block;
+      touch-action:none;
+      background:#fff;
+    }
+
+    .signatureTools{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+
+    .miniBtn{
+      min-height:38px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.82);
+      padding:0 14px;
+      font-size:13px;
+      font-weight:850;
+      cursor:pointer;
+    }
+
+    .signaturePreview{
+      margin-top:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.035);
+      padding:10px;
+    }
+
+    .signaturePreview img{
+      width:100%;
+      max-height:120px;
+      object-fit:contain;
+      display:block;
+      background:#fff;
+      border-radius:10px;
+    }
+
+    .pdfBox{
+      margin-top:14px;
+      border-radius:16px;
+      border:1px solid rgba(131,240,161,.22);
+      background:rgba(131,240,161,.08);
+      padding:12px;
+      color:rgba(230,255,236,.92);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .pdfBox a{
+      color:#fff;
+      font-weight:900;
+      text-decoration:underline;
+    }
+
+    .reviewBox{
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.035);
+      padding:14px;
+      white-space:pre-wrap;
+      color:rgba(255,255,255,.76);
+      font-size:13px;
+      line-height:1.45;
+      max-height:42dvh;
+      overflow:auto;
+    }
+
+    .errorBox{
+      margin-top:12px;
+      display:none;
+      border-radius:14px;
+      padding:11px 12px;
+      border:1px solid rgba(255,92,92,.24);
+      background:rgba(255,92,92,.10);
+      color:#ffd3d3;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .errorBox.show{ display:block; }
+
+    .saveState{
+      margin-top:12px;
+      min-height:18px;
+      color:var(--soft);
+      font-size:12px;
+      font-weight:700;
+    }
+    .saveState.ok{ color:rgba(131,240,161,.85); }
+    .saveState.err{ color:rgba(255,92,92,.9); }
+
+    .footer.singleAction{
+      grid-template-columns:1fr;
+    }
+
+    .footer{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:5;
+      min-height:82px;
+      padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));
+      background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.84) 28%,rgba(0,0,0,.99));
+      border-top:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      display:grid;
+      grid-template-columns:1fr 1.45fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    button{
+      font-family:inherit;
+    }
+
+    .btn{
+      min-height:50px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:rgba(255,255,255,.80);
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .10s ease, opacity .12s ease, background .12s ease;
+    }
+    .btn:active{ transform:scale(.99); }
+    .btn:disabled{ opacity:.42; cursor:not-allowed; }
+    .btn.primary{ background:rgba(255,255,255,.88); color:#000; border-color:transparent; }
+    .btn.ghost{ background:transparent; }
+
+    .toast{
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:calc(94px + env(safe-area-inset-bottom,0px));
+      padding:11px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(20,20,20,.94);
+      color:var(--text);
+      font-size:12px;
+      display:none;
+      box-shadow:0 16px 38px rgba(0,0,0,.55);
+      z-index:20;
+    }
+    .toast.show{ display:block; }
+
+
+    .positionsBox{
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.035);
+      padding:14px;
+    }
+    .positionsHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .positionsCount{
+      color:rgba(255,255,255,.72);
+      font-size:13px;
+      font-weight:850;
+    }
+    .chips{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(255,255,255,.04);
+      color:rgba(255,255,255,.82);
+      font-size:12px;
+      font-weight:850;
+    }
+    .positionsModal{
+      position:absolute;
+      inset:0;
+      z-index:40;
+      display:none;
+      background:rgba(0,0,0,.82);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      padding:18px 14px calc(96px + env(safe-area-inset-bottom,0px));
+      overflow:auto;
+    }
+    .positionsModal.show{ display:block; }
+    .modalPanel{
+      width:min(540px,100%);
+      margin:0 auto;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#080808;
+      box-shadow:0 24px 70px rgba(0,0,0,.65);
+      padding:16px;
+    }
+    .modalTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .modalTitle{
+      margin:0;
+      font-size:21px;
+      line-height:1.1;
+      font-weight:950;
+      color:rgba(255,255,255,.9);
+    }
+    .modalHint{
+      margin:7px 0 0;
+      color:rgba(255,255,255,.58);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .closeMini{
+      width:38px;
+      height:38px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      font-size:20px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .positionsGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    .positionCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:rgba(255,255,255,.035);
+      padding:10px;
+      cursor:pointer;
+      text-align:left;
+      color:rgba(255,255,255,.84);
+      min-height:190px;
+      position:relative;
+      overflow:hidden;
+    }
+    .positionCard.selected{
+      border-color:rgba(255,255,255,.68);
+      background:#000000;
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.20), 0 12px 30px rgba(0,0,0,.60);
+    }
+    .positionCard.selected::before{
+      content:"✓";
+      position:absolute;
+      top:9px;
+      left:9px;
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#ffffff;
+      color:#000000;
+      font-size:15px;
+      font-weight:950;
+      z-index:2;
+    }
+    .positionCard.liked::after{
+      content:"curti";
+      position:absolute;
+      top:9px;
+      right:9px;
+      border-radius:999px;
+      padding:4px 7px;
+      background:rgba(255,255,255,.88);
+      color:#000;
+      font-size:10px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .positionCard img{
+      width:100%;
+      height:132px;
+      object-fit:contain;
+      display:block;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      margin-bottom:8px;
+    }
+    .positionName{
+      font-size:13px;
+      font-weight:900;
+      line-height:1.22;
+    }
+    .positionMeta{
+      margin-top:4px;
+      color:rgba(255,255,255,.52);
+      font-size:11px;
+      font-weight:700;
+    }
+    .modalActions{
+      position:sticky;
+      bottom:0;
+      margin-top:14px;
+      padding-top:10px;
+      background:linear-gradient(180deg,rgba(8,8,8,0),#080808 38%);
+      display:grid;
+      grid-template-columns:1fr 1.2fr;
+      gap:10px;
+    }
+
+    @media (max-width:390px){
+      .logo-center img{ width:64px; height:64px; }
+      .content{ padding-left:15px; padding-right:15px; }
+      h1{ font-size:27px; }
+      .questionTitle{ font-size:21px; }
+      .footer{ grid-template-columns:1fr 1.25fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <main class="shell" aria-live="polite">
+      <header class="topbar">
+        <div class="logo-center">
+          <img src="images/logo.png" alt="Inovando Juntos" />
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="hero">
+          <p class="kicker">Contrato digital</p>
+          <h1 id="appTitle">Acordo de entrega</h1>
+          <p class="subtitle" id="appSubtitle">Responda com calma. As escolhas podem ser revisadas antes de finalizar.</p>
+          <div class="progressRow">
+            <div class="bar" aria-hidden="true"><div class="barFill" id="barFill"></div></div>
+            <div class="stepInfo" id="stepInfo">0/0</div>
+          </div>
+        </div>
+
+        <article class="questionCard" id="questionBox">
+          <p class="questionDesc">Carregando perguntas...</p>
+        </article>
+
+        <div class="errorBox" id="errorBox"></div>
+        <div class="saveState" id="saveState"></div>
+      </section>
+
+      <footer class="footer">
+        <button class="btn ghost" id="backBtn" type="button">Voltar</button>
+        <button class="btn primary" id="nextBtn" type="button">Continuar</button>
+      </footer>
+
+
+      <div class="positionsModal" id="positionsModal" aria-hidden="true">
+        <div class="modalPanel" role="dialog" aria-modal="true" aria-labelledby="positionsModalTitle">
+          <div class="modalTop">
+            <div>
+              <h2 class="modalTitle" id="positionsModalTitle">Adicionar posições</h2>
+              <p class="modalHint">Selecione as posições que deseja experimentar durante a experiência. As curtidas aparecem primeiro; depois, as demais por popularidade.</p>
+            </div>
+            <button class="closeMini" id="closePositionsModal" type="button" aria-label="Fechar">×</button>
+          </div>
+          <div class="positionsGrid" id="positionsGrid"></div>
+          <div class="modalActions">
+            <button class="btn ghost" id="clearPositionsBtn" type="button">Limpar</button>
+            <button class="btn primary" id="confirmPositionsBtn" type="button">Confirmar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    import SignaturePad from "https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/+esm";
+    import { PDFDocument, StandardFonts, rgb } from "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm";
+    import fontkit from "https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/+esm";
+    import QRCode from "https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm";
+
+    (() => {
+      const SUPABASE_URL = "https://rsordtljnvxonaygyuxd.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_iA35OOvF4WVTKJ4d7G0W7A_TR4FLwf9";
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const questionBox = document.getElementById("questionBox");
+      const stepInfo = document.getElementById("stepInfo");
+      const barFill = document.getElementById("barFill");
+      const backBtn = document.getElementById("backBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const errorBox = document.getElementById("errorBox");
+      const saveState = document.getElementById("saveState");
+      const toast = document.getElementById("toast");
+      const positionsModal = document.getElementById("positionsModal");
+      const positionsGrid = document.getElementById("positionsGrid");
+      const closePositionsModal = document.getElementById("closePositionsModal");
+      const clearPositionsBtn = document.getElementById("clearPositionsBtn");
+      const confirmPositionsBtn = document.getElementById("confirmPositionsBtn");
+
+      let authUserId = null;
+      let desafioSlug = "";
+      let questions = [];
+      let answers = {};
+      let currentIndex = 0;
+      let isSignatureStep = false;
+      let isReviewStep = false;
+      let isSubmittedSummary = false;
+      let signaturePad = null;
+      let signatureDataUrl = "";
+      let pdfUrl = "";
+      let contractResponseId = "";
+      let saveTimer = null;
+      let saving = false;
+      let allPositions = [];
+      let selectedPositionIds = [];
+      let contractTemplate = null;
+
+      function showToast(msg){
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1600);
+      }
+
+      function showError(msg){
+        errorBox.textContent = msg || "";
+        errorBox.classList.toggle("show", !!msg);
+      }
+
+      function setSaveState(msg, mode = ""){
+        saveState.textContent = msg || "";
+        saveState.className = `saveState ${mode}`.trim();
+      }
+
+      function escapeHtml(value){
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function getDesafioSlug(){
+        const params = new URLSearchParams(window.location.search);
+        const fromQuery = params.get("desafio") || params.get("id") || params.get("slug");
+        if (fromQuery) return fromQuery.trim();
+        const parts = window.location.pathname.split("/").map(p => p.trim()).filter(Boolean);
+        return parts[parts.length - 1] || "desafio_20";
+      }
+
+      function createClientUuid(){
+        if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+          (Number(c) ^ window.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> Number(c) / 4).toString(16)
+        );
+      }
+
+      function getStableContractResponseId(){
+        if (!contractResponseId) contractResponseId = createClientUuid();
+        return contractResponseId;
+      }
+
+      function getContractNumber(){
+        const date = new Date();
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+
+        const shortId = String(getStableContractResponseId())
+          .replaceAll("-", "")
+          .slice(0, 8)
+          .toUpperCase();
+
+        return `IJ-${desafioSlug.toUpperCase()}-${y}${m}${d}-${shortId}`;
+      }
+
+      function getVerificationUrl(){
+        return `${window.location.origin}/contrato-verificar.html?id=${encodeURIComponent(getStableContractResponseId())}`;
+      }
+
+      function enrichContractMetadata(){
+        answers = {
+          ...answers,
+          contract_response_id: getStableContractResponseId(),
+          contract_number: getContractNumber(),
+          verification_url: getVerificationUrl()
+        };
+      }
+
+      function normalizeRpcSingle(data){
+        return Array.isArray(data) ? (data[0] || null) : (data || null);
+      }
+
+      function applyResponseIdentity(response){
+        const id = response?.id || response?.contract_response_id || response?.answers?.contract_response_id || "";
+        if (id) contractResponseId = String(id);
+      }
+
+      function isFinalizedResponse(response){
+        return String(response?.status || "").toLowerCase() === "submitted" || !!response?.submitted_at || !!response?.signed_at;
+      }
+
+      function formatDateTimePt(value){
+        if (!value) return "Não informado";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
+        return date.toLocaleString("pt-BR");
+      }
+
+      function formatDatePt(value){
+        if (!value) return "";
+        const [year, month, day] = String(value).split("-");
+        if (!year || !month || !day) return String(value);
+        return `${day}/${month}/${year}`;
+      }
+
+      function goToChallenge(){
+        window.location.href = `/play/${encodeURIComponent(desafioSlug)}`;
+      }
+
+
+      async function refreshSubmittedSummaryPdf(){
+        if (!pdfUrl) return;
+        const link = document.getElementById("submittedPdfLink");
+        if (link) link.href = pdfUrl;
+      }
+
+      function renderSubmittedSummary(response = {}){
+        isSubmittedSummary = true;
+        isReviewStep = false;
+        isSignatureStep = false;
+        showError("");
+        clearTimeout(saveTimer);
+
+        applyResponseIdentity(response);
+        answers = response?.answers && typeof response.answers === "object" ? response.answers : answers;
+        enrichContractMetadata();
+        signatureDataUrl = response?.signature_image || signatureDataUrl || "";
+        pdfUrl = response?.pdf_url || pdfUrl || "";
+
+        const contractNumber = answers.contract_number || getContractNumber();
+        const submittedAt = response?.submitted_at || response?.signed_at || "";
+        const renderedText = response?.rendered_text || buildContractText();
+
+        stepInfo.textContent = "Finalizado";
+        barFill.style.width = "100%";
+        setSaveState("Contrato já assinado. Modo somente leitura.", "ok");
+
+        document.querySelector(".footer")?.classList.add("singleAction");
+        backBtn.style.display = "none";
+
+        questionBox.innerHTML = `
+          <h2 class="questionTitle">Contrato finalizado</h2>
+          <p class="questionDesc">Este contrato foi assinado digitalmente e está bloqueado para edição. Você pode consultar o resumo, baixar o PDF final e compartilhá-lo com seu parceiro(a).</p>
+
+          <div class="pdfBox">
+            <strong>Documento:</strong> ${escapeHtml(contractNumber)}<br>
+            <strong>ID:</strong> ${escapeHtml(getStableContractResponseId())}<br>
+            <strong>Status:</strong> Assinado eletronicamente<br>
+            <strong>Assinado em:</strong> ${escapeHtml(formatDateTimePt(submittedAt))}
+          </div>
+
+          ${pdfUrl ? `<div class="pdfBox">PDF final: <a id="submittedPdfLink" href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener noreferrer">Baixar contrato em PDF</a></div>` : `<div class="pdfBox">PDF ainda não localizado nesta resposta. Verifique se o campo <strong>pdf_url</strong> foi salvo pelo RPC.</div>`}
+
+          ${signatureDataUrl ? `<div class="signaturePreview"><img src="${signatureDataUrl}" alt="Assinatura eletrônica registrada"></div>` : ""}
+
+          <div class="reviewBox">${escapeHtml(renderedText)}</div>
+        `;
+
+        backBtn.disabled = true;
+        nextBtn.disabled = false;
+        nextBtn.textContent = "Voltar ao desafio";
+      }
+
+      async function refreshContractResponseIdentity(){
+        try{
+          const saved = await loadExistingResponse(desafioSlug);
+          applyResponseIdentity(saved);
+          if (saved?.pdf_url) pdfUrl = saved.pdf_url || pdfUrl;
+          return saved;
+        }catch(err){
+          console.warn("[CONTRACT RESPONSE ID REFRESH WARNING]", err);
+          return null;
+        }
+      }
+
+      async function requireAuth(){
+        const { data, error } = await supabase.auth.getUser();
+        if (error) console.error("[AUTH ERROR]", error);
+        authUserId = data?.user?.id || null;
+        if (!authUserId){
+          const redirectUrl = window.location.pathname + window.location.search;
+          window.location.replace(`/login.html?redirect=${encodeURIComponent(redirectUrl)}`);
+          return false;
+        }
+        return true;
+      }
+
+      async function loadQuestions(slug){
+        const { data, error } = await supabase
+          .from("contract_questions")
+          .select("id,desafio_slug,step_order,question_key,title,description,question_type,options,required")
+          .eq("desafio_slug", slug)
+          .eq("is_active", true)
+          .order("step_order", { ascending:true });
+        if (error) throw error;
+        return Array.isArray(data) ? data : [];
+      }
+
+
+      async function loadContractTemplate(slug){
+        const { data, error } = await supabase.rpc("get_contract_template", {
+          p_desafio_slug: slug
+        });
+        if (error) throw error;
+        return Array.isArray(data) ? (data[0] || null) : (data || null);
+      }
+
+      async function tryLoadContractTemplate(slug){
+        try{
+          return await loadContractTemplate(slug);
+        }catch(err){
+          console.error("[CONTRACT TEMPLATE RPC ERROR]", err);
+          showError("Template do contrato não carregou. O questionário continuará usando apenas as perguntas configuradas.");
+          return null;
+        }
+      }
+
+      function applyContractTemplateToUi(){
+        const appTitle = document.getElementById("appTitle");
+        const appSubtitle = document.getElementById("appSubtitle");
+        if (appTitle && contractTemplate?.pdf_title) appTitle.textContent = contractTemplate.pdf_title;
+        if (appSubtitle && contractTemplate?.intro_text) appSubtitle.textContent = contractTemplate.intro_text;
+      }
+
+      function isPositionsQuestion(q){
+        return q?.question_key === "posicoes_aceitas" || String(q?.title || "").trim().toLowerCase() === "posições";
+      }
+
+      async function loadAllPositions(){
+        const { data, error } = await supabase.rpc("get_contract_positions_all", {
+          p_user_id: authUserId
+        });
+        if (error) throw error;
+        allPositions = Array.isArray(data) ? data : [];
+
+        // Bucket "kamasutra" es privado: firmamos las URLs y las escribimos en image_url
+        // para que el render y la generación del PDF (que usan pos.image_url) sigan funcionando.
+        try {
+          const paths = [...new Set(allPositions.map(p => p.image_path).filter(Boolean))];
+          if (paths.length){
+            const { data: signed, error: sErr } =
+              await supabase.storage.from("kamasutra").createSignedUrls(paths, 3600);
+            if (!sErr && Array.isArray(signed)){
+              const map = {};
+              signed.forEach(s => { if (s && s.path && s.signedUrl) map[s.path] = s.signedUrl; });
+              allPositions.forEach(p => { if (p.image_path && map[p.image_path]) p.image_url = map[p.image_path]; });
+            }
+          }
+        } catch (e) {
+          console.warn("No se pudieron firmar las URLs de kamasutra:", e);
+        }
+      }
+
+      function normalizeSelectedPositions(value){
+        if (Array.isArray(value)) return value.map(String).filter(Boolean);
+        if (value && typeof value === "object" && Array.isArray(value.ids)) return value.ids.map(String).filter(Boolean);
+        return [];
+      }
+
+      function getPositionId(pos){
+        return String(pos.posicion_id || pos.position_id || pos.id || "");
+      }
+
+      function getPositionName(pos){
+        return pos.nombre || pos.name || pos.slug || "Posição";
+      }
+
+      function getSelectedPositions(){
+        const selected = new Set(selectedPositionIds.map(String));
+        return allPositions.filter(pos => selected.has(getPositionId(pos)));
+      }
+
+      function renderSelectedPositionChips(){
+        const selected = getSelectedPositions();
+        if (!selected.length) return `<div class="chips"><span class="chip">Nenhuma posição selecionada</span></div>`;
+        return `<div class="chips">${selected.map(pos => `<span class="chip">${escapeHtml(getPositionName(pos))}</span>`).join("")}</div>`;
+      }
+
+      async function loadExistingResponse(slug){
+        const { data, error } = await supabase.rpc("get_contract_response", {
+          p_desafio_slug: slug
+        });
+
+        if (error) throw error;
+        return normalizeRpcSingle(data);
+      }
+
+      function normalizeOptions(options){
+        if (!options) return [];
+        if (Array.isArray(options)) return options;
+        try{ return JSON.parse(options); }catch{ return []; }
+      }
+
+      function isInfoQuestion(q){
+        return String(q?.question_type || "").trim().toLowerCase() === "info";
+      }
+
+      function getInfoAnswerText(q){
+        return String(q?.description || q?.title || "").trim();
+      }
+
+      function applyInformativeAnswers(){
+        if (!Array.isArray(questions) || !questions.length) return;
+        const nextAnswers = { ...answers };
+        questions.forEach(q => {
+          if (isInfoQuestion(q)){
+            nextAnswers[q.question_key] = getInfoAnswerText(q);
+          }
+        });
+        answers = nextAnswers;
+      }
+
+      function resizeSignatureCanvas(){
+        const canvas = document.getElementById("signatureCanvas");
+        if (!canvas) return;
+
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        const rect = canvas.getBoundingClientRect();
+
+        canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+        canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+
+        const ctx = canvas.getContext("2d");
+        ctx.scale(ratio, ratio);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, rect.width, rect.height);
+
+        if (signatureDataUrl){
+          const img = new Image();
+          img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
+          img.src = signatureDataUrl;
+        }
+      }
+
+      function initSignaturePad(){
+        const canvas = document.getElementById("signatureCanvas");
+        if (!canvas) return;
+
+        resizeSignatureCanvas();
+
+        signaturePad = new SignaturePad(canvas, {
+          backgroundColor: "rgb(255,255,255)",
+          penColor: "rgb(0,0,0)",
+          minWidth: 0.7,
+          maxWidth: 2.4,
+          throttle: 12
+        });
+
+        if (signatureDataUrl){
+          signaturePad.fromDataURL(signatureDataUrl, {
+            ratio: Math.max(window.devicePixelRatio || 1, 1)
+          });
+        }
+
+        signaturePad.addEventListener("endStroke", () => {
+          signatureDataUrl = signaturePad.toDataURL("image/png");
+          showError("");
+          scheduleDraftSave();
+        });
+
+        document.getElementById("clearSignatureBtn")?.addEventListener("click", () => {
+          signaturePad.clear();
+          signatureDataUrl = "";
+          showError("");
+          scheduleDraftSave();
+        });
+      }
+
+      function renderSignatureStep(){
+        questionBox.innerHTML = `
+          <h2 class="questionTitle">Assinatura eletrônica</h2>
+          <p class="questionDesc">Assine com o dedo ou mouse dentro do quadro branco. Esta assinatura será anexada ao contrato final.</p>
+          <div class="signatureWrap">
+            <canvas id="signatureCanvas" class="signatureCanvas" aria-label="Campo de assinatura"></canvas>
+          </div>
+          <div class="signatureTools">
+            <button class="miniBtn" id="clearSignatureBtn" type="button">Limpar assinatura</button>
+            <span class="questionDesc" style="margin:0;">Use uma assinatura legível.</span>
+          </div>
+        `;
+
+        requestAnimationFrame(initSignaturePad);
+      }
+
+      function getAnswer(key){ return answers[key]; }
+
+      function setAnswer(key, value){
+        answers = { ...answers, [key]: value };
+        showError("");
+        scheduleDraftSave();
+      }
+
+      function renderText(q){
+        const current = getAnswer(q.question_key) || "";
+        return `
+          <textarea id="fieldText" maxlength="1500" placeholder="Escreva aqui...">${escapeHtml(current)}</textarea>
+        `;
+      }
+
+      function renderDate(q){
+        const current = getAnswer(q.question_key) || "";
+
+        return `
+          <input 
+            id="fieldDate" 
+            type="date" 
+            value="${escapeHtml(current)}"
+            aria-label="${escapeHtml(q.title || 'Data')}"
+          />
+        `;
+      }
+
+      function renderInfo(q){
+        const infoText = getInfoAnswerText(q);
+        answers = { ...answers, [q.question_key]: infoText };
+        return `
+          <div class="infoBox" role="note" aria-readonly="true">
+            <div>${escapeHtml(infoText)}</div>
+          </div>
+        `;
+      }
+
+      function renderSingle(q){
+        const opts = normalizeOptions(q.options);
+        const current = String(getAnswer(q.question_key) || "");
+        return opts.map(opt => {
+          const value = String(opt.value ?? opt.label ?? "");
+          return `
+            <label class="option ${current === value ? "selected" : ""}">
+              <input type="radio" name="${escapeHtml(q.question_key)}" value="${escapeHtml(value)}" ${current === value ? "checked" : ""} />
+              <span class="optionText">${escapeHtml(opt.label ?? value)}</span>
+            </label>
+          `;
+        }).join("");
+      }
+
+      function renderMultiple(q){
+        const opts = normalizeOptions(q.options);
+        const current = Array.isArray(getAnswer(q.question_key)) ? getAnswer(q.question_key) : [];
+        return opts.map(opt => {
+          const value = String(opt.value ?? opt.label ?? "");
+          return `
+            <label class="option ${current.includes(value) ? "selected" : ""}">
+              <input type="checkbox" name="${escapeHtml(q.question_key)}" value="${escapeHtml(value)}" ${current.includes(value) ? "checked" : ""} />
+              <span class="optionText">${escapeHtml(opt.label ?? value)}</span>
+            </label>
+          `;
+        }).join("");
+      }
+
+      function renderYesNo(q){
+        const current = String(getAnswer(q.question_key) || "");
+        return [
+          { value:"yes", label:"Sim" },
+          { value:"no", label:"Não" }
+        ].map(opt => `
+          <label class="option ${current === opt.value ? "selected" : ""}">
+            <input type="radio" name="${escapeHtml(q.question_key)}" value="${opt.value}" ${current === opt.value ? "checked" : ""} />
+            <span class="optionText">${opt.label}</span>
+          </label>
+        `).join("");
+      }
+
+      function renderPositionsQuestion(){
+        return `
+          <div class="positionsBox">
+            <div class="positionsHeader">
+              <span class="positionsCount">${selectedPositionIds.length} posição(ões) selecionada(s)</span>
+              <button class="miniBtn" id="openPositionsBtn" type="button">Adicionar posições</button>
+            </div>
+            ${renderSelectedPositionChips()}
+          </div>
+        `;
+      }
+
+      function renderQuestionInput(q){
+        if (isPositionsQuestion(q)) return renderPositionsQuestion();
+        if (isInfoQuestion(q)) return renderInfo(q);
+        if (q.question_type === "text") return renderText(q);
+        if (q.question_type === "date") return renderDate(q);
+        if (q.question_type === "single") return renderSingle(q);
+        if (q.question_type === "multiple") return renderMultiple(q);
+        if (q.question_type === "yes_no") return renderYesNo(q);
+        return `<p class="questionDesc">Tipo de pergunta não suportado.</p>`;
+      }
+
+      function attachQuestionListeners(q){
+        if (isPositionsQuestion(q)){
+          document.getElementById("openPositionsBtn")?.addEventListener("click", openPositionsModal);
+          return;
+        }
+
+        if (isInfoQuestion(q)){
+          return;
+        }
+
+        if (q.question_type === "text"){
+          const el = document.getElementById("fieldText");
+          el?.addEventListener("input", () => setAnswer(q.question_key, el.value.trim()));
+          return;
+        }
+
+        if (q.question_type === "date"){
+          const el = document.getElementById("fieldDate");
+          el?.addEventListener("change", () => setAnswer(q.question_key, el.value));
+          return;
+        }
+
+        questionBox.querySelectorAll("input").forEach(input => {
+          input.addEventListener("change", () => {
+            if (q.question_type === "multiple"){
+              const selected = [...questionBox.querySelectorAll("input:checked")].map(el => el.value);
+              questionBox.querySelectorAll(".option").forEach(label => {
+                label.classList.toggle("selected", !!label.querySelector("input")?.checked);
+              });
+              setAnswer(q.question_key, selected);
+            } else {
+              const selected = questionBox.querySelector("input:checked")?.value || "";
+              questionBox.querySelectorAll(".option").forEach(label => {
+                label.classList.toggle("selected", !!label.querySelector("input")?.checked);
+              });
+              setAnswer(q.question_key, selected);
+            }
+          });
+        });
+      }
+
+      function renderStep(){
+        document.querySelector(".footer")?.classList.remove("singleAction");
+        backBtn.style.display = "";
+        showError("");
+        const totalSteps = questions.length + 2;
+        const displayStep = isReviewStep ? totalSteps : isSignatureStep ? questions.length + 1 : currentIndex + 1;
+        stepInfo.textContent = `${displayStep}/${totalSteps}`;
+        barFill.style.width = `${Math.round((displayStep / totalSteps) * 100)}%`;
+
+        backBtn.disabled = currentIndex === 0 && !isSignatureStep && !isReviewStep;
+        nextBtn.textContent = isReviewStep ? "Finalizar e gerar PDF" : "Continuar";
+
+        if (isReviewStep){
+          questionBox.innerHTML = `
+            <h2 class="questionTitle">Revisão final</h2>
+            <p class="questionDesc">Confira as respostas e a assinatura antes de finalizar. Depois de concluir, o contrato será salvo e o PDF será gerado.</p>
+            <div class="reviewBox">${escapeHtml(buildContractText())}</div>
+            ${renderSelectedPositionsReviewHtml()}
+            ${signatureDataUrl ? `<div class="signaturePreview"><img src="${signatureDataUrl}" alt="Assinatura do usuário"></div>` : ""}
+            ${pdfUrl ? `<div class="pdfBox">PDF gerado: <a href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener noreferrer">Baixar contrato em PDF</a></div>` : ""}
+          `;
+          return;
+        }
+
+        if (isSignatureStep){
+          renderSignatureStep();
+          return;
+        }
+
+        const q = questions[currentIndex];
+        questionBox.innerHTML = `
+          <h2 class="questionTitle">${escapeHtml(q.title)}</h2>
+          ${isPositionsQuestion(q) ? `<p class="questionDesc">Selecione as posições que deseja experimentar durante a experiência.</p>` : (!isInfoQuestion(q) && q.description ? `<p class="questionDesc">${escapeHtml(q.description)}</p>` : "")}
+          <div class="fieldArea">${renderQuestionInput(q)}</div>
+        `;
+        attachQuestionListeners(q);
+      }
+
+      function validateCurrentStep(){
+        if (isReviewStep) return true;
+        if (isSignatureStep) return !!signatureDataUrl;
+        const q = questions[currentIndex];
+        if (isPositionsQuestion(q)) return selectedPositionIds.length > 0;
+        if (isInfoQuestion(q)){
+          answers = { ...answers, [q.question_key]: getInfoAnswerText(q) };
+          return true;
+        }
+        if (!q?.required) return true;
+        const value = getAnswer(q.question_key);
+        if (q.question_type === "multiple") return Array.isArray(value) && value.length > 0;
+        return String(value ?? "").trim().length > 0;
+      }
+
+      function getOptionLabel(q, value){
+        if (isInfoQuestion(q)) return getInfoAnswerText(q);
+
+        if (q.question_type === "yes_no") {
+          return value === "yes" ? "Sim" : value === "no" ? "Não" : "";
+        }
+
+        if (q.question_type === "date") {
+          return formatDatePt(value);
+        }
+
+        const opt = normalizeOptions(q.options).find(o => String(o.value ?? o.label ?? "") === String(value));
+        return opt?.label ?? value;
+      }
+
+      function renderSelectedPositionsReviewHtml(){
+        const selected = getSelectedPositions();
+        if (!selected.length) return "";
+        return `
+          <div class="positionsBox">
+            <div class="positionsHeader">
+              <span class="positionsCount">${selected.length} posição(ões) homologada(s)</span>
+            </div>
+            <div class="positionsGrid" style="margin-top:12px;">
+              ${selected.map(pos => {
+                const name = getPositionName(pos);
+                return `
+                  <div class="positionCard selected" style="cursor:default;min-height:165px;">
+                    ${pos.image_url ? `<img src="${escapeHtml(pos.image_url)}" alt="${escapeHtml(name)}" loading="lazy">` : ""}
+                    <div class="positionName">${escapeHtml(name)}</div>
+                    ${pos.is_liked ? `<div class="positionMeta">curtida</div>` : ""}
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      function pushSection(lines, title, body){
+        if (!body) return;
+        lines.push(String(title || "").trim().toUpperCase());
+        lines.push("");
+        lines.push(String(body).trim());
+        lines.push("");
+      }
+
+      function buildContractText(){
+        const lines = [];
+        const now = new Date().toLocaleString("pt-BR");
+        const selectedPositions = getSelectedPositions();
+        const tpl = contractTemplate || {};
+        const title = tpl.pdf_title || "CONTRATO CIVIL-AMOROSO DE EXPLORAÇÃO DE LIMITES";
+        const footer = tpl.pdf_footer || "Status: assinado eletronicamente pelo usuário autenticado.";
+
+        lines.push(title);
+        lines.push("INOVANDO JUNTOS");
+        lines.push("CONEXÃO • COMUNICAÇÃO • INTIMIDADE");
+        lines.push(`Documento: ${getContractNumber()}`);
+        lines.push(`ID do contrato: ${getStableContractResponseId()}`);
+        lines.push(`Data de emissão: ${new Date().toLocaleDateString("pt-BR")}`);
+        lines.push("");
+
+        pushSection(lines, "Introdução", tpl.intro_text);
+        pushSection(lines, "Cláusula resumida do acordo", tpl.summary_clause);
+        pushSection(lines, "Validade", tpl.validity_text);
+        pushSection(lines, "Penalidade", tpl.penalty_clause);
+
+        lines.push("ANEXO I - ESCOLHAS REGISTRADAS NA APLICAÇÃO");
+        lines.push("");
+
+        questions.forEach((q, idx) => {
+          const raw = getAnswer(q.question_key);
+          let rendered = "";
+
+          if (isInfoQuestion(q)) {
+            rendered = getInfoAnswerText(q);
+          } else if (isPositionsQuestion(q)) {
+            rendered = selectedPositions.map(getPositionName).filter(Boolean).join(", ");
+          } else if (Array.isArray(raw)) {
+            rendered = raw.map(v => getOptionLabel(q, v)).filter(Boolean).join(", ");
+          } else {
+            rendered = getOptionLabel(q, raw);
+          }
+
+          if (!rendered) rendered = "Não informado";
+          lines.push(`${idx + 1}. ${q.title}`);
+          lines.push(rendered);
+          lines.push("");
+        });
+
+        if (selectedPositions.length){
+          lines.push("ANEXO II - POSIÇÕES HOMOLOGADAS");
+          lines.push("");
+          selectedPositions.forEach(pos => {
+            lines.push(`- ${getPositionName(pos)}`);
+          });
+          lines.push("");
+        }
+
+        pushSection(lines, "Declaração final", tpl.final_declaration || "As partes declaram que as escolhas acima refletem os desejos, permissões e limites informados voluntariamente na aplicação, devendo prevalecer sempre o consentimento contínuo, o respeito mútuo e a possibilidade de interromper qualquer prática a qualquer momento.");
+        lines.push(footer);
+
+        return lines.join("\n");
+      }
+
+      async function saveDraft(){
+        if (isSubmittedSummary) return;
+        if (!authUserId || !questions.length || saving) return;
+        saving = true;
+        setSaveState("Salvando rascunho...");
+        try{
+          applyInformativeAnswers();
+          enrichContractMetadata();
+          const { data, error } = await supabase.rpc("save_contract_response", {
+            p_desafio_slug: desafioSlug,
+            p_answers: answers,
+            p_rendered_text: buildContractText(),
+            p_submit: false,
+            p_signature_image: signatureDataUrl || null,
+            p_pdf_url: pdfUrl || null
+          });
+          if (error) throw error;
+          applyResponseIdentity(normalizeRpcSingle(data));
+          enrichContractMetadata();
+          setSaveState("Rascunho salvo", "ok");
+        }catch(err){
+          console.error("[SAVE DRAFT ERROR]", err);
+          setSaveState("Erro ao salvar rascunho", "err");
+        }finally{
+          saving = false;
+        }
+      }
+
+      function scheduleDraftSave(){
+        if (isSubmittedSummary) return;
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(saveDraft, 550);
+      }
+
+
+      function sanitizePdfText(value){
+        return String(value ?? "")
+          .replace(/[“”]/g, '"')
+          .replace(/[‘’]/g, "'")
+          .replace(/[–—]/g, "-");
+      }
+
+      async function fetchFontBytes(url){
+        try{
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return await response.arrayBuffer();
+        }catch(err){
+          console.warn("[PDF FONT LOAD WARNING]", url, err);
+          return null;
+        }
+      }
+
+      async function loadPdfFonts(pdfDoc){
+        try{
+          pdfDoc.registerFontkit(fontkit);
+          const regularBytes = await fetchFontBytes("./fonts/NotoSans-Regular.ttf");
+          const boldBytes = await fetchFontBytes("./fonts/NotoSans-Bold.ttf");
+
+          if (regularBytes && boldBytes){
+            return {
+              font: await pdfDoc.embedFont(regularBytes, { subset:false }),
+              bold: await pdfDoc.embedFont(boldBytes, { subset:false })
+            };
+          }
+        }catch(err){
+          console.warn("[PDF FONTKIT WARNING] Usando Helvetica como fallback.", err);
+        }
+
+        return {
+          font: await pdfDoc.embedFont(StandardFonts.Helvetica),
+          bold: await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+        };
+      }
+
+      function getImageExtensionFromUrl(url){
+        const clean = String(url || "").split("?")[0].toLowerCase();
+        if (clean.endsWith(".jpg") || clean.endsWith(".jpeg")) return "jpg";
+        if (clean.endsWith(".png")) return "png";
+        return "";
+      }
+
+      async function embedRemoteImage(pdfDoc, imageUrl){
+        if (!imageUrl) return null;
+        try{
+          const response = await fetch(imageUrl, { mode:"cors" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const bytes = new Uint8Array(await response.arrayBuffer());
+          const extension = getImageExtensionFromUrl(imageUrl);
+          const contentType = response.headers.get("content-type") || "";
+          if (extension === "jpg" || contentType.includes("jpeg")) return await pdfDoc.embedJpg(bytes);
+          return await pdfDoc.embedPng(bytes);
+        }catch(err){
+          console.warn("[PDF POSITION IMAGE ERROR]", imageUrl, err);
+          return null;
+        }
+      }
+
+      async function createQrDataUrl(text){
+        return await QRCode.toDataURL(text, {
+          errorCorrectionLevel: "M",
+          margin: 1,
+          width: 220
+        });
+      }
+
+      async function createContractPdfBytes(){
+        const pdfDoc = await PDFDocument.create();
+        const { font, bold } = await loadPdfFonts(pdfDoc);
+        const watermarkLogo = await embedRemoteImage(pdfDoc, "images/logo_bn.png");
+        const pdfIconX = await embedRemoteImage(pdfDoc, "images/x.png");
+        const pdfIconCheck = await embedRemoteImage(pdfDoc, "images/check.png");
+        const PDF_ICON_X_TOKEN = "__PDF_ICON_X__";
+        const PDF_ICON_CHECK_TOKEN = "__PDF_ICON_CHECK__";
+
+        const margin = 48;
+        const pageWidth = 595.28;
+        const pageHeight = 841.89;
+
+        function drawWatermark(targetPage){
+          if (!watermarkLogo) return;
+
+          const wmWidth = 260;
+          const wmHeight = (watermarkLogo.height / watermarkLogo.width) * wmWidth;
+
+          targetPage.drawImage(watermarkLogo, {
+            x:(pageWidth - wmWidth) / 2,
+            y:(pageHeight - wmHeight) / 2,
+            width:wmWidth,
+            height:wmHeight,
+            opacity:0.055
+          });
+        }
+
+        let page = pdfDoc.addPage([pageWidth, pageHeight]);
+        drawWatermark(page);
+        let y = pageHeight - margin;
+        const contentWidth = pageWidth - (margin * 2);
+
+        const ensureSpace = (requiredHeight = 70) => {
+          if (y < margin + requiredHeight){
+            page = pdfDoc.addPage([pageWidth, pageHeight]);
+            drawWatermark(page);
+            y = pageHeight - margin;
+          }
+        };
+
+        const normalizePdfIconTokens = (text) => {
+          return sanitizePdfText(text)
+            .replace(/❌/g, ` ${PDF_ICON_X_TOKEN} `)
+            .replace(/[✅✓]/g, ` ${PDF_ICON_CHECK_TOKEN} `)
+            .replace(/\s+([,.;:!?])/g, "$1")
+            .trim();
+        };
+
+        const isPdfIconToken = (word) => word === PDF_ICON_X_TOKEN || word === PDF_ICON_CHECK_TOKEN;
+        const getPdfIconForToken = (word) => word === PDF_ICON_X_TOKEN ? pdfIconX : word === PDF_ICON_CHECK_TOKEN ? pdfIconCheck : null;
+        const getPdfIconSize = (size) => Math.max(size + 1.5, 11)*0.5;
+
+        const measurePdfWord = (word, activeFont, size) => {
+          if (isPdfIconToken(word)) return getPdfIconSize(size);
+          return activeFont.widthOfTextAtSize(word, size);
+        };
+
+        const measurePdfLine = (line, activeFont, size) => {
+          const words = String(line || "").split(/\s+/).filter(Boolean);
+          if (!words.length) return 0;
+          const spaceWidth = activeFont.widthOfTextAtSize(" ", size);
+          return words.reduce((sum, word, index) => {
+            return sum + measurePdfWord(word, activeFont, size) + (index ? spaceWidth : 0);
+          }, 0);
+        };
+
+        const drawPdfInlineLine = (line, x, yPos, size, activeFont, color) => {
+          const words = String(line || "").split(/\s+/).filter(Boolean);
+          if (!words.some(isPdfIconToken)){
+            page.drawText(line, { x, y:yPos, size, font:activeFont, color });
+            return;
+          }
+
+          const spaceWidth = activeFont.widthOfTextAtSize(" ", size);
+          let cursorX = x;
+
+          words.forEach((word, index) => {
+            if (index > 0) cursorX += spaceWidth;
+
+            const icon = getPdfIconForToken(word);
+            if (icon){
+              const iconSize = getPdfIconSize(size);
+              page.drawImage(icon, {
+                x:cursorX,
+                y:yPos - 1,
+                width:iconSize,
+                height:iconSize
+              });
+              cursorX += iconSize;
+              return;
+            }
+
+            page.drawText(word, { x:cursorX, y:yPos, size, font:activeFont, color });
+            cursorX += activeFont.widthOfTextAtSize(word, size);
+          });
+        };
+
+        const wrapPdfText = (text, activeFont, size, maxWidth) => {
+          const cleanText = normalizePdfIconTokens(text);
+          const words = cleanText.split(/\s+/).filter(Boolean);
+          const lines = [];
+          let current = "";
+
+          words.forEach(word => {
+            const candidate = current ? `${current} ${word}` : word;
+            const candidateWidth = measurePdfLine(candidate, activeFont, size);
+            if (candidateWidth > maxWidth && current){
+              lines.push(current);
+              current = word;
+            } else {
+              current = candidate;
+            }
+          });
+
+          if (current) lines.push(current);
+          return lines.length ? lines : [""];
+        };
+
+        const drawJustifiedLine = (line, x, yPos, maxWidth, size, activeFont, color) => {
+          const words = String(line || "").split(/\s+/).filter(Boolean);
+          if (words.length <= 1 || words.some(isPdfIconToken)){
+            drawPdfInlineLine(line, x, yPos, size, activeFont, color);
+            return;
+          }
+
+          const wordsWidth = words.reduce((sum, word) => sum + activeFont.widthOfTextAtSize(word, size), 0);
+          const extraSpace = (maxWidth - wordsWidth) / (words.length - 1);
+          let cursorX = x;
+
+          words.forEach((word, index) => {
+            page.drawText(word, { x:cursorX, y:yPos, size, font:activeFont, color });
+            if (index < words.length - 1){
+              cursorX += activeFont.widthOfTextAtSize(word, size) + extraSpace;
+            }
+          });
+        };
+
+        const drawTextBlock = (text, opts = {}) => {
+          const size = opts.size || 10;
+          const activeFont = opts.bold ? bold : font;
+          const lineGap = opts.lineGap ?? 5;
+          const indent = opts.indent || 0;
+          const maxWidth = opts.maxWidth || (contentWidth - indent);
+          const align = opts.align || "left";
+          const textColor = opts.color || rgb(0.08, 0.08, 0.08);
+          const paragraphs = String(text ?? "").split("\n");
+
+          paragraphs.forEach((paragraph, paragraphIndex) => {
+            const lines = wrapPdfText(paragraph, activeFont, size, maxWidth);
+            lines.forEach((line, lineIndex) => {
+              ensureSpace(size + lineGap + 10);
+              const lineWidth = measurePdfLine(line, activeFont, size);
+              const x = align === "center" ? margin + indent + ((maxWidth - lineWidth) / 2) : margin + indent;
+              const isLastLine = lineIndex === lines.length - 1;
+              const canJustify = align === "justify"
+                && !isLastLine
+                && !/^[-•]/.test(line.trim())
+                && !line.split(/\s+/).some(isPdfIconToken)
+                && line.split(/\s+/).length > 3
+                && lineWidth > maxWidth * 0.58;
+
+              if (canJustify) drawJustifiedLine(line, margin + indent, y, maxWidth, size, activeFont, textColor);
+              else drawPdfInlineLine(line, x, y, size, activeFont, textColor);
+              y -= size + lineGap;
+            });
+            if (paragraphIndex < paragraphs.length - 1) y -= lineGap;
+          });
+        };
+
+        const drawSeparator = () => {
+          ensureSpace(18);
+          y -= 4;
+          page.drawLine({
+            start:{ x:margin, y },
+            end:{ x:pageWidth - margin, y },
+            thickness:0.7,
+            color:rgb(0.72, 0.72, 0.72)
+          });
+          y -= 14;
+        };
+
+        const drawHeading = (text, size = 12) => {
+          ensureSpace(36);
+          y -= 4;
+          drawTextBlock(text, { size, bold:true, lineGap:4 });
+          drawSeparator();
+        };
+
+        const drawImageInsideBox = (embeddedImage, x, yPos, boxW, boxH) => {
+          if (!embeddedImage) return;
+          const ratio = embeddedImage.width / embeddedImage.height;
+          let width = boxW;
+          let height = boxH;
+          if (ratio > boxW / boxH) height = boxW / ratio;
+          else width = boxH * ratio;
+
+          page.drawImage(embeddedImage, {
+            x:x + (boxW - width) / 2,
+            y:yPos + (boxH - height) / 2,
+            width,
+            height
+          });
+        };
+
+        const drawHeaderBrandAssets = async () => {
+          const assetSize = 64;
+          const assetY = pageHeight - margin - assetSize;
+
+          try{
+            const logoImage = await embedRemoteImage(pdfDoc, "images/logo_bn.png");
+            drawImageInsideBox(logoImage, margin, assetY, assetSize, assetSize);
+          }catch(err){
+            console.warn("[PDF HEADER LOGO WARNING]", err);
+          }
+
+          try{
+            const qrDataUrl = await createQrDataUrl(getVerificationUrl());
+            const qrImage = await pdfDoc.embedPng(qrDataUrl);
+            drawImageInsideBox(qrImage, pageWidth - margin - assetSize, assetY, assetSize, assetSize);
+          }catch(err){
+            console.warn("[PDF HEADER QR WARNING]", err);
+          }
+        };
+
+        await drawHeaderBrandAssets();
+
+        const headerAssetSize = 64;
+        const headerAssetGap = 18;
+        const headerTextIndent = headerAssetSize + headerAssetGap;
+        const headerTextWidth = contentWidth - (headerTextIndent * 2);
+
+        drawTextBlock("INOVANDO JUNTOS", {
+          size:18,
+          bold:true,
+          indent:headerTextIndent,
+          maxWidth:headerTextWidth,
+          align:"center",
+          lineGap:5
+        });
+        drawTextBlock("CONEXÃO • COMUNICAÇÃO • INTIMIDADE", {
+          size:8.5,
+          bold:true,
+          indent:headerTextIndent,
+          maxWidth:headerTextWidth,
+          align:"center",
+          lineGap:4,
+          color:rgb(0.45, 0.45, 0.45)
+        });
+        drawTextBlock(`Documento: ${getContractNumber()}`, {
+          size:9,
+          bold:true,
+          indent:headerTextIndent,
+          maxWidth:headerTextWidth,
+          align:"center",
+          lineGap:4
+        });
+        drawTextBlock(`Data: ${new Date().toLocaleDateString("pt-BR")}`, {
+          size:8.5,
+          indent:headerTextIndent,
+          maxWidth:headerTextWidth,
+          align:"center",
+          lineGap:4
+        });
+        drawTextBlock(contractTemplate?.pdf_title || "CONTRATO CIVIL-AMOROSO DE EXPLORAÇÃO DE LIMITES", {
+          size:13,
+          bold:true,
+          indent:headerTextIndent,
+          maxWidth:headerTextWidth,
+          align:"center",
+          lineGap:4
+        });
+        y -= 12;
+        drawSeparator();
+
+        const sections = buildContractText().split("\n");
+        sections.forEach(line => {
+          const trimmed = line.trim();
+          if (!trimmed){
+            y -= 6;
+            return;
+          }
+
+          const isMainTitle = trimmed === "INOVANDO JUNTOS" || trimmed === String(contractTemplate?.pdf_title || "CONTRATO CIVIL-AMOROSO DE EXPLORAÇÃO DE LIMITES").trim();
+          const isPremiumHeaderMeta = /^(CONEXÃO|Documento:|ID do contrato:|Data de emissão:)/.test(trimmed);
+          const isSection = /^(INTRODUÇÃO|CLÁUSULA RESUMIDA DO ACORDO|VALIDADE|PENALIDADE|ANEXO I|ANEXO II|DECLARAÇÃO FINAL|ASSINATURA ELETRÔNICA)/.test(trimmed);
+          const isMeta = /^(Data de assinatura:|Tipo de contrato:|Status:)/.test(trimmed);
+          const isQuestion = /^\d+\./.test(trimmed);
+
+          if (isMainTitle || isPremiumHeaderMeta) return;
+          if (isSection) drawHeading(trimmed, 11.5);
+          else if (isMeta) drawTextBlock(trimmed, { size:9.2, bold:true, lineGap:4 });
+          else if (isQuestion) drawTextBlock(trimmed, { size:9.6, bold:true, lineGap:4 });
+          else drawTextBlock(trimmed, { size:9.3, bold:false, maxWidth:contentWidth, lineGap:4.6, align:"justify" });
+        });
+
+        const selectedPositions = getSelectedPositions();
+        if (selectedPositions.length){
+          y -= 8;
+          drawHeading("ANEXO VISUAL - IMAGENS DAS POSIÇÕES HOMOLOGADAS", 11.5);
+
+          const cardW = 120;
+          const cardH = 150;
+          const gap = 14;
+          const columns = 3;
+
+          for (let i = 0; i < selectedPositions.length; i++){
+            const pos = selectedPositions[i];
+            const col = i % columns;
+            if (col === 0) ensureSpace(cardH + 22);
+
+            const x = margin + col * (cardW + gap);
+            const cardY = y - cardH;
+            page.drawRectangle({
+              x,
+              y:cardY,
+              width:cardW,
+              height:cardH,
+              borderColor:rgb(0.82, 0.82, 0.82),
+              borderWidth:1,
+              color:rgb(1, 1, 1)
+            });
+
+            const embeddedImage = await embedRemoteImage(pdfDoc, pos.image_url);
+            if (embeddedImage){
+              const imgBox = 92;
+              const ratio = embeddedImage.width / embeddedImage.height;
+              let w = imgBox;
+              let h = imgBox;
+              if (ratio > 1) h = imgBox / ratio;
+              else w = imgBox * ratio;
+              page.drawImage(embeddedImage, {
+                x:x + (cardW - w) / 2,
+                y:cardY + 46 + (imgBox - h) / 2,
+                width:w,
+                height:h
+              });
+            }
+
+            const safeName = String(getPositionName(pos) || "Posição").slice(0, 30);
+            page.drawText(sanitizePdfText(`- ${safeName}`), {
+              x:x + 10,
+              y:cardY + 18,
+              size:8.2,
+              font:bold,
+              color:rgb(0.08, 0.08, 0.08)
+            });
+
+            if (col === columns - 1 || i === selectedPositions.length - 1){
+              y -= cardH + 18;
+            }
+          }
+        }
+
+        if (signatureDataUrl){
+          if (y < 180){
+            page = pdfDoc.addPage([pageWidth, pageHeight]);
+            drawWatermark(page);
+            y = pageHeight - margin;
+          }
+
+          y -= 10;
+
+          const pngImage = await pdfDoc.embedPng(signatureDataUrl);
+          const imgWidth = 260;
+          const imgHeight = Math.min(105, (pngImage.height / pngImage.width) * imgWidth);
+
+          page.drawRectangle({
+            x:margin,
+            y:y - imgHeight - 10,
+            width:imgWidth + 20,
+            height:imgHeight + 18,
+            borderColor:rgb(0.75, 0.75, 0.75),
+            borderWidth:1,
+            color:rgb(1, 1, 1)
+          });
+
+          page.drawImage(pngImage, {
+            x:margin + 10,
+            y:y - imgHeight - 1,
+            width:imgWidth,
+            height:imgHeight
+          });
+
+          y -= imgHeight + 26;
+          drawTextBlock(`Assinado em: ${new Date().toLocaleString("pt-BR")}`, { size:9.5 });
+        }
+
+        return await pdfDoc.save();
+      }
+
+      async function uploadContractPdf(){
+        applyInformativeAnswers();
+        enrichContractMetadata();
+        const pdfBytes = await createContractPdfBytes();
+        const filePath = `${authUserId}/${desafioSlug}-${Date.now()}.pdf`;
+        const file = new File([pdfBytes], `${desafioSlug}-contrato.pdf`, { type: "application/pdf" });
+
+        const { error: uploadError } = await supabase.storage
+          .from("contracts")
+          .upload(filePath, file, {
+            contentType: "application/pdf",
+            upsert: true
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage.from("contracts").getPublicUrl(filePath);
+        return data?.publicUrl || filePath;
+      }
+
+      async function updatePdfUrl(finalPdfUrl){
+        applyInformativeAnswers();
+        enrichContractMetadata();
+        const { data, error } = await supabase.rpc("save_contract_response", {
+          p_desafio_slug: desafioSlug,
+          p_answers: answers,
+          p_rendered_text: buildContractText(),
+          p_submit: true,
+          p_signature_image: signatureDataUrl || null,
+          p_pdf_url: finalPdfUrl || null
+        });
+
+        if (error) throw error;
+        applyResponseIdentity(normalizeRpcSingle(data));
+        enrichContractMetadata();
+      }
+
+      async function submitContract(){
+        nextBtn.disabled = true;
+        backBtn.disabled = true;
+        setSaveState("Finalizando contrato...");
+        try{
+          applyInformativeAnswers();
+          enrichContractMetadata();
+          const { data, error } = await supabase.rpc("save_contract_response", {
+            p_desafio_slug: desafioSlug,
+            p_answers: answers,
+            p_rendered_text: buildContractText(),
+            p_submit: true,
+            p_signature_image: signatureDataUrl || null,
+            p_pdf_url: pdfUrl || null
+          });
+          if (error) throw error;
+
+          applyResponseIdentity(normalizeRpcSingle(data));
+          await refreshContractResponseIdentity();
+          enrichContractMetadata();
+
+          setSaveState("Gerando PDF...");
+          pdfUrl = await uploadContractPdf();
+          await updatePdfUrl(pdfUrl);
+
+          const finalResponse = {
+            id: getStableContractResponseId(),
+            answers,
+            status: "submitted",
+            rendered_text: buildContractText(),
+            submitted_at: new Date().toISOString(),
+            signature_image: signatureDataUrl || null,
+            pdf_url: pdfUrl || null
+          };
+
+          setSaveState("Contrato finalizado e PDF gerado", "ok");
+          showToast("Contrato finalizado");
+          renderSubmittedSummary(finalResponse);
+        }catch(err){
+          console.error("[SUBMIT ERROR]", err);
+          nextBtn.disabled = false;
+          backBtn.disabled = false;
+          setSaveState("Erro ao finalizar", "err");
+          showError("Não foi possível finalizar ou gerar o PDF. Verifique Storage/RLS e tente novamente.");
+        }
+      }
+
+
+      function syncPositionsAnswer(){
+        const q = questions.find(isPositionsQuestion);
+        if (!q) return;
+        answers = {
+          ...answers,
+          [q.question_key]: selectedPositionIds,
+          posicoes_selecionadas: getSelectedPositions().map(pos => ({
+            id: getPositionId(pos),
+            numero: pos.numero || null,
+            nome: getPositionName(pos),
+            image_url: pos.image_url || null,
+            is_liked: !!pos.is_liked
+          }))
+        };
+      }
+
+      function renderPositionsGrid(){
+        if (!positionsGrid) return;
+        if (!allPositions.length){
+          positionsGrid.innerHTML = `<p class="questionDesc">Nenhuma posição retornada pelo RPC.</p>`;
+          return;
+        }
+        const selected = new Set(selectedPositionIds.map(String));
+        positionsGrid.innerHTML = allPositions.map(pos => {
+          const id = getPositionId(pos);
+          const name = getPositionName(pos);
+          const liked = !!pos.is_liked;
+          const meta = [pos.grupo, pos.nivel, Number.isFinite(Number(pos.likes_count)) ? `${pos.likes_count} curtida(s)` : ""].filter(Boolean).join(" · ");
+          return `
+            <button class="positionCard ${selected.has(id) ? "selected" : ""} ${liked ? "liked" : ""}" type="button" data-position-id="${escapeHtml(id)}">
+              ${pos.image_url ? `<img src="${escapeHtml(pos.image_url)}" alt="${escapeHtml(name)}" loading="lazy">` : ""}
+              <div class="positionName">${escapeHtml(name)}</div>
+              ${meta ? `<div class="positionMeta">${escapeHtml(meta)}</div>` : ""}
+            </button>
+          `;
+        }).join("");
+        positionsGrid.querySelectorAll(".positionCard").forEach(card => {
+          card.addEventListener("click", () => {
+            const id = String(card.dataset.positionId || "");
+            if (!id) return;
+            const set = new Set(selectedPositionIds.map(String));
+            if (set.has(id)) set.delete(id); else set.add(id);
+            selectedPositionIds = [...set];
+            syncPositionsAnswer();
+            renderPositionsGrid();
+          });
+        });
+      }
+
+      function openPositionsModal(){
+        renderPositionsGrid();
+        positionsModal?.classList.add("show");
+        positionsModal?.setAttribute("aria-hidden", "false");
+      }
+
+      function closePositionsSelector(){
+        positionsModal?.classList.remove("show");
+        positionsModal?.setAttribute("aria-hidden", "true");
+        if (isSubmittedSummary) return;
+        syncPositionsAnswer();
+        scheduleDraftSave();
+        renderStep();
+      }
+
+      closePositionsModal?.addEventListener("click", closePositionsSelector);
+      confirmPositionsBtn?.addEventListener("click", closePositionsSelector);
+      clearPositionsBtn?.addEventListener("click", () => {
+        selectedPositionIds = [];
+        syncPositionsAnswer();
+        renderPositionsGrid();
+      });
+
+      backBtn.addEventListener("click", async () => {
+        if (isSubmittedSummary){
+          goToChallenge();
+          return;
+        }
+
+        if (isReviewStep){
+          isReviewStep = false;
+          isSignatureStep = true;
+          renderStep();
+          return;
+        }
+
+        if (isSignatureStep){
+          isSignatureStep = false;
+          currentIndex = Math.max(0, questions.length - 1);
+          renderStep();
+          return;
+        }
+
+        if (currentIndex > 0){
+          currentIndex--;
+          renderStep();
+        }
+      });
+
+      nextBtn.addEventListener("click", async () => {
+        if (isSubmittedSummary){
+          goToChallenge();
+          return;
+        }
+
+        if (isReviewStep){
+          await submitContract();
+          return;
+        }
+
+        if (!validateCurrentStep()){
+          showError(isSignatureStep ? "A assinatura é obrigatória para finalizar." : "Esta resposta é obrigatória para continuar.");
+          return;
+        }
+
+        await saveDraft();
+
+        if (isSignatureStep){
+          isSignatureStep = false;
+          isReviewStep = true;
+          renderStep();
+          return;
+        }
+
+        if (currentIndex < questions.length - 1){
+          currentIndex++;
+          renderStep();
+        } else {
+          isSignatureStep = true;
+          renderStep();
+        }
+      });
+
+      async function init(){
+        try{
+          const ok = await requireAuth();
+          if (!ok) return;
+          desafioSlug = getDesafioSlug();
+          questions = await loadQuestions(desafioSlug);
+          contractTemplate = await tryLoadContractTemplate(desafioSlug);
+          applyContractTemplateToUi();
+          if (questions.some(isPositionsQuestion)){
+            try{
+              await loadAllPositions();
+            }catch(posErr){
+              console.error("[POSITIONS RPC ERROR]", posErr);
+              showError("Não foi possível carregar todas as posições pelo RPC get_contract_positions_all. Verifique permissões/RLS da tabela posiciones.");
+            }
+          }
+          if (!questions.length){
+            questionBox.innerHTML = `
+              <h2 class="questionTitle">Sem perguntas configuradas</h2>
+              <p class="questionDesc">Não existem perguntas ativas para ${escapeHtml(desafioSlug)}.</p>
+            `;
+            nextBtn.disabled = true;
+            stepInfo.textContent = "0/0";
+            return;
+          }
+          const existing = await loadExistingResponse(desafioSlug);
+          answers = existing?.answers && typeof existing.answers === "object" ? existing.answers : {};
+          applyInformativeAnswers();
+          applyResponseIdentity(existing);
+          contractResponseId = contractResponseId || answers.contract_response_id || createClientUuid();
+          enrichContractMetadata();
+          const positionQuestion = questions.find(isPositionsQuestion);
+          selectedPositionIds = positionQuestion ? normalizeSelectedPositions(answers[positionQuestion.question_key]) : [];
+          syncPositionsAnswer();
+          signatureDataUrl = existing?.signature_image || "";
+          pdfUrl = existing?.pdf_url || "";
+
+          if (isFinalizedResponse(existing)){
+            renderSubmittedSummary(existing);
+            return;
+          }
+
+          isSubmittedSummary = false;
+          document.querySelector(".footer")?.classList.remove("singleAction");
+          backBtn.style.display = "";
+          backBtn.textContent = "Voltar";
+          nextBtn.textContent = "Continuar";
+          renderStep();
+        }catch(err){
+          console.error("[INIT ERROR]", err);
+          questionBox.innerHTML = `
+            <h2 class="questionTitle">Erro ao carregar</h2>
+            <p class="questionDesc">Não foi possível abrir o contrato.</p>
+          `;
+          nextBtn.disabled = true;
+          showError("Erro carregando contrato. Revise Supabase, RLS e conexão.");
+        }
+      }
+
+      window.addEventListener("resize", () => {
+        if (isSignatureStep) resizeSignatureCanvas();
+      });
+
+      init();
+    })();
+  </script>
+</body>
+</html>

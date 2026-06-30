@@ -1291,7 +1291,7 @@
   var grid = document.getElementById("ljGrid");
   if(!grid) return;
 
-  fetch(ENDPOINT).then(function(r){ return r.json(); }).then(function(d){
+  fetch(ENDPOINT + "?t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
     if(!d||!d.ok||!Array.isArray(d.categories)) throw new Error("bad");
     var cats = d.categories.filter(function(c){ return c.count>0 && c.id!==0; }).slice(0, MAX_TILES);
     if(!cats.length){ grid.innerHTML=""; document.getElementById("loja").style.display="none"; return; }
@@ -1579,7 +1579,7 @@
 
   /* ---- Carrinho + checkout: gerenciados por store.js ---- */
 
-  /* ---- Raspadinha de desconto: sorteo ponderado (todos ganham 5%–20%) + cupom ---- */
+  /* ---- Raspadinha de desconto: lê o cupom ativo do jogo desde Nuvemshop (sem hardcode) ---- */
   (function(){
     var stage = document.getElementById("scrStage");
     var canvas = document.getElementById("scrCanvas");
@@ -1590,88 +1590,111 @@
     var oldEl = document.getElementById("buyOld");
     var newEl = document.getElementById("buyNew");
     var ctaEl = document.querySelector(".buy-cta");
-    var base = ctaEl ? (parseFloat(ctaEl.getAttribute("data-price")) || 189.90) : 189.90;
+    var base = ctaEl ? (parseFloat(ctaEl.getAttribute("data-price")) || 187) : 187;
+    var GAME_PRODUCT_ID = 348895068;
+    var CATALOG = "https://rsordtljnvxonaygyuxd.supabase.co/functions/v1/store-catalog";
     function fmtBRL(v){ var s = v.toFixed(2).split("."); return s[0] + '<span class="cents">,' + s[1] + '</span>'; }
 
-    // Descuento FIJO de 20% · cupom fijo IJ20MD. Se aplica PROGRESIVO (0→20%) según el raspaje.
-    var prize = { pct:20 }, coupon = "IJ20MD";
-    if (pctEl) pctEl.textContent = 0;
-    if (codeEl) codeEl.textContent = coupon;
-
-    var ctx = canvas.getContext("2d");
-    var drawing = false, cleared = false, started = false;
-    function size(){
-      var r = stage.getBoundingClientRect();
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = r.width * dpr; canvas.height = r.height * dpr;
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-      cover(r.width, r.height);
-    }
-    function cover(w,h){
-      var g = ctx.createLinearGradient(0,0,w,h);
-      g.addColorStop(0,"#c7ccd4"); g.addColorStop(.5,"#8a909a"); g.addColorStop(1,"#aab0ba");
-      ctx.globalCompositeOperation = "source-over";
-      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
-      ctx.fillStyle = "rgba(0,0,0,.10)";
-      for (var i=0;i<w;i+=20){ for (var j=0;j<h;j+=20){ ctx.fillRect(i,j,2,2); } }
-    }
-    function pos(ev){
-      var r = canvas.getBoundingClientRect();
-      var p = ev.touches ? ev.touches[0] : ev;
-      return { x:p.clientX - r.left, y:p.clientY - r.top };
-    }
-    function scratch(ev){
-      if (!drawing) return;
-      var p = pos(ev);
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.globalAlpha = 1; ctx.fillStyle = "#000";   // fuente opaca → borra del todo en una pasada
-      ctx.beginPath(); ctx.arc(p.x, p.y, 26, 0, Math.PI*2); ctx.fill();
-      if (!started){ started = true; if (hint) hint.style.opacity = "0"; }
-      update();
-    }
-    var MAXPCT = prize.pct, TARGET = 0.85, last = 0;   // hay que limpiar ~85% para llegar al 20%
-    function clearedFraction(){
-      try {
-        var img = ctx.getImageData(0,0,canvas.width,canvas.height).data, clr = 0, step = 80, n = 0;
-        for (var i=3;i<img.length;i+=4*step){ n++; if (img[i] < 128) clr++; }   // alpha<128 = limpiado
-        return n ? clr / n : 0;
-      } catch(e){ return 0; }
-    }
-    function update(){
-      var now = Date.now(); if (now - last < 50) return; last = now;
-      var frac = clearedFraction();
-      var disc = Math.min(MAXPCT, Math.round(frac / TARGET * MAXPCT));   // 0 → 20% progresivo
-      if (pctEl) pctEl.textContent = disc;                              // % en vivo sobre la raspadinha
-      if (disc > 0){
-        if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - disc/100)); newEl.hidden = false; }  // precio en vivo
-        if (oldEl && !oldEl.classList.contains("struck")){ oldEl.classList.add("struck"); requestAnimationFrame(function(){ oldEl.classList.add("on"); }); }
+    // Inicia la raspadinha con el % y código del cupón resuelto (sin hardcode).
+    function init(prize, coupon){
+      if (pctEl) pctEl.textContent = 0;
+      if (codeEl) codeEl.textContent = coupon;
+      var ctx = canvas.getContext("2d");
+      var drawing = false, cleared = false, started = false;
+      function size(){
+        var r = stage.getBoundingClientRect();
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        cover(r.width, r.height);
       }
-      if (disc >= MAXPCT && !cleared){   // llegó al 20% → fija el cupón
-        cleared = true;
-        canvas.style.transition = "opacity .5s ease"; canvas.style.opacity = "0";
-        setTimeout(function(){ canvas.style.display = "none"; }, 520);
+      function cover(w,h){
+        var g = ctx.createLinearGradient(0,0,w,h);
+        g.addColorStop(0,"#c7ccd4"); g.addColorStop(.5,"#8a909a"); g.addColorStop(1,"#aab0ba");
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+        ctx.fillStyle = "rgba(0,0,0,.10)";
+        for (var i=0;i<w;i+=20){ for (var j=0;j<h;j+=20){ ctx.fillRect(i,j,2,2); } }
+      }
+      function pos(ev){
+        var r = canvas.getBoundingClientRect();
+        var p = ev.touches ? ev.touches[0] : ev;
+        return { x:p.clientX - r.left, y:p.clientY - r.top };
+      }
+      function scratch(ev){
+        if (!drawing) return;
+        var p = pos(ev);
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.globalAlpha = 1; ctx.fillStyle = "#000";
+        ctx.beginPath(); ctx.arc(p.x, p.y, 26, 0, Math.PI*2); ctx.fill();
+        if (!started){ started = true; if (hint) hint.style.opacity = "0"; }
+        update();
+      }
+      var MAXPCT = prize.pct, TARGET = 0.85, last = 0;   // limpiar ~85% para llegar al máximo
+      function clearedFraction(){
+        try {
+          var img = ctx.getImageData(0,0,canvas.width,canvas.height).data, clr = 0, step = 80, n = 0;
+          for (var i=3;i<img.length;i+=4*step){ n++; if (img[i] < 128) clr++; }
+          return n ? clr / n : 0;
+        } catch(e){ return 0; }
+      }
+      function update(){
+        var now = Date.now(); if (now - last < 50) return; last = now;
+        var frac = clearedFraction();
+        var disc = Math.min(MAXPCT, Math.round(frac / TARGET * MAXPCT));
+        if (pctEl) pctEl.textContent = disc;
+        if (disc > 0){
+          if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - disc/100)); newEl.hidden = false; }
+          if (oldEl && !oldEl.classList.contains("struck")){ oldEl.classList.add("struck"); requestAnimationFrame(function(){ oldEl.classList.add("on"); }); }
+        }
+        if (disc >= MAXPCT && !cleared){   // llegó al máximo → fija el cupón
+          cleared = true;
+          canvas.style.transition = "opacity .5s ease"; canvas.style.opacity = "0";
+          setTimeout(function(){ canvas.style.display = "none"; }, 520);
+          try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
+          if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
+          try { if (window.ijMeta) window.ijMeta.track("Lead", { content_name:"cupom_"+prize.pct }, window.ijMeta.uuid()); } catch(e){}
+        }
+      }
+      canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
+      window.addEventListener("pointerup", function(){ drawing = false; });
+      canvas.addEventListener("pointermove", scratch);
+      canvas.addEventListener("touchstart", function(e){ drawing = true; scratch(e); }, { passive:true });
+      canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
+      canvas.addEventListener("touchend", function(){ drawing = false; });
+
+      if (reduce){
+        canvas.style.display = "none"; if (hint) hint.style.display = "none";
+        if (pctEl) pctEl.textContent = prize.pct;
+        if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - prize.pct/100)); newEl.hidden = false; }
+        if (oldEl){ oldEl.classList.add("struck","on"); }
         try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
-        if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
-        try { if (window.ijMeta) window.ijMeta.track("Lead", { content_name:"cupom_20" }, window.ijMeta.uuid()); } catch(e){}
+      } else {
+        window.addEventListener("resize", function(){ if (!cleared) size(); });
+        size();
       }
     }
-    canvas.addEventListener("pointerdown", function(e){ drawing = true; scratch(e); });
-    window.addEventListener("pointerup", function(){ drawing = false; });
-    canvas.addEventListener("pointermove", scratch);
-    canvas.addEventListener("touchstart", function(e){ drawing = true; scratch(e); }, { passive:true });
-    canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
-    canvas.addEventListener("touchend", function(){ drawing = false; });
 
-    if (reduce){
-      canvas.style.display = "none"; if (hint) hint.style.display = "none";
-      if (pctEl) pctEl.textContent = prize.pct;
-      if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - prize.pct/100)); newEl.hidden = false; }
-      if (oldEl){ oldEl.classList.add("struck","on"); }
-      try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
-    } else {
-      window.addEventListener("resize", function(){ if (!cleared) size(); });
-      size();
-    }
+    // Sin campaña activa: ocultar la raspadinha y no aplicar descuento.
+    function noCampaign(){ stage.style.display = "none"; try { localStorage.removeItem("ij_coupon"); } catch(e){} }
+
+    // Lee el cupón activo que aplica al juego. Si la lectura falla, mantiene 20%/IJ20MD (no rompe).
+    fetch(CATALOG + "?t=" + Date.now())
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var cps = (d && d.coupons) || [];
+        var applicable = cps.filter(function(x){
+          if (x.type !== "percentage" || !(x.value > 0)) return false;
+          var pids = x.product_ids || [], cids = x.category_ids || [];
+          return pids.indexOf(GAME_PRODUCT_ID) !== -1 || (pids.length === 0 && cids.length === 0);
+        });
+        // si hay más de uno, elegir el de MAYOR % (mejor para el cliente)
+        applicable.sort(function(a, b){ return Number(b.value) - Number(a.value); });
+        var c = applicable[0];
+        if (c) init({ pct: Math.round(c.value) }, c.code);
+        else noCampaign();
+      })
+      .catch(function(){ init({ pct:20 }, "IJ20MD"); });
   })();
 
   /* ---- Cookie consent (LGPD) ---- */
@@ -2306,10 +2329,4 @@
     document.querySelectorAll(".info-modal").forEach(function(m){
       m.addEventListener("click", function(e){ if (e.target.hasAttribute("data-close")) closeM(m); });
     });
-    document.addEventListener("keydown", function(e){ if (e.key === "Escape"){ document.querySelectorAll(".info-modal:not([hidden])").forEach(closeM); } });
-  })();
-})();
-</script>
-<script src="store.js"></script>
-</body>
-</html>
+    document.addEventListener("

@@ -156,7 +156,7 @@
   var DATA = null, timers = [], onResize = null;
   function clearTimers(){ timers.forEach(clearInterval); timers = []; if(onResize){ window.removeEventListener("resize", onResize); onResize=null; } }
 
-  fetch(ENDPOINT)
+  fetch(ENDPOINT + "?t=" + Date.now())
     .then(function(r){ return r.json(); })
     .then(function(d){ if(!d||!d.ok||!Array.isArray(d.products)) throw new Error("bad"); DATA = d; route(); })
     .catch(function(){ document.getElementById("state").textContent = "Não foi possível carregar a loja. Recarregue a página."; });
