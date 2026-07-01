@@ -1228,6 +1228,7 @@
       <button class="btn buy-cta"
         data-ij-add
         data-variant-id="1538741502"
+        data-product-id="348895068"
         data-name="Jogo para casais — Inovando Juntos"
         data-price="187.00"
         data-image="https://dcdn-us.mitiendanube.com/stores/005/452/146/products/ff48f122-233c-4245-9d64-7fd98bfda42f-4f1ffaf4493ffc0ef117827033428518-1024-1024.png">Adicionar ao carrinho</button>
@@ -1243,7 +1244,7 @@
     .ljx-eyebrow{ display:inline-block; font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:12px; }
     .ljx-title{ font-family:"Jost","Century Gothic",system-ui,sans-serif; font-weight:400; font-size:clamp(26px,4.4vw,42px); margin:0 0 8px; color:#fff; letter-spacing:.01em; }
     .ljx-sub{ color:rgba(255,255,255,.56); font-size:14.5px; margin:0; }
-    .ljx-grid{ display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:1px; background:rgba(255,255,255,.09); width:100%; height:80svh; }
+    .ljx-grid{ position:relative; display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:1px; background:rgba(255,255,255,.09); width:100%; height:80svh; }
     @media (min-width:780px){ .ljx-grid{ grid-template-columns:repeat(3,1fr); height:68svh; } }
     .ljx-load{ grid-column:1/-1; text-align:center; color:rgba(255,255,255,.4); padding:40px 0; font-size:13px; }
     .ljx-tile{ position:relative; overflow:hidden; cursor:pointer; background:#000; display:flex; align-items:center; justify-content:center; text-align:center; min-height:0; }
@@ -1262,6 +1263,28 @@
     .ljx-btn{ display:inline-block; border:1px solid rgba(255,255,255,.22); color:#fff; border-radius:999px; padding:13px 28px; font-weight:700; font-size:13.5px; letter-spacing:.03em; transition:background .2s ease; }
     .ljx-btn:hover{ background:rgba(255,255,255,.08); }
     @media (prefers-reduced-motion: reduce){ .ljx-body{ opacity:1; transform:none; } .ljx-media::after{ opacity:.82; } .ljx-media .cm{ transition:none; } }
+    /* ===== Intro: cartas de vidro + tela LED ===== */
+    .ljx-tile{ perspective:1200px; }
+    .ljf{ position:absolute; inset:0; transform-style:preserve-3d; transform:rotateY(180deg); transition:transform .9s cubic-bezier(.2,.85,.25,1); }
+    .ljx-tile.revealed .ljf{ transform:rotateY(0deg); }
+    .ljface{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
+    .ljface--front{ transform:rotateY(0deg); }
+    .ljface--glass{ transform:rotateY(180deg);
+      background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,0) 42%),radial-gradient(120% 90% at 30% 18%,rgba(199,204,212,.10),rgba(0,0,0,0) 55%),linear-gradient(160deg,#0c0c0e,#050506 62%,#0a0a0c); }
+    .ljface--glass::after{ content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size:7px 7px; opacity:.5; }
+    .ljx-led{ position:absolute; inset:0; z-index:6; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; background:#000; overflow:hidden; }
+    .ljx-led.fade{ opacity:0; transition:opacity .7s ease; }
+    .ljx-led .inner{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:92%; display:flex; flex-direction:column; align-items:center; gap:16px; }
+    .ljx-led .m{ white-space:pre-line; min-height:1.5em;
+      font-family:"Jost",system-ui,sans-serif; font-weight:400; letter-spacing:.02em; font-size:clamp(14px,3vw,24px); line-height:1.55;
+      color:#eaf1ff; text-shadow:0 0 7px rgba(150,190,255,.45),0 0 18px rgba(90,150,255,.28); }
+    .ljx-led .m.typing::after{ content:"▌"; margin-left:1px; color:#9fc2ff; animation:ljxCaret .85s steps(1) infinite; }
+    .ljx-led .lg{ opacity:0; transform:translateY(8px); transition:opacity .6s ease, transform .6s ease; }
+    .ljx-led .lg.show{ opacity:1; transform:none; }
+    .ljx-led .lg b{ display:block; font-weight:800; letter-spacing:.2em; font-size:clamp(15px,3vw,24px); color:#fff; text-shadow:0 0 12px rgba(199,204,212,.6); }
+    .ljx-led .lg small{ display:block; margin-top:8px; letter-spacing:.34em; font-size:9px; color:rgba(255,255,255,.45); }
+    @keyframes ljxCaret{ 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+    @media (prefers-reduced-motion: reduce){ .ljf{ transition:none; } }
   </style>
   <div class="ljx-head">
     <span class="ljx-eyebrow">Nossa loja</span>
@@ -1299,7 +1322,10 @@
       catId = String(catId); var imgs=[];
       for(var i=0;i<d.products.length;i++){
         var p = d.products[i], ids = (p.category_ids||[]).map(String);
-        if((catId==="0" && ids.length===0) || ids.indexOf(catId)!==-1){ if(p.image) imgs.push(p.image); }
+        if((catId==="0" && ids.length===0) || ids.indexOf(catId)!==-1){
+          var arr = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+          for(var j=0;j<arr.length;j++){ if(arr[j]) imgs.push(arr[j]); }
+        }
       }
       return imgs;
     }
@@ -1321,25 +1347,70 @@
     grid.innerHTML = "";
     cats.forEach(function(c){
       var a = document.createElement("a");
-      a.className = "ljx-tile";
+      a.className = "ljx-tile in";
       a.href = "loja.html?cat=" + encodeURIComponent(c.id);
       a.innerHTML =
-        '<span class="ljx-num">'+c.count+'</span>' +
-        '<div class="ljx-media"></div>' +
-        '<div class="ljx-body"><h3 class="ljx-ct">'+esc(c.name)+'</h3>' +
-        '<p class="ljx-cd">'+esc(DESC[c.name]||"Produtos para o casal.")+'</p>' +
-        '<span class="ljx-cc">Ver produtos →</span></div>';
+        '<div class="ljf">' +
+          '<div class="ljface ljface--front">' +
+            '<span class="ljx-num">'+c.count+'</span>' +
+            '<div class="ljx-media"></div>' +
+            '<div class="ljx-body"><h3 class="ljx-ct">'+esc(c.name)+'</h3>' +
+            '<p class="ljx-cd">'+esc(DESC[c.name]||"Produtos para o casal.")+'</p>' +
+            '<span class="ljx-cc">Ver produtos →</span></div>' +
+          '</div>' +
+          '<div class="ljface ljface--glass" aria-hidden="true"></div>' +
+        '</div>';
       grid.appendChild(a);
       cycle(a.querySelector(".ljx-media"), imagesOf(c.id));
     });
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var tiles = grid.querySelectorAll(".ljx-tile");
-    if(reduce || !("IntersectionObserver" in window)){ tiles.forEach(function(n){ n.classList.add("in"); }); return; }
-    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold:0.25 });
-    tiles.forEach(function(n){ io.observe(n); });
+    var force = /[?&]intro=1/.test(location.search); // ?intro=1 força a intro de novo
+    var n = 1; try{ n = (parseInt(localStorage.getItem("ij_intro_n_home"),10) || 0) + 1; localStorage.setItem("ij_intro_n_home", String(n)); }catch(e){}
+    var show = force || (n % 6 === 1); // mostra no 1º ingresso e a cada 6
+    if(reduce || !("IntersectionObserver" in window) || !show){ tiles.forEach(function(node){ node.classList.add("revealed"); }); return; }
+    var started=false;
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting && !started){ started=true; io.disconnect(); ljxIntro(grid, tiles); } });
+    }, { threshold:0.3 });
+    io.observe(grid);
   }).catch(function(){
     grid.innerHTML = '<div class="ljx-load"><a class="ljx-btn" href="loja.html">Ver a loja →</a></div>';
   });
+
+  // Intro: tela LED (mensagem → logo) e depois as cartas viram em ordem aleatória.
+  function ljxIntro(grid, tiles){
+    var led = document.createElement("div");
+    led.className = "ljx-led";
+    led.innerHTML =
+      '<div class="inner">' +
+        '<div class="m" aria-label="Selecionamos os melhores itens íntimos para tornar a experiência de vocês ainda mais intensa"></div>' +
+        '<div class="lg"><b>INOVANDO JUNTOS</b></div>' +
+      '</div>';
+    grid.appendChild(led);
+    var m = led.querySelector(".m"), lg = led.querySelector(".lg");
+    var MSG = "Selecionamos os melhores itens íntimos\npara tornar a experiência de vocês\nainda mais intensa.";
+
+    function flips(){
+      var order=[]; for(var i=0;i<tiles.length;i++) order.push(i);
+      for(var k=order.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=order[k]; order[k]=order[j]; order[j]=t; }
+      order.forEach(function(idx, pos){ setTimeout(function(){ tiles[idx].classList.add("revealed"); }, 250 + pos*260); });
+    }
+
+    // máquina de escrever; ao terminar, o logo surge embaixo na mesma tela
+    m.classList.add("typing");
+    var ci=0;
+    var typeId=setInterval(function(){
+      if(ci>=MSG.length){
+        clearInterval(typeId); m.classList.remove("typing");
+        setTimeout(function(){ lg.classList.add("show"); }, 250);
+        setTimeout(function(){ led.classList.add("fade"); }, 2000);
+        setTimeout(function(){ if(led.parentNode) led.parentNode.removeChild(led); flips(); }, 2400);
+        return;
+      }
+      m.textContent += MSG.charAt(ci++);
+    }, 28);
+  }
 })();
 </script>
 
@@ -1595,8 +1666,24 @@
     var CATALOG = "https://rsordtljnvxonaygyuxd.supabase.co/functions/v1/store-catalog";
     function fmtBRL(v){ var s = v.toFixed(2).split("."); return s[0] + '<span class="cents">,' + s[1] + '</span>'; }
 
+    // Guarda el cupón con su SCOPE completo (product_ids/category_ids/min_price) para que
+    // store.js calcule el descuento exactamente como lo hace el backend (draft order).
+    function persistCoupon(code, pct, scope){
+      try {
+        localStorage.setItem("ij_coupon", JSON.stringify({
+          code: code,
+          pct: pct,
+          type: "percentage",
+          value: pct,
+          min_price: (scope && Number(scope.min_price)) || 0,
+          product_ids: (scope && scope.product_ids) || [],
+          category_ids: (scope && scope.category_ids) || []
+        }));
+      } catch(e){}
+    }
+
     // Inicia la raspadinha con el % y código del cupón resuelto (sin hardcode).
-    function init(prize, coupon){
+    function init(prize, coupon, scope){
       if (pctEl) pctEl.textContent = 0;
       if (codeEl) codeEl.textContent = coupon;
       var ctx = canvas.getContext("2d");
@@ -1651,7 +1738,7 @@
           cleared = true;
           canvas.style.transition = "opacity .5s ease"; canvas.style.opacity = "0";
           setTimeout(function(){ canvas.style.display = "none"; }, 520);
-          try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
+          persistCoupon(coupon, prize.pct, scope);
           if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
           try { if (window.ijMeta) window.ijMeta.track("Lead", { content_name:"cupom_"+prize.pct }, window.ijMeta.uuid()); } catch(e){}
         }
@@ -1668,7 +1755,7 @@
         if (pctEl) pctEl.textContent = prize.pct;
         if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - prize.pct/100)); newEl.hidden = false; }
         if (oldEl){ oldEl.classList.add("struck","on"); }
-        try { localStorage.setItem("ij_coupon", JSON.stringify({ code: coupon, pct: prize.pct })); } catch(e){}
+        persistCoupon(coupon, prize.pct, scope);
       } else {
         window.addEventListener("resize", function(){ if (!cleared) size(); });
         size();
@@ -1691,10 +1778,10 @@
         // si hay más de uno, elegir el de MAYOR % (mejor para el cliente)
         applicable.sort(function(a, b){ return Number(b.value) - Number(a.value); });
         var c = applicable[0];
-        if (c) init({ pct: Math.round(c.value) }, c.code);
+        if (c) init({ pct: Math.round(c.value) }, c.code, c);
         else noCampaign();
       })
-      .catch(function(){ init({ pct:20 }, "IJ20MD"); });
+      .catch(function(){ init({ pct:20 }, "IJ20MD", null); });
   })();
 
   /* ---- Cookie consent (LGPD) ---- */

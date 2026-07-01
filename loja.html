@@ -41,10 +41,43 @@
   .crumb{ display:inline-flex; align-items:center; gap:8px; color:#fff; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-top:6px; }
   .crumb:hover{ opacity:.7; }
 
+  /* ===== Botão Voltar (header) ===== */
+  .backbtn{ display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.06); border:1px solid var(--edge2); color:#fff; cursor:pointer;
+    padding:9px 16px 9px 12px; border-radius:999px; font-family:inherit; font-weight:700; font-size:14px; line-height:1; transition:background .2s ease, transform .14s ease; }
+  .backbtn:hover{ background:rgba(255,255,255,.14); }
+  .backbtn:active{ transform:scale(.96); }
+  .backbtn svg{ width:26px; height:26px; stroke:currentColor; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+  @media (max-width:560px){ .backbtn span{ display:none; } .backbtn{ padding:9px; } }
+
   /* ===== Mosaico de categorías · pantalla completa ===== */
-  .mgrid{ display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:1px;
+  .mgrid{ position:relative; display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:1px;
     background:rgba(255,255,255,.09); width:100%; margin:0; padding:0; }
   @media (min-width:780px){ .mgrid{ grid-template-columns:repeat(3,1fr); } }
+
+  /* ===== Intro: cartas de vidro + tela LED ===== */
+  .tile{ perspective:1200px; }
+  .tflip{ position:absolute; inset:0; transform-style:preserve-3d; transform:rotateY(180deg); transition:transform .9s cubic-bezier(.2,.85,.25,1); }
+  .tile.revealed .tflip{ transform:rotateY(0deg); }
+  .tface{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
+  .tface--front{ transform:rotateY(0deg); }
+  .tface--glass{ transform:rotateY(180deg);
+    background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,0) 42%),radial-gradient(120% 90% at 30% 18%,rgba(199,204,212,.10),rgba(0,0,0,0) 55%),linear-gradient(160deg,#0c0c0e,#050506 62%,#0a0a0c); }
+  .tface--glass::after{ content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size:7px 7px; opacity:.5; }
+  .tface--glass::before{ content:""; position:absolute; left:-30%; top:-60%; width:55%; height:170%; transform:rotate(18deg);
+    background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.06),rgba(255,255,255,0)); }
+  .ledintro{ position:absolute; inset:0; z-index:6; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; background:#000; overflow:hidden; }
+  .ledintro.fade{ opacity:0; transition:opacity .7s ease; }
+  .led-inner{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:92%; display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .led-msg{ white-space:pre-line; min-height:1.5em;
+    font-family:var(--display); font-weight:400; letter-spacing:.02em; font-size:clamp(15px,3.4vw,26px); line-height:1.55;
+    color:#eaf1ff; text-shadow:0 0 7px rgba(150,190,255,.45),0 0 18px rgba(90,150,255,.28); }
+  .led-msg.typing::after{ content:"▌"; margin-left:1px; color:#9fc2ff; animation:caretBlink .85s steps(1) infinite; }
+  .led-logo{ opacity:0; transform:translateY(8px); transition:opacity .6s ease, transform .6s ease; }
+  .led-logo.show{ opacity:1; transform:none; }
+  .led-logo b{ display:block; font-family:var(--font); font-weight:800; letter-spacing:.2em; font-size:clamp(16px,3.6vw,28px); color:#fff; text-shadow:0 0 12px rgba(199,204,212,.6); }
+  .led-logo small{ display:block; margin-top:9px; letter-spacing:.34em; font-size:9px; color:var(--soft); }
+  @keyframes caretBlink{ 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+  @media (prefers-reduced-motion: reduce){ .tflip{ transition:none; } }
   .tile{ position:relative; overflow:hidden; border:0; cursor:pointer; background:#000;
     display:flex; align-items:center; justify-content:center; text-align:center; min-height:0; }
   .tmedia{ position:absolute; inset:0; }
@@ -96,6 +129,26 @@
   .btn:hover{ box-shadow:0 8px 20px rgba(0,0,0,.5); }
   .btn[disabled]{ opacity:.4; cursor:not-allowed; box-shadow:none; }
 
+  /* ===== Raspadinha de cupom por produto ===== */
+  .pi-price .pp-base.struck{ text-decoration:line-through; opacity:.5; }
+  .pi-price .pp-new{ display:inline-block; margin-left:10px; color:#fff; }
+  .pi-cupom{ margin-top:6px; }
+  .lscr-stage{ position:relative; width:min(240px,82%); aspect-ratio:16/6; border-radius:13px; overflow:hidden;
+    border:1px solid rgba(199,204,212,.32); background:#060606; touch-action:none;
+    box-shadow:0 16px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06); }
+  .lscr-prize{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:14px; text-align:center; padding:8px 12px;
+    background:radial-gradient(75% 80% at 50% 45%, rgba(199,204,212,.14), rgba(0,0,0,0) 64%), #070708; }
+  .lscr-off{ font-family:var(--display); font-weight:500; line-height:1; color:#fff; display:flex; align-items:baseline; gap:.08em; font-size:clamp(20px,5vw,28px); }
+  .lscr-off b{ font-weight:600; color:var(--ember); }
+  .lscr-off i{ font-style:normal; font-size:.5em; font-weight:600; color:var(--soft); }
+  .lscr-code{ font-size:10.5px; color:var(--muted); }
+  .lscr-code b{ color:var(--ember); letter-spacing:.1em; font-weight:800; font-size:1.2em; border:1px dashed rgba(199,204,212,.5); padding:2px 7px; border-radius:7px; margin-left:3px; }
+  .lscr-canvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
+  .lscr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:3; width:90%; text-align:center;
+    font-family:var(--display); font-size:clamp(10.5px,2.4vw,13px); letter-spacing:.04em; text-transform:uppercase; color:rgba(8,8,10,.82); font-weight:800; pointer-events:none; transition:opacity .4s ease; }
+  .lj-toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(18px); z-index:1003; background:#fff; color:#000; padding:11px 18px; border-radius:999px; font-family:var(--font); font-weight:700; font-size:13px; opacity:0; transition:all .25s ease; pointer-events:none; }
+  .lj-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
   .state{ max-width:var(--maxw); margin:0 auto; padding:60px 22px; text-align:center; color:var(--muted); }
   footer{ border-top:1px solid var(--edge); padding:24px 22px; text-align:center; color:var(--soft); font-size:12px; }
   @media (prefers-reduced-motion: reduce){ .tbody,.pitem{ opacity:1; transform:none; } .tmedia::after{ opacity:.82; } .tmedia .cm,.pi-main .cm{ transition:none; } }
@@ -104,9 +157,11 @@
 <body>
 
 <header>
+  <button class="backbtn" id="backBtn" type="button" aria-label="Voltar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg><span id="backLbl">Início</span>
+  </button>
   <a class="brand" href="/" aria-label="Inovando Juntos">
     <b>INOVANDO JUNTOS</b>
-    <small>CONEXÃO • COMUNICAÇÃO • INTIMIDADE</small>
   </a>
   <button class="cart-ico" data-ij-cart aria-label="Carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span data-ij-cart-count>0</span></button>
 </header>
@@ -153,8 +208,91 @@
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  var DATA = null, timers = [], onResize = null;
-  function clearTimers(){ timers.forEach(clearInterval); timers = []; if(onResize){ window.removeEventListener("resize", onResize); onResize=null; } }
+  // Botão Voltar inteligente: dentro de categoria → mosaico; no mosaico → landing.
+  function updateBack(){
+    var cat = qs("cat"), lbl = document.getElementById("backLbl");
+    if(!lbl) return;
+    lbl.textContent = (cat!==null && cat!=="") ? "Voltar" : "Início";
+  }
+  (function(){
+    var bb = document.getElementById("backBtn");
+    if(bb) bb.addEventListener("click", function(){
+      var cat = qs("cat");
+      location.href = (cat!==null && cat!=="") ? "loja.html" : "/";
+    });
+  })();
+
+  var DATA = null, timers = [], onResize = null, scratchers = [], introHandled = false;
+  function clearTimers(){
+    timers.forEach(clearInterval); timers = [];
+    if(onResize){ window.removeEventListener("resize", onResize); onResize=null; }
+    scratchers.forEach(function(s){ if(s.cleanup) s.cleanup(); }); scratchers = [];
+  }
+
+  /* ---- Cupons: raspadinha por produto (mesma mecânica da landing) ---- */
+  // Guarda o cupom com seu SCOPE completo para que store.js calcule o desconto como o backend.
+  function persistCoupon(code, pct, scope){
+    try{ localStorage.setItem("ij_coupon", JSON.stringify({
+      code:code, pct:pct, type:"percentage", value:pct,
+      min_price:(scope && Number(scope.min_price))||0,
+      product_ids:(scope && scope.product_ids)||[],
+      category_ids:(scope && scope.category_ids)||[]
+    })); }catch(e){}
+  }
+  // Melhor cupom % aplicável a um produto (product_ids, category_ids ou loja inteira). Maior % primeiro.
+  function couponForProduct(p){
+    var cps = (DATA && DATA.coupons) || [];
+    var pid = Number(p.id), cats = (p.category_ids||[]).map(Number);
+    var app = cps.filter(function(c){
+      if(c.type!=="percentage" || !(Number(c.value)>0)) return false;
+      var pids=(c.product_ids||[]).map(Number), cids=(c.category_ids||[]).map(Number);
+      if(pids.length===0 && cids.length===0) return true;          // loja inteira
+      if(pids.indexOf(pid)!==-1) return true;
+      for(var k=0;k<cats.length;k++) if(cids.indexOf(cats[k])!==-1) return true;
+      return false;
+    });
+    app.sort(function(a,b){ return Number(b.value)-Number(a.value); });
+    return app[0] || null;
+  }
+  var _toastEl=null, _toastT;
+  function toastMsg(m){
+    if(!_toastEl){ _toastEl=document.createElement("div"); _toastEl.className="lj-toast"; document.body.appendChild(_toastEl); }
+    _toastEl.textContent=m; _toastEl.classList.add("show");
+    clearTimeout(_toastT); _toastT=setTimeout(function(){ _toastEl.classList.remove("show"); }, 2200);
+  }
+  // Monta a raspadinha sobre uma .lscr-stage. opts: { pct, onProgress(disc), onComplete() }
+  function mountScratch(stage, opts){
+    var canvas = stage.querySelector(".lscr-canvas");
+    var hint = stage.querySelector(".lscr-hint");
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var ctx = canvas.getContext("2d");
+    var drawing=false, cleared=false, started=false, last=0;
+    var MAXPCT=opts.pct, TARGET=0.80;
+    function size(){ var r=stage.getBoundingClientRect(); if(!r.width) return; var dpr=Math.min(window.devicePixelRatio||1,2);
+      canvas.width=r.width*dpr; canvas.height=r.height*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); cover(r.width,r.height); }
+    function cover(w,h){ var g=ctx.createLinearGradient(0,0,w,h); g.addColorStop(0,"#c7ccd4"); g.addColorStop(.5,"#8a909a"); g.addColorStop(1,"#aab0ba");
+      ctx.globalCompositeOperation="source-over"; ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle="rgba(0,0,0,.10)"; for(var i=0;i<w;i+=18){ for(var j=0;j<h;j+=18){ ctx.fillRect(i,j,2,2); } } }
+    function pos(ev){ var r=canvas.getBoundingClientRect(); var pt=ev.touches?ev.touches[0]:ev; return { x:pt.clientX-r.left, y:pt.clientY-r.top }; }
+    function scratch(ev){ if(!drawing) return; var pt=pos(ev); ctx.globalCompositeOperation="destination-out"; ctx.globalAlpha=1; ctx.fillStyle="#000";
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,20,0,Math.PI*2); ctx.fill(); if(!started){ started=true; if(hint) hint.style.opacity="0"; } update(); }
+    function clearedFraction(){ try{ var img=ctx.getImageData(0,0,canvas.width,canvas.height).data, clr=0, step=80, n=0;
+      for(var i=3;i<img.length;i+=4*step){ n++; if(img[i]<128) clr++; } return n?clr/n:0; }catch(e){ return 0; } }
+    function update(){ var now=Date.now(); if(now-last<50) return; last=now; var frac=clearedFraction();
+      var disc=Math.min(MAXPCT, Math.round(frac/TARGET*MAXPCT)); if(opts.onProgress) opts.onProgress(disc);
+      if(disc>=MAXPCT && !cleared){ cleared=true; canvas.style.transition="opacity .5s ease"; canvas.style.opacity="0";
+        setTimeout(function(){ canvas.style.display="none"; },520); if(opts.onComplete) opts.onComplete(); } }
+    var up=function(){ drawing=false; };
+    canvas.addEventListener("pointerdown", function(e){ drawing=true; scratch(e); });
+    window.addEventListener("pointerup", up);
+    canvas.addEventListener("pointermove", scratch);
+    canvas.addEventListener("touchstart", function(e){ drawing=true; scratch(e); }, { passive:true });
+    canvas.addEventListener("touchmove", function(e){ scratch(e); }, { passive:true });
+    canvas.addEventListener("touchend", function(){ drawing=false; });
+    if(reduce){ canvas.style.display="none"; if(hint) hint.style.display="none"; if(opts.onProgress) opts.onProgress(MAXPCT); if(opts.onComplete) opts.onComplete(); }
+    else { size(); }
+    scratchers.push({ size:size, cleared:function(){ return cleared; }, cleanup:function(){ window.removeEventListener("pointerup", up); } });
+  }
 
   fetch(ENDPOINT + "?t=" + Date.now())
     .then(function(r){ return r.json(); })
@@ -163,6 +301,7 @@
 
   function route(){
     clearTimers();
+    updateBack();
     var cat = qs("cat");
     if(cat===null || cat==="") renderMosaic();
     else renderCategory(cat);
@@ -177,7 +316,10 @@
   }
   function imagesOfCat(catId){
     var imgs = [];
-    productsOfCat(catId).forEach(function(p){ if(p.image) imgs.push(p.image); });
+    productsOfCat(catId).forEach(function(p){
+      var arr = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+      arr.forEach(function(s){ if(s) imgs.push(s); });
+    });
     return imgs;
   }
 
@@ -218,17 +360,22 @@
     main.innerHTML = '<div class="mgrid" id="grid"></div>';
     var grid = document.getElementById("grid");
 
-    cats.forEach(function(c, i){
+    cats.forEach(function(c){
       var a = document.createElement("a");
-      a.className = "tile";
+      a.className = "tile in";
       a.href = "loja.html?cat=" + encodeURIComponent(c.id);
       a.innerHTML =
-        '<span class="tcount">'+c.count+'</span>' +
-        '<div class="tmedia"></div>' +
-        '<div class="tbody">' +
-          '<h3 class="ttitle">'+esc(c.name)+'</h3>' +
-          '<p class="tdesc">'+esc(CAT_DESC[c.name]||"Produtos para o casal.")+'</p>' +
-          '<span class="tcta">Ver produtos →</span>' +
+        '<div class="tflip">' +
+          '<div class="tface tface--front">' +
+            '<span class="tcount">'+c.count+'</span>' +
+            '<div class="tmedia"></div>' +
+            '<div class="tbody">' +
+              '<h3 class="ttitle">'+esc(c.name)+'</h3>' +
+              '<p class="tdesc">'+esc(CAT_DESC[c.name]||"Produtos para o casal.")+'</p>' +
+              '<span class="tcta">Ver produtos →</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="tface tface--glass" aria-hidden="true"></div>' +
         '</div>';
       grid.appendChild(a);
       makeCycler(a.querySelector(".tmedia"), imagesOfCat(c.id));
@@ -236,7 +383,52 @@
 
     onResize=function(){ fitViewport(grid); }; window.addEventListener("resize", onResize);
     fitViewport(grid);
-    revealAll(grid.querySelectorAll(".tile"));
+    introMosaic(grid, grid.querySelectorAll(".tile"));
+  }
+
+  // Intro do mosaico: tela preta LED, texto digitado e o logo aparece embaixo na mesma tela.
+  function introMosaic(grid, tiles){
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function revealNow(){ tiles.forEach(function(t){ t.classList.add("revealed"); }); }
+    if(reduce){ revealNow(); return; }
+    // decide só uma vez por carregamento (voltar do produto ao mosaico não repete a intro)
+    if(introHandled){ revealNow(); return; }
+    introHandled = true;
+    var force = /[?&]intro=1/.test(location.search);                  // ?intro=1 força a intro
+    var n = 1; try { n = (parseInt(localStorage.getItem("ij_intro_n_loja"),10) || 0) + 1; localStorage.setItem("ij_intro_n_loja", String(n)); } catch(e){}
+    if(!force && (n % 6 !== 1)){ revealNow(); return; }               // mostra no 1º ingresso e a cada 6
+
+    var led = document.createElement("div");
+    led.className = "ledintro";
+    led.innerHTML =
+      '<div class="led-inner">' +
+        '<div class="led-msg" aria-label="Selecionamos os melhores itens íntimos para tornar a experiência de vocês ainda mais intensa"></div>' +
+        '<div class="led-logo"><b>INOVANDO JUNTOS</b></div>' +
+      '</div>';
+    grid.appendChild(led);
+    var msg = led.querySelector(".led-msg"), logo = led.querySelector(".led-logo");
+    var MSG = "Selecionamos os melhores itens íntimos\npara tornar a experiência de vocês\nainda mais intensa.";
+
+    function flips(){
+      var order = []; for(var i=0;i<tiles.length;i++) order.push(i);
+      for(var k=order.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=order[k]; order[k]=order[j]; order[j]=t; }
+      order.forEach(function(idx, pos){ timers.push(setTimeout(function(){ tiles[idx].classList.add("revealed"); }, 250 + pos*260)); });
+    }
+
+    // efeito máquina de escrever (char a char) com cursor piscante; ao terminar, o logo surge embaixo
+    msg.classList.add("typing");
+    var ci = 0;
+    var typeId = setInterval(function(){
+      if(ci >= MSG.length){
+        clearInterval(typeId); msg.classList.remove("typing");
+        timers.push(setTimeout(function(){ logo.classList.add("show"); }, 250));
+        timers.push(setTimeout(function(){ led.classList.add("fade"); }, 2000));
+        timers.push(setTimeout(function(){ if(led.parentNode) led.parentNode.removeChild(led); flips(); }, 2400));
+        return;
+      }
+      msg.textContent += MSG.charAt(ci++);
+    }, 28);
+    timers.push(typeId);
   }
 
   // ===== Nivel 2: Lista scrollable de produtos =====
@@ -247,7 +439,7 @@
     var catName = cat ? cat.name : "Produtos";
     document.getElementById("eyebrow").textContent = "Categoria";
     document.getElementById("leadTitle").textContent = catName;
-    document.getElementById("crumb").hidden = false;
+    document.getElementById("crumb").hidden = true; // back fica no header (botão Voltar)
     document.title = catName + " — Loja Inovando Juntos";
 
     var list = productsOfCat(catId);
@@ -261,6 +453,15 @@
       var ok = available(v0);
       var imgs = (p.images&&p.images.length?p.images:[p.image]).filter(Boolean);
       var sold = SOLD[p.id];
+      var coup = ok ? couponForProduct(p) : null;
+      var pct = coup ? Math.round(coup.value) : 0;
+      var priceSec = coup
+        ? '<div class="pi-price"><span class="pp-base">'+priceBlock(v0)+'</span><span class="pp-new" hidden></span></div>' +
+          '<div class="pi-cupom"><div class="lscr-stage" role="img" aria-label="Raspe para descobrir o cupom">' +
+            '<div class="lscr-prize" aria-hidden="true"><div class="lscr-off"><b class="lscr-pct">0</b><i>%</i> OFF</div>' +
+            '<div class="lscr-code">Cupom <b>'+esc(coup.code)+'</b></div></div>' +
+            '<canvas class="lscr-canvas"></canvas><span class="lscr-hint">Raspe e descubra seu desconto</span></div></div>'
+        : '<div class="pi-price">'+priceBlock(v0)+'</div>';
 
       var it = document.createElement("article");
       it.className = "pitem";
@@ -273,7 +474,7 @@
           '<h2 class="pi-name">'+esc(p.name)+'</h2>' +
           '<span class="pi-stk '+(ok?"ok":"no")+'">'+(ok?"Em estoque":"Indisponível")+'</span>' +
           (sold&&sold>0 ? '<div class="pi-sold">🔥 '+sold+' já vendidos</div>' : '') +
-          '<div class="pi-price">'+priceBlock(v0)+'</div>' +
+          priceSec +
           (p.desc_full||p.desc ? '<p class="pi-desc">'+esc(p.desc_full||p.desc)+'</p>' : '') +
           '<div class="pi-buy">' +
             '<div class="qty"><button type="button" data-dec>−</button><input type="text" value="1" inputmode="numeric"><button type="button" data-inc>+</button></div>' +
@@ -292,10 +493,29 @@
       qtyInput.addEventListener("input", function(){ qtyInput.value=qtyInput.value.replace(/[^0-9]/g,""); });
       it.querySelector("[data-add]").addEventListener("click", function(){
         if(!available(v0)) return;
-        window.IJStore.addToCart({ variant_id:v0.id, name:p.name, price:priceOf(v0), image:p.image, qty:clampQty(qtyInput.value) }, true);
+        window.IJStore.addToCart({ variant_id:v0.id, product_id:p.id, category_ids:(p.category_ids||[]), name:p.name, price:priceOf(v0), image:p.image, qty:clampQty(qtyInput.value) }, true);
       });
+
+      // Raspadinha de cupom (só quando há desconto aplicável e produto disponível)
+      if(coup){
+        var base=priceOf(v0);
+        var pctEl=it.querySelector(".lscr-pct"), baseEl=it.querySelector(".pp-base"), newEl=it.querySelector(".pp-new");
+        mountScratch(it.querySelector(".lscr-stage"), {
+          pct:pct,
+          onProgress:function(disc){
+            if(pctEl) pctEl.textContent=disc;
+            if(disc>0){
+              if(baseEl) baseEl.classList.add("struck");
+              if(newEl){ newEl.hidden=false; newEl.innerHTML='<span class="cur">R$</span> '+money(base*(1-disc/100)).replace("R$ ",""); }
+            }
+          },
+          onComplete:function(){ persistCoupon(coup.code, pct, coup); toastMsg("Cupom "+coup.code+" ativado · "+pct+"% OFF"); }
+        });
+      }
     });
     revealAll(plist.querySelectorAll(".pitem"));
+    onResize = function(){ scratchers.forEach(function(s){ if(!s.cleared()) s.size(); }); };
+    window.addEventListener("resize", onResize);
     window.scrollTo(0,0);
   }
 
