@@ -107,7 +107,7 @@
         <button data-d="30">30 días</button>
         <button data-d="" class="on">Todo</button>
       </div>
-      <button class="reload" onclick="load()">↻ Actualizar</button>
+      <button class="reload" id="btnReload" onclick="refreshAll()">↻ Actualizar</button>
     </div>
   </header>
 
@@ -283,6 +283,26 @@ document.querySelectorAll("#tabs button").forEach(b=>{
     document.getElementById("view-" + b.dataset.tab).classList.add("on");
   });
 });
+
+async function refreshAll(){
+  const btn = document.getElementById("btnReload");
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = "⟳ Sincronizando…";
+  const errBox = document.getElementById("err"); errBox.style.display = "none";
+  try{
+    const res = await fetch(SUPABASE_URL + "/functions/v1/meta-ads-sync?date_preset=today", {
+      headers: { "Authorization": "Bearer " + ANON_KEY }
+    });
+    if(!res.ok) throw new Error("Sync HTTP " + res.status + " — " + (await res.text()).slice(0,200));
+    const syncResult = await res.json();
+    if(!syncResult.ok) throw new Error("Sync devolvió error: " + JSON.stringify(syncResult.errors||syncResult));
+  }catch(err){
+    errBox.style.display = "block";
+    errBox.textContent = "No se pudo sincronizar con Meta (se muestran los últimos datos guardados).\n" + (err && err.message ? err.message : err);
+  }
+  await load();
+  btn.disabled = false; btn.textContent = original;
+}
 
 function rpc(name){
   return fetch(SUPABASE_URL + "/rest/v1/rpc/" + name, {
