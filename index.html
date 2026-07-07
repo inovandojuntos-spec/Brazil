@@ -357,6 +357,12 @@
     text-shadow:0 2px 14px rgba(0,0,0,.6); opacity:0; animation:fadeUp .8s ease .2s forwards;
   }
   .hero-eyebrow .amp{ flex:none; font:inherit; color:inherit; font-size:1.3em; }
+  /* ====== Subtítulo do hero (mesmo formato do eyebrow, exibido abaixo do H1) ====== */
+  .hero-eyebrow-sub{
+    display:block; margin-bottom:0; margin-top:clamp(14px,2.4vw,22px);
+    max-width:65%; width:65%; animation-delay:1.05s;
+    font-size:clamp(7px,1.1vw,9px); letter-spacing:.12em;
+  }
   /* ====== Fuente auto-alojada (plug & play): suelta el archivo en fonts/bodoni-moda/ ====== */
   @font-face{
     font-family:"Bodoni Moda Local";
@@ -504,6 +510,30 @@
     box-shadow:0 8px 22px rgba(0,0,0,.4); }
   .buy-off b{ font-weight:800; margin:0 .12em; }
   .buy-cta{ width:auto; min-width:0; margin:clamp(16px,2.4vw,24px) auto 0; padding:10px 22px; font-size:13px; border-radius:999px; }
+  .buy-perks{ list-style:none; margin:clamp(14px,2.4vw,22px) auto 0; padding:0; display:inline-flex; flex-direction:column; gap:9px; text-align:left; }
+  .buy-perks li{ font-size:clamp(13.5px,1.6vw,15.5px); color:var(--text); font-weight:500; display:flex; align-items:center; gap:9px; }
+  .buy-check{ flex:none; font-weight:700; font-size:1.1em; line-height:1;
+    background-image:linear-gradient(120deg,#f7f8fa 0%,#aab0ba 30%,#ffffff 50%,#868c96 70%,#e9ebef 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
+    opacity:0; transform:scale(.4); display:inline-block;
+    transition:opacity .35s ease, transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .buy-check.show{ opacity:1; transform:scale(1); }
+  .buy-perk-text{ opacity:0; transform:translateX(-8px); display:inline-block;
+    transition:opacity .4s ease, transform .4s ease; }
+  .buy-perk-text.show{ opacity:1; transform:none; }
+  /* ---- sequência pós-checks: investimento → raspadinha → botão ---- */
+  .buy-price, .buy-scratch{ opacity:0; transform:translateY(16px);
+    transition:opacity .6s ease, transform .6s ease; }
+  .buy-price.show, .buy-scratch.show{ opacity:1; transform:none; }
+  .buy-cta{ opacity:0; transform:translateY(16px) scale(.94);
+    transition:opacity .6s ease, transform .6s ease, box-shadow .25s ease, background .25s ease; }
+  .buy-cta.show{ opacity:1; transform:none; }
+  .buy-cta.cta-pulse{ animation:ctaPulse 1.7s ease-in-out infinite; }
+  @keyframes ctaPulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(255,255,255,.4), 0 18px 40px rgba(255,255,255,.15); }
+    50%{ box-shadow:0 0 0 9px rgba(255,255,255,0), 0 22px 48px rgba(255,255,255,.26); }
+  }
+  @media (prefers-reduced-motion:reduce){ .buy-cta.cta-pulse{ animation:none; } }
 
   /* ---- raspadinha de descuento (todos ganham) · ~mitad de tamaño ---- */
   .buy-scratch{ display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:clamp(16px,2.4vw,26px); }
@@ -708,6 +738,10 @@
 
   .jogo-head{ text-align:center; margin-bottom:clamp(0px,0.3vh,3px); }
   .jogo-head .title{ font-size:clamp(22px,3.7vw,42px); }   /* 80% del tamaño base */
+  .jogo-sub{
+    display:block; text-align:justify; text-align-last:center; text-transform:uppercase; color:var(--soft); font-weight:600;
+    letter-spacing:.08em; font-size:clamp(9px,1.4vw,11px); max-width:66ch; margin:12px auto 0;
+  }
   .jogo-title{ margin:0;
     font-family:"Jost Local","Jost","Century Gothic","Futura",system-ui,sans-serif;
     font-weight:400; text-transform:uppercase; letter-spacing:.12em; line-height:1.05;
@@ -737,7 +771,7 @@
     --sweep:1.2s; }   /* duración del barrido de luz; debe igualar a STEP del attract loop (JS) */
   .g-tile{ position:relative; padding:0; border:0; cursor:pointer; overflow:hidden;
     border-radius:16px; background:#000; aspect-ratio:25/38; box-shadow:0 18px 44px rgba(0,0,0,.5); }
-  .g-tile img{ width:100%; height:100%; object-fit:cover; display:block;
+  .g-tile img, .g-tile video{ width:100%; height:100%; object-fit:cover; display:block;
     transition:transform .55s cubic-bezier(.2,.8,.2,1), filter .4s ease; }
   /* borde plateado + oscurecido al hover (negro/plata premium) */
   .g-tile::after{ content:""; position:absolute; inset:0; border-radius:16px; pointer-events:none;
@@ -795,7 +829,7 @@
     border-radius:20px; overflow:hidden; background:#0a0a0c; border:1px solid rgba(199,204,212,.28);
     box-shadow:0 50px 130px rgba(0,0,0,.85); transform:scale(.96); transition:transform .35s cubic-bezier(.2,.8,.2,1); cursor:auto; }
   .g-zoom.open .g-zoom-frame{ transform:scale(1); }
-  .g-zoom-frame img{ flex:1 1 auto; min-height:0; width:100%; object-fit:contain; display:block; background:#000; }
+  .g-zoom-frame img, .g-zoom-frame video{ flex:1 1 auto; min-height:0; width:100%; object-fit:contain; display:block; background:#000; }
   /* cierre dentro del marco (top-right) -> queda por debajo del nav/carrito */
   .g-zoom-close{ position:absolute; top:10px; right:10px; z-index:6;
     width:38px; height:38px; border-radius:50%; display:grid; place-items:center; cursor:pointer;
@@ -837,7 +871,7 @@
     border:1px solid rgba(255,255,255,.06); }
   .rphone-screen::before{ content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%);
     width:48px; height:5px; border-radius:99px; background:rgba(255,255,255,.18); z-index:2; }
-  .rphone-screen img{ width:100%; height:100%; object-fit:cover; }
+  .rphone-screen img, .rphone-screen video{ width:100%; height:100%; object-fit:cover; }
   /* phone activo: borde plata premium + halo plateado */
   .rphone.is-active{ border-color:rgba(199,204,212,.62);
     box-shadow:0 50px 110px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.10),
@@ -889,8 +923,8 @@
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .ring-text{ margin:0 auto; max-width:52ch; color:var(--muted); font-family:var(--font); font-weight:500;
     font-size:clamp(13.5px,1.6vw,16px); line-height:1.55;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-    min-height:calc(2 * 1.55em); }   /* exactamente 2 filas */
+    display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:calc(4 * 1.55em); }   /* exactamente 4 filas */
 
   /* ====== Responsive ====== */
   @media (max-width:900px){
@@ -912,6 +946,7 @@
     .plat-cue{ bottom:10px; }
     .plat-cue .cue-line{ height:clamp(14px,2.4vh,22px); }
     .plat-cue .mw{ width:10px; height:10px; }
+    .hero-eyebrow-sub{ font-size:clamp(6px,1.9vw,8px); letter-spacing:.05em; }
   }
   /* slide 2 y 3: el contenido fijo debe caber en una sola pantalla */
   @media (max-height:900px){
@@ -1019,6 +1054,7 @@
         <span class="ln"><span>Viver Algo</span></span>
         <span class="ln"><span>Novo?</span></span>
       </h1>
+      <span class="hero-eyebrow hero-eyebrow-sub">20 experiências guiadas por voz para escutar juntos, colocar em prática e criar novas memórias.</span>
     </div>
   </div>
   <a class="hero-scroll" href="#rotina" aria-label="Descubra">
@@ -1044,7 +1080,7 @@
           <p class="rl">Quanto mais tempo juntos,<br>mais fácil é entrar no automático.</p>
           <p class="rl">E, sem perceber, vocês deixam de criar<br>novas histórias juntos.</p>
           <p class="rl rl-strong">Sabemos que vocês ainda se amam.</p>
-          <p class="rl rl-close">E foi exatamente por isso que criamos<br>a Inovando Juntos.</p>
+          <p class="rl rl-close">Foi por isso que criamos uma experiência<br>que ajuda casais a criarem novas histórias juntos.</p>
         </div>
       </div>
       <a class="rotina-cue" href="#jogo" aria-label="Continuar">
@@ -1059,33 +1095,34 @@
   <div class="jogo-track"><div class="jogo-sticky"><div class="wrap">
     <div class="jogo-head reveal">
       <span class="eyebrow"><span class="chev">›</span> Sua rotina termina aqui</span>
-      <h2 class="title">Raspe, Escaneie e Explorem-se</h2>
+      <h2 class="title">Raspe, Escaneie e Vivam 20 experiências</h2>
+      <p class="jogo-sub">Vocês não recebem apenas um desafio. Recebem uma experiência completa, guiada por voz, que conduz cada momento do começo ao fim. Além disso, contam com vídeos demonstrativos para mostrar exatamente como viver cada experiência juntos.</p>
     </div>
 
     <div class="gallery reveal d1" id="gallery">
       <button class="g-tile" type="button" data-img="images/jogo01.PNG" data-title="Caixa Premium" data-text="O primeiro detalhe que desperta curiosidade antes mesmo da experiência começar.">
         <img src="images/jogo01.PNG" alt="A caixa premium do jogo" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Caixa Premium</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">Este jogo</span></span>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Caixa Premium</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">Muito mais</span></span>
       </button>
       <button class="g-tile" type="button" data-img="images/jogo03.PNG" data-title="Primeiro Acesso" data-text="Escaneie o QR Code da caixa, ative seu código exclusivo e desbloqueie a plataforma. Um código para até duas pessoas por jogo.">
         <img src="images/jogo03.PNG" alt="Como funciona: quatro passos" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Primeiro Acesso</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">não é só um jogo.</span></span>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Primeiro Acesso</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">do que um jogo.</span></span>
       </button>
-      <button class="g-tile" type="button" data-img="images/jogo02.PNG" data-title="Como Funciona" data-text="Quatro passos simples para viver experiências guiadas que aproximam vocês a cada desafio.">
+      <button class="g-tile" type="button" data-img="images/jogo02.PNG" data-title="Como Funciona" data-text="Quatro passos simples: raspe, escaneie, escutem juntos e organizem-se para viver a experiência revelada.">
         <img src="images/jogo02.PNG" alt="Primeiro acesso pelo QR Code" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Como Funciona</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">É uma experiência</span></span>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Como Funciona</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">Uma experiência</span></span>
       </button>
-      <button class="g-tile" type="button" data-img="images/jogo04.PNG" data-title="20 Experiências" data-text="Cada raspadinha revela uma nova experiência guiada por áudio e vídeo. Vocês escolhem o momento ideal para viver cada desafio.">
-        <img src="images/jogo04.PNG" alt="20 experiências na raspadinha" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">20 Experiências</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">que vai mudar</span></span>
+      <button class="g-tile" type="button" data-img="images/jogo04.PNG" data-video="images/mock-raspe.mp4" data-title="20 Experiências" data-text="Cada raspadinha revela uma experiência diferente. O áudio explica o ambiente, os materiais necessários e guia vocês em cada etapa, enquanto vídeos demonstrativos mostram como viver cada momento.">
+        <video src="images/mock-raspe.mp4" poster="images/jogo04.PNG" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">20 Experiências</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">guiada</span></span>
       </button>
-      <button class="g-tile" type="button" data-img="images/jogo05.PNG" data-title="Experiência Guiada" data-text="Após escanear o QR Code, vocês recebem instruções completas para cada desafio. Toda a preparação e condução acontecem diretamente na plataforma.">
-        <img src="images/jogo05.PNG" alt="Experiência guiada na plataforma" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Experiência Guiada</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">o relacionamento</span></span>
+      <button class="g-tile" type="button" data-img="images/jogo05.PNG" data-video="images/mock-escanee.mp4" data-title="Experiência Guiada" data-text="A experiência começa no momento em que vocês raspam, escaneiam e apertam o play. A expectativa de descobrir o que vem a seguir já faz parte da emoção.">
+        <video src="images/mock-escanee.mp4" poster="images/jogo05.PNG" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Experiência Guiada</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">do começo</span></span>
       </button>
       <button class="g-tile" type="button" data-img="images/jogo06.PNG" data-title="Para Casais" data-text="Criado para casais que desejam fortalecer a conexão, aprofundar a intimidade e criar novas memórias. O melhor presente para o relacionamento de vocês.">
         <img src="images/jogo06.PNG" alt="Para casais" loading="lazy" />
-        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Para Casais</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">de vocês.</span></span>
+        <span class="g-ov"><span class="g-ov-info"><span class="g-ov-label">Para Casais</span><span class="g-ov-cue">Ver detalhe</span></span><span class="g-ov-story">ao fim.</span></span>
       </button>
     </div>
   </div>
@@ -1113,26 +1150,39 @@
         <div class="section-head reveal" style="text-align:center; margin:0 auto 16px;">
           <span class="eyebrow" style="justify-content:center;"><span class="chev">›</span> Do físico ao digital</span>
           <h2 class="title">A experiência continua<br>na plataforma</h2>
+          <p class="jogo-sub">A experiência começa na raspadinha e continua na plataforma digital, com áudios guiados, vídeos demonstrativos, contratos interativos, roleta de perguntas, playlists e conteúdos exclusivos. Tudo isso sem precisar baixar aplicativo.</p>
         </div>
         <div class="ring reveal d1" id="ring" tabindex="0" role="group" aria-roledescription="carrossel 3D" aria-label="Telas da plataforma — arraste para girar">
           <button class="ring-nav ring-prev" id="ringPrev" type="button" aria-label="Anterior">
             <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
           </button>
           <div class="ring-stage" id="ringStage">
-            <article class="rphone" data-title="Primeiro acesso" data-text="Cada experiência começa com uma introdução guiada por voz e vídeo.">
-              <div class="rphone-screen"><img src="images/phone_mockup_1.jpeg" alt="Tela de primeiro acesso da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+            <article class="rphone" data-title="Desafio 01" data-text="Já imaginaram reservar 30 minutos para uma massagem sensual? Guiamos cada etapa para transformar um cantinho da casa em um spa e criar uma experiência que vai deixar vocês loucos um pelo outro.">
+              <div class="rphone-screen"><video src="images/mock_desafio_01.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
             </article>
-            <article class="rphone" data-title="Progresso do casal" data-text="A plataforma registra o que vocês já viveram e o que ainda falta descobrir.">
-              <div class="rphone-screen"><img src="images/phone_mockup_2.jpeg" alt="Tela de progresso da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+            <article class="rphone" data-title="Desafio 02" data-text="Vocês já imaginaram sair para um encontro como se nunca tivessem se visto antes? Neste desafio, vocês assumem novas identidades, escolhem novos nomes, iniciam uma conversa do zero e vivem a emoção de uma primeira conquista outra vez.">
+              <div class="rphone-screen"><video src="images/mock_desafio_02.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
             </article>
-            <article class="rphone" data-title="Comunidade do casal" data-text="Compartilhem experiências e vejam como outros casais vivem cada desafio.">
-              <div class="rphone-screen"><img src="images/phone_mockup_3.jpeg" alt="Tela da comunidade da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+            <article class="rphone" data-title="Desafio 06" data-text="Ela será a protagonista da noite. Guiamos como preparar o ambiente, escolher a música e conduzir uma dança sensual para surpreendê-lo e transformar esse momento em uma lembrança inesquecível.">
+              <div class="rphone-screen"><video src="images/mock_desafio_06.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
             </article>
-            <article class="rphone" data-title="Roleta do casal" data-text="Roleta com perguntas selecionadas e guiadas por voz para aprofundar suas conversas.">
-              <div class="rphone-screen"><img src="images/phone_mockup_4.jpeg" alt="Tela da roleta do casal" loading="lazy" onerror="this.style.opacity='0'" /></div>
+            <article class="rphone" data-title="Roleta do casal" data-text="Girem a roleta e deixem que as perguntas conduzam uma conversa. Temos certeza de que vocês vão falar sobre assuntos que nunca conversaram antes.">
+              <div class="rphone-screen"><video src="images/roleta_01.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
             </article>
-            <article class="rphone" data-title="Itens recomendados" data-text="Indicações de itens íntimos para quem deseja tornar algumas experiências ainda mais intensas.">
-              <div class="rphone-screen"><img src="images/phone_mockup_5.jpeg" alt="Tela de itens recomendados da plataforma" loading="lazy" onerror="this.style.opacity='0'" /></div>
+            <article class="rphone" data-title="Progresso do casal" data-text="Escaneou a raspadinha? Ela já é registrada na plataforma. Depois, basta marcar o check-in para acompanhar o progresso de vocês pelas 20 experiências.">
+              <div class="rphone-screen"><video src="images/mock_progreso.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
+            </article>
+            <article class="rphone" data-title="Curadoria de itens íntimos" data-text="Nossa curadoria reúne itens íntimos escolhidos para complementar cada desafio, ajudando vocês a descobrir produtos que talvez nunca tivessem experimentado.">
+              <div class="rphone-screen"><video src="images/mock_items.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
+            </article>
+            <article class="rphone" data-title="Contrato do casal" data-text="Escolham as regras, definam os desafios e assinem juntos. Nós transformamos esse acordo em uma experiência interativa dentro da plataforma.">
+              <div class="rphone-screen"><video src="images/mock_contrato.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
+            </article>
+            <article class="rphone" data-title="Guia de posições" data-text="Chega de repetir sempre as mesmas posições. Descubram novas possibilidades e encontrem a que mais combina com vocês.">
+              <div class="rphone-screen"><video src="images/mock_posiciones.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
+            </article>
+            <article class="rphone" data-title="Comunidade do casal" data-text="Entre para uma comunidade exclusiva de casais, onde cada experiência pode gerar novas ideias, conversas e inspirações para a próxima aventura a dois.">
+              <div class="rphone-screen"><video src="images/mock_comentarios.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto" onerror="this.style.opacity='0'"></video></div>
             </article>
           </div>
           <button class="ring-nav ring-next" id="ringNext" type="button" aria-label="Próximo">
@@ -1159,6 +1209,7 @@
       <div class="wrap">
         <div class="section-head reveal" style="margin:0 auto clamp(14px,2.4vh,26px); text-align:center;">
           <span class="eyebrow" style="justify-content:center;"><span class="chev">›</span> Experimente agora</span>
+          <p class="jogo-sub">Cada raspadinha revela uma experiência completamente diferente.</p>
         </div>
 
         <!-- Player do Desafio (vídeo único com áudio próprio) + raspadinha encima -->
@@ -1188,7 +1239,8 @@
       <div class="trans-inner">
         <p class="trans-line">Isso foi apenas uma prévia</p>
         <p class="trans-line">das 20 experiências que preparamos para vocês.</p>
-        <p class="trans-line trans-em">Agora a decisão é de vocês.</p>
+        <p class="trans-line">Se vocês decidirem dar esse passo para inovar na relação,</p>
+        <p class="trans-line">é bem provável que os próximos finais de semana nunca mais sejam os mesmos.</p>
       </div>
     </div>
   </div>
@@ -1200,20 +1252,29 @@
     <div class="buy-wrap reveal">
       <span class="eyebrow"><span class="chev">›</span> Estão prontos para viver esta experiência?</span>
 
+      <!-- 0 · o que vocês recebem -->
+      <div class="buy-label" style="margin-top:clamp(14px,2.4vw,22px);">Vocês recebem</div>
+      <ul class="buy-perks" id="buyPerks">
+        <li><span class="buy-check">✓</span> <span class="buy-perk-text">20 experiências completas</span></li>
+        <li><span class="buy-check">✓</span> <span class="buy-perk-text">Plataforma exclusiva</span></li>
+        <li><span class="buy-check">✓</span> <span class="buy-perk-text">Atualizações futuras</span></li>
+        <li><span class="buy-check">✓</span> <span class="buy-perk-text">Acesso para o casal</span></li>
+        <li><span class="buy-check">✓</span> <span class="buy-perk-text">Frete grátis</span></li>
+      </ul>
+
       <!-- 1 · investimento (riscado) + novo valor após raspar — arriba -->
       <div class="buy-price">
         <span class="buy-label">Investimento</span>
         <div class="buy-price-line">
           <div class="price price--old" id="buyOld"><small>R$</small> 187</div>
           <div class="price price--new" id="buyNew" hidden></div>
-          <span class="buy-off">✦ Frete grátis</span>
         </div>
         <!-- 2 · métodos de pagamento (debajo del precio, pequeño) -->
         <p class="buy-pay">PIX, cartão em até 3x sem juros</p>
       </div>
 
       <!-- 3 · raspe para descobrir o desconto -->
-      <div class="buy-scratch reveal d1">
+      <div class="buy-scratch">
         <div class="scr-stage" id="scrStage" role="img" aria-label="Raspadinha de desconto">
           <div class="scr-prize" id="scrPrize" aria-hidden="true">
             <div class="scr-off"><b id="scrPct">20</b><i>%</i> OFF</div>
@@ -1231,7 +1292,7 @@
         data-product-id="348895068"
         data-name="Jogo para casais — Inovando Juntos"
         data-price="187.00"
-        data-image="https://dcdn-us.mitiendanube.com/stores/005/452/146/products/ff48f122-233c-4245-9d64-7fd98bfda42f-4f1ffaf4493ffc0ef117827033428518-1024-1024.png">Adicionar ao carrinho</button>
+        data-image="https://dcdn-us.mitiendanube.com/stores/005/452/146/products/ff48f122-233c-4245-9d64-7fd98bfda42f-4f1ffaf4493ffc0ef117827033428518-1024-1024.png">Quero viver a experiência</button>
     </div>
   </div>
 </section>
@@ -1287,9 +1348,9 @@
     @media (prefers-reduced-motion: reduce){ .ljf{ transition:none; } }
   </style>
   <div class="ljx-head">
-    <span class="ljx-eyebrow">Nossa loja</span>
-    <h2 class="ljx-title">Vá além do jogo</h2>
-    <p class="ljx-sub">Produtos selecionados para casais — explore por categoria.</p>
+    <span class="ljx-eyebrow">A experiência continua</span>
+    <h2 class="ljx-title">Curadoria de itens íntimos</h2>
+    <p class="ljx-sub">Talvez vocês ainda não conheçam os produtos que podem levar a intimidade de vocês para outro nível. Convidamos vocês a descobrir uma seleção de itens escolhidos para intensificar as experiências.</p>
   </div>
   <div class="ljx-grid" id="ljGrid"><div class="ljx-load">Carregando categorias…</div></div>
   <div class="ljx-foot"><a class="ljx-btn" href="loja.html">Ver a loja completa →</a></div>
@@ -1521,6 +1582,7 @@
       <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
     <img id="gZoomImg" src="" alt="Detalhe da foto" />
+    <video id="gZoomVideo" muted loop playsinline webkit-playsinline preload="metadata" hidden></video>
     <div class="show-cap">
       <h3 class="show-cap-title" id="gZoomTitle"></h3>
       <p class="show-cap-text" id="gZoomText"></p>
@@ -2025,21 +2087,36 @@
     var tiles = Array.prototype.slice.call(gal.querySelectorAll(".g-tile"));
     var zoom = document.getElementById("gZoom");
     var zImg = document.getElementById("gZoomImg");
+    var zVideo = document.getElementById("gZoomVideo");
     var zTitle = document.getElementById("gZoomTitle");
     var zText = document.getElementById("gZoomText");
     var zClose = document.getElementById("gZoomClose");
 
-    /* --- lightbox de detalle --- */
+    /* --- lightbox de detalle: o próprio arquivo já traz a sequência capa→vídeo --- */
     function openZoom(t){
       if (!zoom) return;
-      zImg.src = t.getAttribute("data-img") || "";
+      var imgSrc = t.getAttribute("data-img") || "";
+      var videoSrc = t.getAttribute("data-video") || "";
+      if (videoSrc && zVideo){
+        zVideo.poster = imgSrc;
+        if (zVideo.getAttribute("src") !== videoSrc) zVideo.setAttribute("src", videoSrc);
+        zVideo.hidden = false; zImg.hidden = true;
+        zVideo.currentTime = 0; zVideo.play().catch(function(){});
+      } else {
+        if (zVideo){ zVideo.pause(); zVideo.hidden = true; zVideo.removeAttribute("src"); }
+        zImg.hidden = false;
+      }
+      zImg.src = imgSrc;
       zImg.alt = (t.getAttribute("data-title") || "") + " — detalhe";
       if (zTitle) zTitle.textContent = t.getAttribute("data-title") || "";
       if (zText) zText.textContent = t.getAttribute("data-text") || "";
       zoom.classList.add("open"); zoom.setAttribute("aria-hidden", "false");
       document.documentElement.classList.add("modal-open");
     }
-    function closeZoom(){ if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("modal-open"); } }
+    function closeZoom(){
+      if (zoom){ zoom.classList.remove("open"); zoom.setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("modal-open"); }
+      if (zVideo) zVideo.pause();
+    }
     // abre al primer toque/clic (pointerup evita el doble-toque de iOS por :hover)
     tiles.forEach(function(t){
       var sx = 0, sy = 0, moved = false;
@@ -2386,6 +2463,58 @@
     window.addEventListener("scroll", req, { passive:true });
     window.addEventListener("resize", req);
     req();
+  })();
+
+  /* ---- COMPRA: "Vocês recebem" — escreve cada linha e depois marca o check, ~3s no total ---- */
+  (function(){
+    var wrap = document.getElementById("buyPerks");
+    if (!wrap) return;
+    var items = Array.prototype.slice.call(wrap.querySelectorAll("li"));
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion){
+      items.forEach(function(li){
+        var t = li.querySelector(".buy-perk-text"), c = li.querySelector(".buy-check");
+        if (t) t.classList.add("show"); if (c) c.classList.add("show");
+      });
+      var priceEl0 = document.querySelector(".buy-price"), scratchEl0 = document.querySelector(".buy-scratch"), ctaEl0 = document.querySelector(".buy-cta");
+      if (priceEl0) priceEl0.classList.add("show");
+      if (scratchEl0) scratchEl0.classList.add("show");
+      if (ctaEl0) ctaEl0.classList.add("show");
+      return;
+    }
+    var played = false;
+    function play(){
+      if (played) return; played = true;
+      var n = items.length;
+      var textStep = 250, checkStartExtra = 200, checkStep = 250;
+      items.forEach(function(li, i){
+        var t = li.querySelector(".buy-perk-text");
+        setTimeout(function(){ if (t) t.classList.add("show"); }, i * textStep);
+      });
+      var checksStart = n * textStep + checkStartExtra;
+      items.forEach(function(li, i){
+        var c = li.querySelector(".buy-check");
+        setTimeout(function(){ if (c) c.classList.add("show"); }, checksStart + i * checkStep);
+      });
+
+      /* após o último check: investimento → raspadinha → botão (com CTA pulsante) */
+      var lastCheckAt = checksStart + (n - 1) * checkStep;
+      var priceEl = document.querySelector(".buy-price");
+      var scratchEl = document.querySelector(".buy-scratch");
+      var ctaEl = document.querySelector(".buy-cta");
+      var t0 = lastCheckAt + 300;
+      setTimeout(function(){ if (priceEl) priceEl.classList.add("show"); }, t0);
+      setTimeout(function(){ if (scratchEl) scratchEl.classList.add("show"); }, t0 + 450);
+      setTimeout(function(){
+        if (ctaEl){ ctaEl.classList.add("show"); setTimeout(function(){ ctaEl.classList.add("cta-pulse"); }, 650); }
+      }, t0 + 900);
+    }
+    if ("IntersectionObserver" in window){
+      var io = new IntersectionObserver(function(es){
+        es.forEach(function(e){ if (e.isIntersecting){ play(); io.disconnect(); } });
+      }, { threshold:0.35 });
+      io.observe(wrap);
+    } else { play(); }
   })();
 
   /* ---- WhatsApp flotante: aparece al llegar a #comprar, con el ID de captura en el texto ---- */
