@@ -107,7 +107,7 @@
         <button data-d="30">30 días</button>
         <button data-d="" class="on">Todo</button>
       </div>
-      <button class="reload" id="btnReload" onclick="refreshAll()">↻ Actualizar</button>
+      <button class="reload" onclick="load()">↻ Actualizar</button>
     </div>
   </header>
 
@@ -192,7 +192,7 @@
     <div class="grid kpis">
       <div class="card kpi fb"><div class="label">Gasto</div><div class="val" id="fb_spend">—</div><div class="hint">BRL</div></div>
       <div class="card kpi fb"><div class="label">Impressões</div><div class="val" id="fb_impr">—</div></div>
-      <div class="card kpi fb"><div class="label">Clics</div><div class="val" id="fb_clicks">—</div></div>
+      <div class="card kpi fb"><div class="label">Clics</div><div class="val" id="fb_clicks">—</div><div class="hint" id="fb_clicks_hint">totales</div></div>
       <div class="card kpi fb"><div class="label">CTR</div><div class="val" id="fb_ctr">—</div><div class="hint">clics / impressões</div></div>
       <div class="card kpi fb"><div class="label">CPC</div><div class="val" id="fb_cpc">—</div><div class="hint">costo por clic</div></div>
       <div class="card kpi fb"><div class="label">CPM</div><div class="val" id="fb_cpm">—</div><div class="hint">costo / 1000 impressões</div></div>
@@ -284,26 +284,6 @@ document.querySelectorAll("#tabs button").forEach(b=>{
   });
 });
 
-async function refreshAll(){
-  const btn = document.getElementById("btnReload");
-  const original = btn.textContent;
-  btn.disabled = true; btn.textContent = "⟳ Sincronizando…";
-  const errBox = document.getElementById("err"); errBox.style.display = "none";
-  try{
-    const res = await fetch(SUPABASE_URL + "/functions/v1/meta-ads-sync?date_preset=today", {
-      headers: { "Authorization": "Bearer " + ANON_KEY }
-    });
-    if(!res.ok) throw new Error("Sync HTTP " + res.status + " — " + (await res.text()).slice(0,200));
-    const syncResult = await res.json();
-    if(!syncResult.ok) throw new Error("Sync devolvió error: " + JSON.stringify(syncResult.errors||syncResult));
-  }catch(err){
-    errBox.style.display = "block";
-    errBox.textContent = "No se pudo sincronizar con Meta (se muestran los últimos datos guardados).\n" + (err && err.message ? err.message : err);
-  }
-  await load();
-  btn.disabled = false; btn.textContent = original;
-}
-
 function rpc(name){
   return fetch(SUPABASE_URL + "/rest/v1/rpc/" + name, {
     method: "POST",
@@ -382,10 +362,12 @@ async function load(){
     ).join("");
 
     const f = data.funnel || {};
+    // Orden lógico del viaje: engagement → intención → carrito → checkout → compra (monótono descendente)
     const steps = [
-      ["Visita", +f.f_view||0], ["Clic CTA", +f.fcta||0], ["Scroll 50%", +f.f50||0], ["Scroll 75%", +f.f75||0],
-      ["Experimente (QR)", +f.fexp||0], ["Desconto revelado", +f.fdisc||0],
-      ["AddToCart", +f.fatc||0], ["InitiateCheckout", +f.fic||0], ["Clic Comprar", +f.fbuy||0]
+      ["Visita", +f.f_view||0], ["Scroll 50%", +f.f50||0], ["Scroll 75%", +f.f75||0],
+      ["Experimente (QR)", +f.fexp||0], ["Clic CTA", +f.fcta||0], ["Desconto revelado", +f.fdisc||0],
+      ["Clic Comprar", +f.fbuy||0], ["AddToCart", +f.fatc||0], ["InitiateCheckout", +f.fic||0],
+      ["Compra", +f.fpurchase||0]
     ];
     const base = Math.max(1, steps[0][1]);
     document.getElementById("funnel").innerHTML = steps.map(st=>{
@@ -426,6 +408,8 @@ async function load(){
     document.getElementById("fb_spend").textContent  = brl(fk.spend);
     document.getElementById("fb_impr").textContent   = fmt(fk.impressions);
     document.getElementById("fb_clicks").textContent = fmt(fk.clicks);
+    document.getElementById("fb_clicks_hint").textContent =
+      (fk.link_clicks!=null ? fmt(fk.link_clicks)+" no link · comparables con visitas" : "totales");
     document.getElementById("fb_ctr").textContent    = (fk.ctr||0) + "%";
     document.getElementById("fb_cpc").textContent     = brl(fk.cpc);
     document.getElementById("fb_cpm").textContent     = brl(fk.cpm);
@@ -453,7 +437,7 @@ async function load(){
     else fcTb.innerHTML = fbCamps.map(c=>
       '<tr data-nombre="'+c.nombre.replace(/"/g,'&quot;')+'" class="'+(fbCampFilter===c.nombre?'sel':'')+'">'+
       '<td class="src">'+c.nombre+'</td><td class="num">'+brl(c.spend)+'</td><td class="num">'+fmt(c.impressions)+'</td>'+
-      '<td class="num">'+fmt(c.clicks)+'</td><td class="num">'+c.ctr+'%</td><td class="num">'+brl(c.cpc)+'</td></tr>'
+      '<td class="num">'+fmt(c.clicks)+(c.link_clicks!=null?' <span class="muted" style="font-size:.82em">('+fmt(c.link_clicks)+' link)</span>':'')+'</td><td class="num">'+c.ctr+'%</td><td class="num">'+brl(c.cpc)+'</td></tr>'
     ).join("");
     fcTb.querySelectorAll("tr[data-nombre]").forEach(tr=>{
       tr.addEventListener("click", ()=>{
