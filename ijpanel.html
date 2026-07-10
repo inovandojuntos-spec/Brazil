@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -98,91 +98,92 @@
   <header class="top">
     <div class="brand">
       <div class="tag">Inovando Juntos</div>
-      <h1>Estadísticas de la landing</h1>
-      <div class="sub" id="updated">Cargando datos…</div>
+      <h1>Estatísticas da landing</h1>
+      <div class="sub" id="updated">Carregando dados…</div>
     </div>
     <div class="controls">
       <div class="seg" id="period">
-        <button data-d="7">7 días</button>
-        <button data-d="30">30 días</button>
-        <button data-d="" class="on">Todo</button>
+        <button data-d="7">7 dias</button>
+        <button data-d="30">30 dias</button>
+        <button data-d="month">Mês atual</button>
+        <button data-d="" class="on">Tudo</button>
       </div>
-      <button class="reload" onclick="load()">↻ Actualizar</button>
+      <button class="reload" onclick="load()">↻ Atualizar</button>
     </div>
   </header>
 
   <div class="tabs" id="tabs">
-    <button data-tab="site" class="on">Sitio</button>
+    <button data-tab="site" class="on">Site</button>
     <button data-tab="fb">Meta Ads</button>
   </div>
 
   <div id="err"></div>
 
   <div class="view on" id="view-site">
-  <div class="sec-label">Ventas</div>
+  <div class="sec-label">Vendas</div>
   <div class="grid kpis">
-    <div class="card kpi sale"><div class="label">Compras pagas</div><div class="val" id="k_orders">—</div><div class="hint">CAPI / Nuvemshop</div></div>
+    <div class="card kpi sale"><div class="label">Compras pagas</div><div class="val" id="k_orders">—</div><div class="hint">pagamento confirmado (Nuvemshop)</div></div>
     <div class="card kpi sale"><div class="label">Receita</div><div class="val" id="k_rev">—</div><div class="hint">BRL</div></div>
     <div class="card kpi sale"><div class="label">Ticket médio</div><div class="val" id="k_ticket">—</div></div>
-    <div class="card kpi sale"><div class="label">Conversión</div><div class="val" id="k_conv">—</div><div class="hint">compras / visitantes</div></div>
+    <div class="card kpi sale"><div class="label">Conversão</div><div class="val" id="k_conv">—</div><div class="hint">compras / visitantes</div></div>
   </div>
 
-  <div class="sec-label">Tráfico</div>
+  <div class="sec-label">Tráfego</div>
   <div class="grid kpis">
     <div class="card kpi"><div class="label">Visitas</div><div class="val" id="k_pv">—</div><div class="hint">page views</div></div>
     <div class="card kpi"><div class="label">Visitantes</div><div class="val" id="k_vis">—</div><div class="hint">únicos</div></div>
-    <div class="card kpi"><div class="label">Sesiones</div><div class="val" id="k_ses">—</div></div>
-    <div class="card kpi"><div class="label">Tiempo medio</div><div class="val" id="k_sec">—</div><div class="hint">seg/visita</div></div>
+    <div class="card kpi"><div class="label">Sessões</div><div class="val" id="k_ses">—</div></div>
+    <div class="card kpi"><div class="label">Tempo médio</div><div class="val" id="k_sec">—</div><div class="hint">seg/visita</div></div>
   </div>
 
   <div class="sec-label">Engajamento</div>
   <div class="grid kpis">
-    <div class="card kpi"><div class="label">Clics CTA</div><div class="val" id="k_cta">—</div></div>
-    <div class="card kpi"><div class="label">Clics Comprar</div><div class="val" id="k_buy">—</div></div>
+    <div class="card kpi"><div class="label">Cliques CTA</div><div class="val" id="k_cta">—</div></div>
+    <div class="card kpi"><div class="label">Cliques botão Comprar</div><div class="val" id="k_buy">—</div><div class="hint">intenção — não é venda</div></div>
     <div class="card kpi"><div class="label">Descobriu QR</div><div class="val" id="k_qr">—</div></div>
     <div class="card kpi"><div class="label">Descobriu desconto</div><div class="val" id="k_disc">—</div></div>
     <div class="card kpi"><div class="label">Reproduziu vídeo</div><div class="val" id="k_play">—</div></div>
-    <div class="card kpi"><div class="label">Clic WhatsApp</div><div class="val" id="k_wa">—</div></div>
+    <div class="card kpi"><div class="label">Clique WhatsApp</div><div class="val" id="k_wa">—</div></div>
   </div>
 
   <div class="grid row2">
-    <div class="card"><h3>Visitas por día</h3><div class="chart-box"><canvas id="chDaily"></canvas></div></div>
-    <div class="card"><h3>Fuente de tráfico</h3><div class="chart-box"><canvas id="chSrc"></canvas></div></div>
+    <div class="card"><h3>Visitas por dia</h3><div class="chart-box"><canvas id="chDaily"></canvas></div></div>
+    <div class="card"><h3>Fonte de tráfego</h3><div class="chart-box"><canvas id="chSrc"></canvas></div></div>
   </div>
 
   <div class="grid row2">
-    <div class="card"><h3>Embudo de conversión</h3><div id="funnel"><div class="loading">Cargando…</div></div></div>
+    <div class="card"><h3>Funil de conversão</h3><div id="funnel"><div class="loading">Carregando…</div></div></div>
     <div class="card"><h3>Dispositivos</h3><div class="chart-box"><canvas id="chDev"></canvas></div></div>
   </div>
 
   <div class="grid row2">
-    <div class="card"><h3>Profundidad de scroll</h3><div class="chart-box"><canvas id="chScroll"></canvas></div></div>
+    <div class="card"><h3>Profundidade de scroll</h3><div class="chart-box"><canvas id="chScroll"></canvas></div></div>
     <div class="card"><h3>Idiomas</h3><div class="chart-box"><canvas id="chLang"></canvas></div></div>
   </div>
 
   <div class="grid row2">
     <div class="card"><h3>Países</h3><div class="chart-box"><canvas id="chCountry"></canvas></div></div>
-    <div class="card"><h3>Regiones / Ciudades</h3>
+    <div class="card"><h3>Regiões / Cidades</h3>
       <div style="overflow:auto; max-height:300px;">
-        <table id="regions"><thead><tr><th>Región</th><th>Ciudad</th><th>País</th><th>Visitas</th></tr></thead>
-        <tbody><tr><td colspan="4" class="loading">Cargando…</td></tr></tbody></table>
+        <table id="regions"><thead><tr><th>Região</th><th>Cidade</th><th>País</th><th>Visitas</th></tr></thead>
+        <tbody><tr><td colspan="4" class="loading">Carregando…</td></tr></tbody></table>
       </div>
     </div>
   </div>
 
   <div class="card" style="margin-top:14px;">
-    <h3>Clientes (detalle) · granularidad por visitante</h3>
+    <h3>Clientes (detalhe) · granularidade por visitante</h3>
     <div style="overflow-x:auto;">
-      <table id="clients"><thead><tr><th>ID</th><th>Disp.</th><th>Lugar</th><th>Scroll máx.</th><th>QR desafío</th><th>Desconto</th><th>Comprar</th><th>Visitas</th><th>Última</th></tr></thead>
-      <tbody><tr><td colspan="9" class="loading">Cargando…</td></tr></tbody></table>
+      <table id="clients"><thead><tr><th>ID</th><th>Disp.</th><th>Lugar</th><th>Scroll máx.</th><th>QR desafio</th><th>Desconto</th><th>Clique Comprar</th><th>Visitas</th><th>Última</th></tr></thead>
+      <tbody><tr><td colspan="9" class="loading">Carregando…</td></tr></tbody></table>
     </div>
   </div>
 
   <div class="card" style="margin-top:14px;">
     <h3>Últimas visitas</h3>
     <div style="overflow-x:auto;">
-      <table id="recent"><thead><tr><th>Hora (BR)</th><th>Dispositivo</th><th>Lugar</th><th>Fuente</th><th>Referrer</th></tr></thead>
-      <tbody><tr><td colspan="5" class="loading">Cargando…</td></tr></tbody></table>
+      <table id="recent"><thead><tr><th>Hora (BR)</th><th>Dispositivo</th><th>Lugar</th><th>Fonte</th><th>Referrer</th></tr></thead>
+      <tbody><tr><td colspan="5" class="loading">Carregando…</td></tr></tbody></table>
     </div>
   </div>
   </div>
@@ -192,14 +193,14 @@
     <div class="grid kpis">
       <div class="card kpi fb"><div class="label">Gasto</div><div class="val" id="fb_spend">—</div><div class="hint">BRL</div></div>
       <div class="card kpi fb"><div class="label">Impressões</div><div class="val" id="fb_impr">—</div></div>
-      <div class="card kpi fb"><div class="label">Clics</div><div class="val" id="fb_clicks">—</div><div class="hint" id="fb_clicks_hint">totales</div></div>
-      <div class="card kpi fb"><div class="label">CTR</div><div class="val" id="fb_ctr">—</div><div class="hint">clics / impressões</div></div>
-      <div class="card kpi fb"><div class="label">CPC</div><div class="val" id="fb_cpc">—</div><div class="hint">costo por clic</div></div>
-      <div class="card kpi fb"><div class="label">CPM</div><div class="val" id="fb_cpm">—</div><div class="hint">costo / 1000 impressões</div></div>
+      <div class="card kpi fb"><div class="label">Cliques</div><div class="val" id="fb_clicks">—</div><div class="hint" id="fb_clicks_hint">totais</div></div>
+      <div class="card kpi fb"><div class="label">CTR</div><div class="val" id="fb_ctr">—</div><div class="hint">cliques / impressões</div></div>
+      <div class="card kpi fb"><div class="label">CPC</div><div class="val" id="fb_cpc">—</div><div class="hint">custo por clique</div></div>
+      <div class="card kpi fb"><div class="label">CPM</div><div class="val" id="fb_cpm">—</div><div class="hint">custo / 1000 impressões</div></div>
     </div>
 
     <div class="grid row2">
-      <div class="card"><h3>Gasto y clics por día</h3><div class="chart-box"><canvas id="chFbDaily"></canvas></div></div>
+      <div class="card"><h3>Gasto e cliques por dia</h3><div class="chart-box"><canvas id="chFbDaily"></canvas></div></div>
       <div class="card"><h3>Gasto por campanha</h3><div class="chart-box"><canvas id="chFbCamp"></canvas></div></div>
     </div>
 
@@ -207,8 +208,8 @@
       <h3>Campanhas</h3>
       <div style="overflow-x:auto;">
         <table class="cmp-table" id="fbCampaigns">
-          <thead><tr><th>Campanha</th><th class="num">Gasto</th><th class="num">Impressões</th><th class="num">Clics</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead>
-          <tbody><tr><td colspan="6" class="loading">Cargando…</td></tr></tbody>
+          <thead><tr><th>Campanha</th><th class="num">Gasto</th><th class="num">Impressões</th><th class="num">Cliques</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead>
+          <tbody><tr><td colspan="6" class="loading">Carregando…</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -218,10 +219,21 @@
       <div id="fbAdsFilter"></div>
       <div style="overflow-x:auto;">
         <table class="cmp-table" id="fbAds">
-          <thead><tr><th>Anúncio</th><th>Conjunto</th><th class="num">Gasto</th><th class="num">Impressões</th><th class="num">Clics</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead>
-          <tbody><tr><td colspan="7" class="loading">Cargando…</td></tr></tbody>
+          <thead><tr><th>Anúncio</th><th>Conjunto</th><th class="num">Gasto</th><th class="num">Impressões</th><th class="num">Cliques</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead>
+          <tbody><tr><td colspan="7" class="loading">Carregando…</td></tr></tbody>
         </table>
       </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:18px;">Demografia <span class="muted" style="font-weight:400;font-size:.85em">· clique numa campanha acima para filtrar</span></div>
+    <div class="card" style="margin-top:8px;">
+      <h3 id="fbDemoTitle">Demografia · todas as campanhas</h3>
+      <div id="fbDemoSummary" class="hint" style="margin:4px 0 10px;"></div>
+      <div class="grid row2">
+        <div><h3 style="font-size:.95em;opacity:.85">Cliques por idade e sexo</h3><div class="chart-box"><canvas id="chFbDemoAge"></canvas></div></div>
+        <div><h3 style="font-size:.95em;opacity:.85">Participação de cliques por sexo</h3><div class="chart-box"><canvas id="chFbDemoGender"></canvas></div></div>
+      </div>
+      <div style="margin-top:14px;"><h3 style="font-size:.95em;opacity:.85">CTR % por idade e sexo</h3><div class="chart-box"><canvas id="chFbDemoCtr"></canvas></div></div>
     </div>
   </div>
 </div>
@@ -234,13 +246,16 @@ const palette = ["#a7c7e7","#c9b6e4","#9ad0c2","#f3c6a5","#f2a6a6","#d9e29a","#f
 let charts = {};
 let period = null; // null = todo
 let fbAdsAll = [];       // último resultado de fb.ads, sin filtrar
+let fbDemoAll = [];      // último resultado de fb.demo (edad × sexo × campaña)
 let fbCampFilter = null; // nombre de campaña seleccionada, o null = todas
+const AGE_ORDER = ["18-24","25-34","35-44","45-54","55-64","65+"];
+const C_MALE = "#8fb3dd", C_FEMALE = "#f2a6a6";
 
 Chart.defaults.color = "rgba(255,255,255,.66)";
 Chart.defaults.borderColor = "rgba(255,255,255,.08)";
 Chart.defaults.font.family = "Manrope, system-ui, sans-serif";
 
-function fmt(n){ return (n==null||isNaN(n)) ? "0" : Number(n).toLocaleString("es"); }
+function fmt(n){ return (n==null||isNaN(n)) ? "0" : Number(n).toLocaleString("pt-BR"); }
 function brl(n){ return "R$ " + (Number(n||0)).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function pct(a,b){ b=+b||0; return b>0 ? Math.round((+a||0)/b*100) : 0; }
 function mkChart(id, cfg){ if(charts[id]) charts[id].destroy(); charts[id] = new Chart(document.getElementById(id), cfg); }
@@ -259,18 +274,71 @@ function renderFbAds(){
 
   const rows = fbCampFilter ? fbAdsAll.filter(a=>a.campana===fbCampFilter) : fbAdsAll;
   const faTb = document.querySelector("#fbAds tbody");
-  if(!rows.length){ faTb.innerHTML = '<tr><td colspan="7" class="muted">Sin anúncios para este filtro</td></tr>'; return; }
-  faTb.innerHTML = rows.map(a=>
+  if(!rows.length){ faTb.innerHTML = '<tr><td colspan="7" class="muted">Sem anúncios para este filtro</td></tr>'; }
+  else faTb.innerHTML = rows.map(a=>
     '<tr><td class="src">'+a.nombre+'</td><td class="muted">'+(a.conjunto||'—')+'</td><td class="num">'+brl(a.spend)+'</td>'+
     '<td class="num">'+fmt(a.impressions)+'</td><td class="num">'+fmt(a.clicks)+'</td><td class="num">'+a.ctr+'%</td><td class="num">'+brl(a.cpc)+'</td></tr>'
   ).join("");
+  renderFbDemo();
+}
+
+function renderFbDemo(){
+  const rows = fbCampFilter ? fbDemoAll.filter(d=>d.campana===fbCampFilter) : fbDemoAll;
+  const title = document.getElementById("fbDemoTitle");
+  if(title) title.textContent = "Demografia · " + (fbCampFilter || "todas as campanhas");
+
+  // agregação idade × sexo
+  const agg = {}; let tm = {i:0,c:0,s:0}, tf = {i:0,c:0,s:0};
+  rows.forEach(d=>{
+    const g = d.sexo==="male" ? "m" : d.sexo==="female" ? "f" : null;
+    if(!g || AGE_ORDER.indexOf(d.edad)<0) return;
+    agg[d.edad] = agg[d.edad] || { m:{i:0,c:0}, f:{i:0,c:0} };
+    agg[d.edad][g].i += +d.impressions||0;
+    agg[d.edad][g].c += +d.clicks||0;
+    const t = (g==="m") ? tm : tf;
+    t.i += +d.impressions||0; t.c += +d.clicks||0; t.s += +d.spend||0;
+  });
+  const ages = AGE_ORDER.filter(a=>agg[a]);
+  const sum = document.getElementById("fbDemoSummary");
+
+  if(!ages.length){
+    if(sum) sum.textContent = "Sem dados demográficos para este filtro (a campanha pode ser muito nova — o detalhamento chega com o próximo sync).";
+    ["chFbDemoAge","chFbDemoGender","chFbDemoCtr"].forEach(id=>{ if(charts[id]){ charts[id].destroy(); delete charts[id]; } });
+    return;
+  }
+
+  const totC = tm.c + tf.c;
+  const ctrM = tm.i>0 ? (tm.c/tm.i*100) : 0, ctrF = tf.i>0 ? (tf.c/tf.i*100) : 0;
+  if(sum) sum.textContent =
+    "Homens: "+fmt(tm.c)+" cliques ("+pct(tm.c,totC)+"%) · CTR "+ctrM.toFixed(2)+"% · "+brl(tm.s)+
+    "   |   Mulheres: "+fmt(tf.c)+" cliques ("+pct(tf.c,totC)+"%) · CTR "+ctrF.toFixed(2)+"% · "+brl(tf.s);
+
+  mkChart("chFbDemoAge", { type:"bar",
+    data:{ labels: ages, datasets:[
+      { label:"Homens", data: ages.map(a=>agg[a].m.c), backgroundColor:C_MALE, borderRadius:6 },
+      { label:"Mulheres", data: ages.map(a=>agg[a].f.c), backgroundColor:C_FEMALE, borderRadius:6 } ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom" } },
+      scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }, grid:{ color:"rgba(255,255,255,.06)" } }, x:{ grid:{ display:false } } } } });
+
+  mkChart("chFbDemoGender", { type:"doughnut",
+    data:{ labels:["Homens","Mulheres"], datasets:[{ data:[tm.c, tf.c], backgroundColor:[C_MALE, C_FEMALE], borderColor:"#0c0c0d", borderWidth:2 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:"62%", plugins:{ legend:{ position:"bottom" } } } });
+
+  mkChart("chFbDemoCtr", { type:"bar",
+    data:{ labels: ages, datasets:[
+      { label:"Homens", data: ages.map(a=> agg[a].m.i>0 ? +(agg[a].m.c/agg[a].m.i*100).toFixed(2) : 0), backgroundColor:C_MALE, borderRadius:6 },
+      { label:"Mulheres", data: ages.map(a=> agg[a].f.i>0 ? +(agg[a].f.c/agg[a].f.i*100).toFixed(2) : 0), backgroundColor:C_FEMALE, borderRadius:6 } ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom" },
+      tooltip:{ callbacks:{ label: ctx => ctx.dataset.label+": "+ctx.parsed.y+"%" } } },
+      scales:{ y:{ beginAtZero:true, grid:{ color:"rgba(255,255,255,.06)" }, ticks:{ callback:v=>v+"%" } }, x:{ grid:{ display:false } } } } });
 }
 
 document.querySelectorAll("#period button").forEach(b=>{
   b.addEventListener("click", ()=>{
     document.querySelectorAll("#period button").forEach(x=>x.classList.remove("on"));
     b.classList.add("on");
-    period = b.dataset.d ? +b.dataset.d : null;
+    const v = b.dataset.d;
+    period = v === "month" ? Math.max(new Date().getDate() - 1, 0) : (v ? +v : null);
     load();
   });
 });
@@ -315,8 +383,8 @@ async function load(){
     document.getElementById("k_disc").textContent= fmt(k.disc);
     document.getElementById("k_play").textContent= fmt(k.play);
     document.getElementById("k_wa").textContent  = fmt(k.wa);
-    const per = data.period_days ? ("últimos " + data.period_days + " días") : "todo el período";
-    document.getElementById("updated").textContent = "Actualizado: " + new Date().toLocaleString("es") + " · " + per;
+    const per = data.period_days ? ("últimos " + data.period_days + " dias") : "todo o período";
+    document.getElementById("updated").textContent = "Atualizado: " + new Date().toLocaleString("pt-BR") + " · " + per;
 
     const daily = data.daily || [];
     mkChart("chDaily", { type:"bar",
@@ -356,7 +424,7 @@ async function load(){
 
     const regions = data.regions || [];
     const rtb = document.querySelector("#regions tbody");
-    if(!regions.length){ rtb.innerHTML = '<tr><td colspan="4" class="muted">Sin datos de región aún</td></tr>'; }
+    if(!regions.length){ rtb.innerHTML = '<tr><td colspan="4" class="muted">Sem dados de região ainda</td></tr>'; }
     else rtb.innerHTML = regions.map(r=>
       '<tr><td class="src">'+(r.region||'—')+'</td><td>'+(r.city||'—')+'</td><td>'+(r.pais||'—')+'</td><td>'+fmt(r.v)+'</td></tr>'
     ).join("");
@@ -365,9 +433,9 @@ async function load(){
     // Orden lógico del viaje: engagement → intención → carrito → checkout → compra (monótono descendente)
     const steps = [
       ["Visita", +f.f_view||0], ["Scroll 50%", +f.f50||0], ["Scroll 75%", +f.f75||0],
-      ["Experimente (QR)", +f.fexp||0], ["Clic CTA", +f.fcta||0], ["Desconto revelado", +f.fdisc||0],
-      ["Clic Comprar", +f.fbuy||0], ["AddToCart", +f.fatc||0], ["InitiateCheckout", +f.fic||0],
-      ["Compra", +f.fpurchase||0]
+      ["Experimente (QR)", +f.fexp||0], ["Clique CTA", +f.fcta||0], ["Desconto revelado", +f.fdisc||0],
+      ["Clique botão Comprar (intenção)", +f.fbuy||0], ["Adicionou ao carrinho", +f.fatc||0], ["Iniciou checkout", +f.fic||0],
+      ["Compra paga ✓", +f.fpurchase||0]
     ];
     const base = Math.max(1, steps[0][1]);
     document.getElementById("funnel").innerHTML = steps.map(st=>{
@@ -377,7 +445,7 @@ async function load(){
 
     const recent = data.recent || [];
     const tb = document.querySelector("#recent tbody");
-    if(!recent.length){ tb.innerHTML = '<tr><td colspan="5" class="muted">Sin visitas aún</td></tr>'; }
+    if(!recent.length){ tb.innerHTML = '<tr><td colspan="5" class="muted">Sem visitas ainda</td></tr>'; }
     else tb.innerHTML = recent.map(r=>{
       const d = (r.dispositivo||"?").toLowerCase();
       const ref = (r.referrer||"—").replace(/^https?:\/\//,"").slice(0,40);
@@ -389,17 +457,17 @@ async function load(){
     const ctb = document.querySelector("#clients tbody");
     const yn = v => v ? '<span style="color:#9ad0c2;font-weight:800">✓</span>' : '<span class="muted">—</span>';
     const bar = p => { p = Math.max(0, Math.min(100, +p || 0)); return '<div style="display:flex;align-items:center;gap:6px"><div style="flex:1;min-width:54px;background:rgba(255,255,255,.08);border-radius:6px;height:9px;overflow:hidden"><div style="height:100%;width:'+p+'%;background:linear-gradient(90deg,#8fb3dd,#bcd4ef)"></div></div><span style="font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted)">'+p+'%</span></div>'; };
-    if(!clients.length){ ctb.innerHTML = '<tr><td colspan="9" class="muted">Sin datos aún</td></tr>'; }
+    if(!clients.length){ ctb.innerHTML = '<tr><td colspan="9" class="muted">Sem dados ainda</td></tr>'; }
     else ctb.innerHTML = clients.map(c=>{
       const dv = (c.device||"?").toLowerCase();
       return '<tr><td class="src" style="font-family:monospace">'+(c.pid||'—')+'</td>'+
-        '<td><span class="badge '+dv+'">'+(c.device||'?')+'</span></td>'+
+        '<td><span class="badge '+dv+'">'+(c.device||'—')+'</span></td>'+
         '<td>'+(c.lugar||'—')+'</td>'+
-        '<td style="min-width:120px">'+bar(c.max_scroll)+'</td>'+
+        '<td>'+bar(c.max_scroll)+'</td>'+
         '<td>'+yn(c.qr)+'</td>'+
         '<td>'+yn(c.disc)+'</td>'+
         '<td>'+yn(c.buy)+'</td>'+
-        '<td>'+fmt(c.visitas)+'</td>'+
+        '<td class="num">'+fmt(c.visitas)+'</td>'+
         '<td class="muted">'+(c.ultima||'—')+'</td></tr>';
     }).join("");
 
@@ -409,7 +477,7 @@ async function load(){
     document.getElementById("fb_impr").textContent   = fmt(fk.impressions);
     document.getElementById("fb_clicks").textContent = fmt(fk.clicks);
     document.getElementById("fb_clicks_hint").textContent =
-      (fk.link_clicks!=null ? fmt(fk.link_clicks)+" no link · comparables con visitas" : "totales");
+      (fk.link_clicks!=null ? fmt(fk.link_clicks)+" no link · comparáveis com visitas" : "totais");
     document.getElementById("fb_ctr").textContent    = (fk.ctr||0) + "%";
     document.getElementById("fb_cpc").textContent     = brl(fk.cpc);
     document.getElementById("fb_cpm").textContent     = brl(fk.cpm);
@@ -418,7 +486,7 @@ async function load(){
     mkChart("chFbDaily", { type:"bar",
       data:{ labels: fbDaily.map(r=>r.dia), datasets:[
         { label:"Gasto (R$)", data: fbDaily.map(r=>+r.spend), backgroundColor:"#8fb3dd", borderRadius:6, yAxisID:"y" },
-        { label:"Clics", data: fbDaily.map(r=>+r.clicks), backgroundColor:"#f3c6a5", borderRadius:6, yAxisID:"y1" } ]},
+        { label:"Cliques", data: fbDaily.map(r=>+r.clicks), backgroundColor:"#f3c6a5", borderRadius:6, yAxisID:"y1" } ]},
       options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom" } },
         scales:{
           y:{ beginAtZero:true, position:"left", grid:{ color:"rgba(255,255,255,.06)" } },
@@ -430,10 +498,10 @@ async function load(){
       data:{ labels: fbCamps.map(r=>r.nombre), datasets:[{ data: fbCamps.map(r=>+r.spend), backgroundColor: palette, borderColor:"#0c0c0d", borderWidth:2 }] },
       options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom", labels:{ boxWidth:10, font:{ size:10.5 } } } } } });
 
-    if(fbCampFilter && !fbCamps.some(c=>c.nombre===fbCampFilter)) fbCampFilter = null; // limpia si ya no existe en el período elegido
+    if(fbCampFilter && !fbCamps.some(c=>c.nombre===fbCampFilter)) fbCampFilter = null; // limpa se já não existe no período
 
     const fcTb = document.querySelector("#fbCampaigns tbody");
-    if(!fbCamps.length){ fcTb.innerHTML = '<tr><td colspan="6" class="muted">Sin datos de Meta Ads todavía</td></tr>'; }
+    if(!fbCamps.length){ fcTb.innerHTML = '<tr><td colspan="6" class="muted">Sem dados de Meta Ads ainda</td></tr>'; }
     else fcTb.innerHTML = fbCamps.map(c=>
       '<tr data-nombre="'+c.nombre.replace(/"/g,'&quot;')+'" class="'+(fbCampFilter===c.nombre?'sel':'')+'">'+
       '<td class="src">'+c.nombre+'</td><td class="num">'+brl(c.spend)+'</td><td class="num">'+fmt(c.impressions)+'</td>'+
@@ -449,11 +517,12 @@ async function load(){
     });
 
     fbAdsAll = fb.ads || [];
+    fbDemoAll = fb.demo || [];
     renderFbAds();
 
   }catch(err){
     errBox.style.display = "block";
-    errBox.textContent = "No se pudieron cargar los datos.\n" + (err && err.message ? err.message : err);
+    errBox.textContent = "Não foi possível carregar os dados.\n" + (err && err.message ? err.message : err);
   }
 }
 load();
