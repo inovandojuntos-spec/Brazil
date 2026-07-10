@@ -552,6 +552,15 @@
   .scr-code{ font-size:11px; color:var(--muted); }
   .scr-code b{ color:var(--ember); letter-spacing:.1em; font-weight:800; font-size:1.2em;
     border:1px dashed rgba(199,204,212,.5); padding:3px 8px; border-radius:8px; margin-left:4px; }
+  .scr-valid{ margin-top:6px; font-size:12.5px; letter-spacing:.02em; color:rgba(220,226,233,.92); font-weight:700; min-height:1em; }
+  .scr-valid.typing::after{ content:"|"; margin-left:1px; color:var(--ember); animation:scrCaret .7s step-end infinite; }
+  @keyframes scrCaret{ 0%,100%{opacity:1} 50%{opacity:0} }
+  .scr-valid.pulse{ display:inline-block; padding:2px 9px; border-radius:9px; }
+  @keyframes scrValidPulse{
+    0%,100%{ background:rgba(224,122,63,0); color:rgba(220,226,233,.92); box-shadow:0 0 0 rgba(224,122,63,0); transform:scale(1); }
+    50%{ background:rgba(224,122,63,.20); color:#fff; box-shadow:0 0 14px rgba(224,122,63,.4); transform:scale(1.07); } }
+  .scr-valid.pulse{ animation:scrValidPulse .9s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce){ .scr-valid.pulse{ animation:none; background:rgba(224,122,63,.16); } .scr-valid.typing::after{ display:none; } }
   #scrCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
   .scr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:3; width:86%; text-align:center;
     font-family:var(--display); font-size:clamp(11px,2.4vw,15px); letter-spacing:.04em; text-transform:uppercase; color:rgba(8,8,10,.80); font-weight:800;
@@ -613,7 +622,9 @@
   .foot-social svg{ width:18px; height:18px; }
   .age{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--edge2); border-radius:999px;
     padding:6px 13px; font-size:11px; font-weight:800; letter-spacing:.1em; color:var(--text); }
-  .copyright{ max-width:var(--maxw); margin:36px auto 0; padding-top:22px; border-top:1px solid var(--edge);
+  .foot-legal{ max-width:var(--maxw); margin:36px auto 0; padding-top:22px; border-top:1px solid var(--edge);
+    color:var(--soft); font-size:12px; line-height:1.6; text-align:center; display:flex; flex-direction:column; gap:2px; }
+  .copyright{ max-width:var(--maxw); margin:12px auto 0; padding-top:0;
     color:var(--soft); font-size:12px; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; }
 
   /* ====== Cookie banner LGPD ====== */
@@ -1279,6 +1290,7 @@
           <div class="scr-prize" id="scrPrize" aria-hidden="true">
             <div class="scr-off"><b id="scrPct">20</b><i>%</i> OFF</div>
             <div class="scr-code">Cupom <b id="scrCode">IJ20MD</b></div>
+            <div class="scr-valid" id="scrValid" hidden></div>
           </div>
           <canvas id="scrCanvas"></canvas>
           <span class="scr-hint" id="scrHint">Raspe para descobrir seu desconto</span>
@@ -1298,7 +1310,7 @@
 </section>
 
 <!-- ====== NOSSA LOJA · mosaico de categorias (link à loja) ====== -->
-<section class="ljx" id="loja" aria-label="Nossa loja">
+<section class="ljx" id="loja" aria-label="Nossa loja" hidden style="display:none">
   <style>
     .ljx{ padding:clamp(34px,6vh,68px) 0 0; }
     .ljx-head{ text-align:center; max-width:60ch; margin:0 auto 20px; padding:0 22px; }
@@ -1567,6 +1579,10 @@
       </div>
     </div>
   </div>
+  <div class="foot-legal">
+    <span>Inovando Juntos · Rua Antônio Clemente, 119 — São Paulo/SP · CEP 02039-020</span>
+    <span>CNPJ 59.214.090/0001-66</span>
+  </div>
   <div class="copyright">
     <span>© <span id="year"></span> Inovando Juntos. Todos os direitos reservados.</span>
     <span>Feito com cuidado para casais.</span>
@@ -1720,6 +1736,7 @@
     var hint = document.getElementById("scrHint");
     var pctEl = document.getElementById("scrPct");
     var codeEl = document.getElementById("scrCode");
+    var validEl = document.getElementById("scrValid");
     var oldEl = document.getElementById("buyOld");
     var newEl = document.getElementById("buyNew");
     var ctaEl = document.querySelector(".buy-cta");
@@ -1727,6 +1744,17 @@
     var GAME_PRODUCT_ID = 348895068;
     var CATALOG = "https://rsordtljnvxonaygyuxd.supabase.co/functions/v1/store-catalog";
     function fmtBRL(v){ var s = v.toFixed(2).split("."); return s[0] + '<span class="cents">,' + s[1] + '</span>'; }
+    // Fecha ISO (YYYY-MM-DD) → DD/MM/AAAA para "Válido até".
+    function fmtDate(iso){
+      if (!iso) return "";
+      var p = String(iso).slice(0,10).split("-");
+      return p.length === 3 ? (p[2] + "/" + p[1] + "/" + p[0]) : "";
+    }
+    // Fecha local de hoy en YYYY-MM-DD (comparable lexicográficamente con las de Nuvemshop).
+    function todayYMD(){
+      var d = new Date(), m = d.getMonth()+1, day = d.getDate();
+      return d.getFullYear() + "-" + (m<10?"0":"") + m + "-" + (day<10?"0":"") + day;
+    }
 
     // Guarda el cupón con su SCOPE completo (product_ids/category_ids/min_price) para que
     // store.js calcule el descuento exactamente como lo hace el backend (draft order).
@@ -1738,6 +1766,8 @@
           type: "percentage",
           value: pct,
           min_price: (scope && Number(scope.min_price)) || 0,
+          valid_from: (scope && scope.start_date) || null,
+          valid_until: (scope && scope.end_date) || null,
           product_ids: (scope && scope.product_ids) || [],
           category_ids: (scope && scope.category_ids) || []
         }));
@@ -1748,6 +1778,21 @@
     function init(prize, coupon, scope){
       if (pctEl) pctEl.textContent = 0;
       if (codeEl) codeEl.textContent = coupon;
+      // "Válido até ..." se prepara oculto y se revela al terminar de raspar (typewriter + pulso).
+      var vd = validEl ? fmtDate(scope && scope.end_date) : "";
+      var validText = vd ? ("Válido até " + vd) : "";
+      if (validEl){ validEl.hidden = true; validEl.textContent = ""; validEl.classList.remove("typing","pulse"); }
+      function revealValid(){
+        if (!validEl || !validText) return;
+        if (reduce){ validEl.hidden = false; validEl.textContent = validText; validEl.classList.add("pulse"); return; }
+        validEl.hidden = false; validEl.textContent = ""; validEl.classList.add("typing");
+        var i = 0;
+        (function typeNext(){
+          validEl.textContent = validText.slice(0, i);
+          if (i < validText.length){ i++; setTimeout(typeNext, 55); }
+          else { validEl.classList.remove("typing"); validEl.classList.add("pulse"); }
+        })();
+      }
       var ctx = canvas.getContext("2d");
       var drawing = false, cleared = false, started = false;
       function size(){
@@ -1800,6 +1845,7 @@
           cleared = true;
           canvas.style.transition = "opacity .5s ease"; canvas.style.opacity = "0";
           setTimeout(function(){ canvas.style.display = "none"; }, 520);
+          revealValid();
           persistCoupon(coupon, prize.pct, scope);
           if (window.ijTrack) window.ijTrack("scratch_coupon", { pct:prize.pct, code:coupon });
           try { if (window.ijMeta) window.ijMeta.track("Lead", { content_name:"cupom_"+prize.pct }, window.ijMeta.uuid()); } catch(e){}
@@ -1817,6 +1863,7 @@
         if (pctEl) pctEl.textContent = prize.pct;
         if (newEl){ newEl.innerHTML = '<small>R$</small> ' + fmtBRL(base * (1 - prize.pct/100)); newEl.hidden = false; }
         if (oldEl){ oldEl.classList.add("struck","on"); }
+        revealValid();
         persistCoupon(coupon, prize.pct, scope);
       } else {
         window.addEventListener("resize", function(){ if (!cleared) size(); });
@@ -1832,8 +1879,12 @@
       .then(function(r){ return r.json(); })
       .then(function(d){
         var cps = (d && d.coupons) || [];
+        var hoy = todayYMD();
         var applicable = cps.filter(function(x){
           if (x.type !== "percentage" || !(x.value > 0)) return false;
+          // Vigencia: solo aplica dentro de la ventana del cupón.
+          if (x.start_date && String(x.start_date).slice(0,10) > hoy) return false; // aún no vigente
+          if (x.end_date && String(x.end_date).slice(0,10) < hoy) return false;     // vencido
           var pids = x.product_ids || [], cids = x.category_ids || [];
           return pids.indexOf(GAME_PRODUCT_ID) !== -1 || (pids.length === 0 && cids.length === 0);
         });

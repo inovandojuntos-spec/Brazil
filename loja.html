@@ -133,16 +133,23 @@
   .pi-price .pp-base.struck{ text-decoration:line-through; opacity:.5; }
   .pi-price .pp-new{ display:inline-block; margin-left:10px; color:#fff; }
   .pi-cupom{ margin-top:6px; }
-  .lscr-stage{ position:relative; width:min(240px,82%); aspect-ratio:16/6; border-radius:13px; overflow:hidden;
+  .lscr-stage{ position:relative; width:min(210px,72%); aspect-ratio:1/1; border-radius:14px; overflow:hidden;
     border:1px solid rgba(199,204,212,.32); background:#060606; touch-action:none;
     box-shadow:0 16px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06); }
-  .lscr-prize{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:14px; text-align:center; padding:8px 12px;
+  .lscr-prize{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; text-align:center; padding:8px 12px;
     background:radial-gradient(75% 80% at 50% 45%, rgba(199,204,212,.14), rgba(0,0,0,0) 64%), #070708; }
   .lscr-off{ font-family:var(--display); font-weight:500; line-height:1; color:#fff; display:flex; align-items:baseline; gap:.08em; font-size:clamp(20px,5vw,28px); }
   .lscr-off b{ font-weight:600; color:var(--ember); }
   .lscr-off i{ font-style:normal; font-size:.5em; font-weight:600; color:var(--soft); }
   .lscr-code{ font-size:10.5px; color:var(--muted); }
   .lscr-code b{ color:var(--ember); letter-spacing:.1em; font-weight:800; font-size:1.2em; border:1px dashed rgba(199,204,212,.5); padding:2px 7px; border-radius:7px; margin-left:3px; }
+  .lscr-valid{ margin-top:4px; font-size:12px; letter-spacing:.02em; color:rgba(220,226,233,.92); font-weight:700; min-height:1em; }
+  .lscr-valid.typing::after{ content:"|"; margin-left:1px; color:var(--ember); animation:lscrCaret .7s step-end infinite; }
+  @keyframes lscrCaret{ 0%,100%{opacity:1} 50%{opacity:0} }
+  .lscr-valid.pulse{ display:inline-block; padding:2px 9px; border-radius:9px; animation:lscrValidPulse .9s ease-in-out infinite; }
+  @keyframes lscrValidPulse{ 0%,100%{ background:rgba(224,122,63,0); color:rgba(220,226,233,.92); box-shadow:0 0 0 rgba(224,122,63,0); transform:scale(1); }
+    50%{ background:rgba(224,122,63,.20); color:#fff; box-shadow:0 0 14px rgba(224,122,63,.4); transform:scale(1.06); } }
+  @media (prefers-reduced-motion: reduce){ .lscr-valid.pulse{ animation:none; background:rgba(224,122,63,.16); } .lscr-valid.typing::after{ display:none; } }
   .lscr-canvas{ position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; }
   .lscr-hint{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:3; width:90%; text-align:center;
     font-family:var(--display); font-size:clamp(10.5px,2.4vw,13px); letter-spacing:.04em; text-transform:uppercase; color:rgba(8,8,10,.82); font-weight:800; pointer-events:none; transition:opacity .4s ease; }
@@ -284,10 +291,14 @@
     try{ localStorage.setItem("ij_coupon", JSON.stringify({
       code:code, pct:pct, type:"percentage", value:pct,
       min_price:(scope && Number(scope.min_price))||0,
+      valid_from:(scope && scope.start_date)||null,
+      valid_until:(scope && scope.end_date)||null,
       product_ids:(scope && scope.product_ids)||[],
       category_ids:(scope && scope.category_ids)||[]
     })); }catch(e){}
   }
+  // Fecha ISO (YYYY-MM-DD) → DD/MM/AAAA para "Válido até".
+  function fmtCupomDate(iso){ if(!iso) return ""; var q=String(iso).slice(0,10).split("-"); return q.length===3?(q[2]+"/"+q[1]+"/"+q[0]):""; }
   // Melhor cupom % aplicável a um produto (product_ids, category_ids ou loja inteira). Maior % primeiro.
   function couponForProduct(p){
     var cps = (DATA && DATA.coupons) || [];
@@ -508,7 +519,8 @@
         ? '<div class="pi-price"><span class="pp-base">'+priceBlock(v0)+'</span><span class="pp-new" hidden></span></div>' +
           '<div class="pi-cupom"><div class="lscr-stage" role="img" aria-label="Raspe para descobrir o cupom">' +
             '<div class="lscr-prize" aria-hidden="true"><div class="lscr-off"><b class="lscr-pct">0</b><i>%</i> OFF</div>' +
-            '<div class="lscr-code">Cupom <b>'+esc(coup.code)+'</b></div></div>' +
+            '<div class="lscr-code">Cupom <b>'+esc(coup.code)+'</b></div>' +
+            '<div class="lscr-valid" hidden></div></div>' +
             '<canvas class="lscr-canvas"></canvas><span class="lscr-hint">Raspe e descubra seu desconto</span></div></div>'
         : '<div class="pi-price">'+priceBlock(v0)+'</div>';
 
@@ -549,6 +561,15 @@
       if(coup){
         var base=priceOf(v0);
         var pctEl=it.querySelector(".lscr-pct"), baseEl=it.querySelector(".pp-base"), newEl=it.querySelector(".pp-new");
+        var validEl=it.querySelector(".lscr-valid");
+        var validText = fmtCupomDate(coup.end_date) ? ("Válido até "+fmtCupomDate(coup.end_date)) : "";
+        var revealValid = function(){
+          if(!validEl || !validText) return;
+          var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if(reduce){ validEl.hidden=false; validEl.textContent=validText; validEl.classList.add("pulse"); return; }
+          validEl.hidden=false; validEl.textContent=""; validEl.classList.add("typing");
+          var i=0; (function t(){ validEl.textContent=validText.slice(0,i); if(i<validText.length){ i++; setTimeout(t,55); } else { validEl.classList.remove("typing"); validEl.classList.add("pulse"); } })();
+        };
         mountScratch(it.querySelector(".lscr-stage"), {
           pct:pct,
           onProgress:function(disc){
@@ -558,7 +579,7 @@
               if(newEl){ newEl.hidden=false; newEl.innerHTML='<span class="cur">R$</span> '+money(base*(1-disc/100)).replace("R$ ",""); }
             }
           },
-          onComplete:function(){ persistCoupon(coup.code, pct, coup); toastMsg("Cupom "+coup.code+" ativado · "+pct+"% OFF"); }
+          onComplete:function(){ persistCoupon(coup.code, pct, coup); revealValid(); toastMsg("Cupom "+coup.code+" ativado · "+pct+"% OFF"); }
         });
       }
     });
