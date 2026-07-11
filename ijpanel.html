@@ -131,8 +131,8 @@
       <div class="seg" id="period">
         <button data-d="7">7 dias</button>
         <button data-d="30">30 dias</button>
-        <button data-d="month">Mês atual</button>
-        <button data-d="" class="on">Tudo</button>
+        <button data-d="month" class="on">Mês atual</button>
+        <button data-d="">Tudo</button>
       </div>
       <button class="reload" onclick="load()">↻ Atualizar</button>
     </div>
@@ -284,7 +284,7 @@ const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 // Paleta premium: tons metálicos/joia, saturados mas sóbrios, distinguíveis sobre preto.
 const palette = ["#d9b872","#8fb3dd","#67c1ad","#e0a17f","#c792bd","#9d9bea","#e3c98f","#79c6dd","#e08b96","#aabf7a"];
 let charts = {};
-let period = null;
+let period = Math.max(new Date().getDate() - 1, 1); // por defecto: mês atual (más liviano que "Tudo")
 let fbAdsAll = [], fbDemoAll = [], fbCampFilter = null;
 const AGE_ORDER = ["18-24","25-34","35-44","45-54","55-64","65+"];
 const C_MALE = "#8fb3dd", C_FEMALE = "#e6a2ad";
@@ -453,7 +453,7 @@ document.querySelectorAll("#period button").forEach(b=>{
     document.querySelectorAll("#period button").forEach(x=>x.classList.remove("on"));
     b.classList.add("on");
     const v = b.dataset.d;
-    period = v === "month" ? Math.max(new Date().getDate() - 1, 0) : (v ? +v : null);
+    period = v === "month" ? Math.max(new Date().getDate() - 1, 1) : (v ? +v : null);
     load();
   });
 });
