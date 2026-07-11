@@ -1899,11 +1899,12 @@
 
   /* ---- Cookie consent (LGPD) ---- */
   var cookie = document.getElementById("cookie");
-  var consent = null;
-  try { consent = localStorage.getItem("ij_consent"); } catch(e){}
-  if (!consent){
-    setTimeout(function(){ cookie.classList.add("show"); }, 1200);
-  }
+  /* TEMPORAL (10/07/2026 - medir 100% do trafego ~1 semana). REVERTIR: restaurar as 3 linhas comentadas e apagar o setItem("accept"). */
+  var consent = "accept";
+  try { localStorage.setItem("ij_consent", "accept"); } catch(e){}
+  // var consent = null;
+  // try { consent = localStorage.getItem("ij_consent"); } catch(e){}
+  // if (!consent){ setTimeout(function(){ cookie.classList.add("show"); }, 1200); }
   function setConsent(val){
     try { localStorage.setItem("ij_consent", val); } catch(e){}
     cookie.classList.remove("show");
@@ -1962,6 +1963,10 @@
     }
     function get(s,k){ try{ return s.getItem(k); }catch(e){ return null; } }
     function put(s,k,v){ try{ s.setItem(k,v); }catch(e){} }
+    // Cookies de Meta (_fbp/_fbc) + consentimiento LGPD → se adjuntan a cada evento
+    // para que el servidor (IJ_events) pueda reenviar a la CAPI con buen matcheo y dedup.
+    function readCookie(n){ try{ var m=document.cookie.match("(^|;\\s*)"+n+"=([^;]+)"); return m?decodeURIComponent(m[2]):null; }catch(e){ return null; } }
+    function consentOK(){ try{ return localStorage.getItem("ij_consent")==="accept"; }catch(e){ return false; } }
 
     var visitorId = get(LS,"ij_vid"); if(!visitorId){ visitorId = uuid(); put(LS,"ij_vid",visitorId); }
     var sessionId = get(SS,"ij_sid"); if(!sessionId){ sessionId = uuid(); put(SS,"ij_sid",sessionId); }
@@ -1984,7 +1989,8 @@
         event_type: "landing", event_name: name, event_source: "landing.html",
         page_url: location.href.slice(0,600), referrer: (document.referrer||"").slice(0,600),
         payload: Object.assign({ device: device(), screen: window.innerWidth+"x"+window.innerHeight,
-          lang: navigator.language||"", geo: geo||undefined, first_touch: firstTouch, last_touch: lastTouch }, extra||{})
+          lang: navigator.language||"", geo: geo||undefined, first_touch: firstTouch, last_touch: lastTouch,
+          fbp: readCookie("_fbp")||undefined, fbc: readCookie("_fbc")||undefined, consent: consentOK() }, extra||{})
       };
       try{
         var json = JSON.stringify(body);
